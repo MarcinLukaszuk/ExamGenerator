@@ -1,10 +1,12 @@
 ﻿using Autofac;
+using ExamGenerator.DocumentManager;
+using ExamGenerator.DocumentManager.QRCodeGenerator;
 using ExamGenerator.Service.EF;
 using ExamGenerator.Service.Interfaces;
 using ExamGenerator.Service.Services;
 using ExamGeneratorModel.Model;
 using System;
-
+ 
 
 namespace TestApplication
 {
@@ -12,29 +14,21 @@ namespace TestApplication
     {
         static void Main(string[] args)
         {
-            var builder = new ContainerBuilder();
+            //var builder = new ContainerBuilder();
 
-            builder.RegisterType<DataModelEF>().As<IDataModelEF>();
-            builder.RegisterType<ExamService>().As<IExamService>();
-            builder.RegisterType<QuestionService>().As<IQuestionService>(); 
-            builder.Build();
+            //builder.RegisterType<DataModelEF>().As<IDataModelEF>();
+            //builder.RegisterType<ExamService>().As<IExamService>();
+            //builder.RegisterType<QuestionService>().As<IQuestionService>(); 
+            //builder.Build();
 
-            ExamService examService = new ExamService(new DataModelEF());
-            QuestionService questionService = new QuestionService(new DataModelEF());
-            var exam = examService.GetByID(7);
-     
-            foreach (var item in exam.Questions)
-            {
-                Console.WriteLine(item.QuestionText);
-                foreach (var answer in item.Answers)
-                {
-                    Console.WriteLine(answer.TextAnswer);
-                } 
-                Console.WriteLine(); 
-            }
+            QrCodeED qrcodeGenerator = new QrCodeED();
+           var zapisanyQRcode= qrcodeGenerator.Encode("Modzel chuj");
+            DocumentCreator dcr = new DocumentCreator();
+
+
 
             Console.WriteLine("koniec");
-            Console.Read();
+          //  Console.Read();
         }
     }
 }

@@ -45,6 +45,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -61,6 +62,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ExamGenerator.DocumentManager\ExamGenerator.DocumentManager.csproj">
+      <Project>{7e4cbe6a-21dc-499a-ae41-716ba3317c79}</Project>
+      <Name>ExamGenerator.DocumentManager</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ExamGenerator.Service\ExamGenerator.Service.csproj">
       <Project>{34BFF91D-7BE7-427F-8477-52EFF995B25B}</Project>
       <Name>ExamGenerator.Service</Name>
