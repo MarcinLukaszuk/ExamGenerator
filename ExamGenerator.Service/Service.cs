@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace ExamGenerator.Service
 {
+
     public abstract class Service<TEntity> : IService<TEntity> where TEntity : Entity
     {
         private readonly IDataModelEF _dataModelEF;

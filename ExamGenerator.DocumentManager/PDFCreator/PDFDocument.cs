@@ -16,7 +16,7 @@ namespace ExamGenerator.DocumentManager.PDFCreator
         PdfWriter _writer;
         string _filename;
         int questionCounter;
-
+        LinkedList<PdfPTable> tables;
 
         public string Filename
         {
@@ -33,11 +33,14 @@ namespace ExamGenerator.DocumentManager.PDFCreator
             _writer.PageEvent = PDFHelpers.CreatePageEventHelper(examID);            
             _document.Open();
             questionCounter = 1;
+
+            tables = new LinkedList<PdfPTable>();
         }
         public void AddExercise(QuestionDTO question)
         {
-            var table = PDFHelpers.PDFTableCreator(question, questionCounter++);
-            _document.Add(table);
+            tables.AddLast(PDFHelpers.PDFTableCreator(question, questionCounter++));
+            
+            _document.Add(tables.Last());
             _document.Add(new Paragraph("\n"));
         }
 
