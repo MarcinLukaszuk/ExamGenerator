@@ -13,13 +13,21 @@ namespace ExamGenerator.DocumentManager
     public class DocumentCreator
     {
         ExamDTO _exam;
+        IPDFDocument doc;
+        public List<AnswerPositionDTO> AnswerPositionDTO
+        {
+            get
+            {
+                return doc.ExamAnswerPositions;
+            }
+        }
         public DocumentCreator(ExamDTO exam)
         {
-            IPDFDocument doc = new PDFDocument(exam.Id);            
+            doc = new PDFDocument(exam.Id);
             foreach (var item in exam.QuestionsDTO)
             {
                 doc.AddExercise(item);
-            } 
+            }
             doc.SaveDocument();
         }
     }

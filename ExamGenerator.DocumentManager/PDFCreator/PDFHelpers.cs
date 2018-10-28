@@ -71,11 +71,58 @@ namespace ExamGenerator.DocumentManager.PDFCreator
                 image = Image.GetInstance(flag, System.Drawing.Imaging.ImageFormat.Jpeg);
                 image.ScaleAbsolute(_fontsize, _fontsize);
             }
-
             return image;
         }
 
+        public static LinkedList<AnswerPositionDTO> getAbsolutePositionOfAnswers(PdfPTable table, QuestionDTO question, Document document, PdfWriter writer)
+        {
+            var answerPositions = new LinkedList<AnswerPositionDTO>();
+            var answersDTO = question.AnswersDTO;
+            answersDTO.Reverse();
+            var end = writer.GetVerticalPosition(false);
+            var rows = table.Rows;
+            rows.RemoveAt(0);
+            rows.Reverse();
 
+            var lol = BaseColor.YELLOW;
+            int i = 0;
+            foreach (var row in rows)
+            {
+                answerPositions.AddFirst(new AnswerPositionDTO()
+                {
+                    X = document.Left,
+                    Y = end + row.GetMaxRowHeightsWithoutCalculating(),
+                    Height = row.GetMaxRowHeightsWithoutCalculating(),
+                    Width = row.GetCells().ElementAt(0).Width,
+                    PageNumber = writer.CurrentPageNumber,
+                    AnswerID = answersDTO.ElementAt(i).Id
+                });
+
+                lol = lol == BaseColor.YELLOW ? BaseColor.BLUE : BaseColor.YELLOW;
+                document.Add(new Rectangle(answerPositions.First().X, answerPositions.First().Y - answerPositions.First().Height, answerPositions.First().X + answerPositions.First().Width, answerPositions.First().Y, 0)
+                {
+                    BackgroundColor = lol
+                });
+                end = answerPositions.First().Y;
+                ++i;
+            }
+            return answerPositions;
+        }
+        public static string GetMD5(string input)
+        {
+            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            {
+                byte[] inputBytes = Encoding.ASCII.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("X2"));
+                }
+                return sb.ToString();
+            }
+        }
     }
 
     public class PDFHeader : PdfPageEventHelper

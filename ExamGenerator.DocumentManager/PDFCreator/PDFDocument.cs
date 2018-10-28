@@ -15,9 +15,9 @@ namespace ExamGenerator.DocumentManager.PDFCreator
         Document _document;
         PdfWriter _writer;
         string _filename;
-        int questionCounter;
         LinkedList<PdfPTable> tables;
-
+        LinkedList<QuestionDTO> questions;
+        List<AnswerPositionDTO> examAnswerPositions;
         public string Filename
         {
             get
@@ -25,19 +25,29 @@ namespace ExamGenerator.DocumentManager.PDFCreator
                 return _filename;
             }
         }
+        public List<AnswerPositionDTO> ExamAnswerPositions
+        {
+            get
+            {
+                return examAnswerPositions;
+            }
+        }
+
         public PDFDocument(int examID)
         {
-            _filename = GetMD5(examID.ToString()) + ".pdf";
+            _filename = PDFHelpers.GetMD5(examID.ToString()) + ".pdf";
             _document = new Document(PageSize.A4, 36, 36, 36, 36);
             _writer = PdfWriter.GetInstance(_document, new FileStream(Filename, FileMode.Create));
             _writer.PageEvent = PDFHelpers.CreatePageEventHelper(examID);
             _document.Open();
-            questionCounter = 1;
+
             tables = new LinkedList<PdfPTable>();
+            questions = new LinkedList<QuestionDTO>();
+            examAnswerPositions = new List<AnswerPositionDTO>();
         }
         public void AddExercise(QuestionDTO question)
         {
-            tables.AddLast(PDFHelpers.PDFTableCreator(question, questionCounter++));
+            questions.AddLast(question);
         }
 
         public void SaveDocument()
@@ -48,40 +58,15 @@ namespace ExamGenerator.DocumentManager.PDFCreator
 
         private void buildDocument()
         {
-            float poczatek = 0;
-            float koniec = 0;
-            var lol = BaseColor.BLACK;
-            foreach (var table in tables)
+            int questionCounter = 1;
+            foreach (var question in questions)
             {
-                poczatek = _writer.GetVerticalPosition(false);
+                var currentAnswerPositions = new LinkedList<AnswerPositionDTO>();
+                var table = PDFHelpers.PDFTableCreator(question, questionCounter++);
                 _document.Add(table);
-                koniec = _writer.GetVerticalPosition(false);
-                if (poczatek < koniec)
-                {
-                    _document.Add(new Chunk("\n"));
-                    koniec = _writer.GetVerticalPosition(false);
-                }
-                if (lol == BaseColor.BLACK)
-                    lol = BaseColor.BLUE;
-                else
-                    lol = BaseColor.BLACK;
+                currentAnswerPositions = PDFHelpers.getAbsolutePositionOfAnswers(table, question, _document, _writer);
 
-                _document.Add(new Rectangle(10, poczatek, 60, koniec, 0) { BackgroundColor = lol });
-            }
-        }
-        private string GetMD5(string input)
-        {
-            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
-            {
-                byte[] inputBytes = Encoding.ASCII.GetBytes(input);
-                byte[] hashBytes = md5.ComputeHash(inputBytes);
-
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < hashBytes.Length; i++)
-                {
-                    sb.Append(hashBytes[i].ToString("X2"));
-                }
-                return sb.ToString();
+                examAnswerPositions.AddRange(currentAnswerPositions);
             }
         }
     }

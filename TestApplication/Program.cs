@@ -30,7 +30,7 @@ namespace TestApplication
             AnswerService serviceA = new AnswerService(dataNew);
             QuestionService serviceQ = new QuestionService(dataNew);
             ExamService serviceE = new ExamService(dataNew);
-            
+            AnswerPositionService serviceAP = new AnswerPositionService(dataNew);
             //var iloscpytan = Mapper.Map<ExamDTO>(serviceE.GetByID(5)).QuestionsDTO.Where(x => x.AnswersDTO.Count == 0).ToList().Count();
             //foreach (var item in Mapper.Map<ExamDTO>(serviceE.GetByID(5)).QuestionsDTO)
             //{
@@ -44,9 +44,13 @@ namespace TestApplication
             //    serviceQ.Delete(item.Id);
             //}
             //var iloscpytan3 = Mapper.Map<ExamDTO>(serviceE.GetByID(5)).QuestionsDTO.Where(x => x.AnswersDTO.Count == 0).ToList().Count();
-        
-            DocumentCreator dcr = new DocumentCreator(Mapper.Map<ExamDTO>(serviceE.GetByID(5)));
-            
+
+           // DocumentCreator dcr = new DocumentCreator(Mapper.Map<ExamDTO>(serviceE.GetByID(5)));
+            // serviceAP.InsertRange(Mapper.Map<List<AnswerPosition>>(dcr.AnswerPositionDTO));
+
+            var costam = serviceAP.GetAllAnswersPositionsByExamID(5);
+
+
             //Console.Read();
         }
     }
@@ -66,9 +70,11 @@ namespace TestApplication
 
             CreateMap<Exam, ExamDTO>()
                 .ForMember(destination => destination.QuestionsDTO, opts => opts.MapFrom(source => source.Questions));
-
             CreateMap<ExamDTO, Exam>()
                 .ForMember(destination => destination.Questions, opts => opts.Ignore());
+
+            CreateMap<AnswerPosition, AnswerPositionDTO>();
+            CreateMap<AnswerPositionDTO, AnswerPosition>();
         }
     }
 }

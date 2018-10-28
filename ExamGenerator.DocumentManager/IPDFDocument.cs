@@ -11,5 +11,7 @@ namespace ExamGenerator.DocumentManager
     {
         void AddExercise(QuestionDTO question);
         void SaveDocument();
+        List<AnswerPositionDTO> ExamAnswerPositions { get; }
+        string Filename { get; }
     }
 }

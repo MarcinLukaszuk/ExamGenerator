@@ -51,12 +51,14 @@
   <ItemGroup>
     <Compile Include="EF\DataModelEF.cs" />
     <Compile Include="EF\IDataModelEF.cs" />
+    <Compile Include="Interfaces\IAnswerPositionService.cs" />
     <Compile Include="Interfaces\IAnswerService.cs" />
     <Compile Include="Interfaces\IExamService.cs" />
     <Compile Include="Interfaces\IQuestionService.cs" />
     <Compile Include="IService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service.cs" />
+    <Compile Include="Services\AnswerPositionService.cs" />
     <Compile Include="Services\AnswerService.cs" />
     <Compile Include="Services\ExamService.cs" />
     <Compile Include="Services\QuestionService.cs" />

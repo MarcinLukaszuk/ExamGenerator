@@ -13,5 +13,6 @@ namespace ExamGeneratorModel
         public DbSet<Exam> Exams { get; set; }
         public DbSet<Answer> Answer { get; set; }
         public DbSet<Question> Questions { get; set; }
+        public DbSet<AnswerPosition> AnswersPositions { get; set; }
     }
 }

@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTO\AnswerPositionDTO.cs" />
     <Compile Include="DTO\EntityDTO.cs" />
     <Compile Include="DTO\QuestionDTO.cs" />
     <Compile Include="DTO\ExamDTO.cs" />
@@ -72,8 +73,17 @@
     <Compile Include="Migrations\201809172100445_Init31.Designer.cs">
       <DependentUpon>201809172100445_Init31.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810280933403_AddAnswerPositions.cs" />
+    <Compile Include="Migrations\201810280933403_AddAnswerPositions.Designer.cs">
+      <DependentUpon>201810280933403_AddAnswerPositions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810281036502_AddAnswerPositions1.cs" />
+    <Compile Include="Migrations\201810281036502_AddAnswerPositions1.Designer.cs">
+      <DependentUpon>201810281036502_AddAnswerPositions1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Answer.cs" />
+    <Compile Include="Model\AnswersPositions.cs" />
     <Compile Include="Model\Entity.cs" />
     <Compile Include="Model\Exam.cs" />
     <Compile Include="Model\Question.cs" />
@@ -95,6 +105,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201809172100445_Init31.resx">
       <DependentUpon>201809172100445_Init31.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810280933403_AddAnswerPositions.resx">
+      <DependentUpon>201810280933403_AddAnswerPositions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810281036502_AddAnswerPositions1.resx">
+      <DependentUpon>201810281036502_AddAnswerPositions1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
