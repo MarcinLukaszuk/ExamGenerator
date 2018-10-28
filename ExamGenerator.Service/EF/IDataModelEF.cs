@@ -4,6 +4,6 @@
 
     public interface IDataModelEF
     {
-        ExamGeneratorDBContext CreateNew();
+         ExamGeneratorDBContext GetContext();
     }
 }

@@ -14,47 +14,71 @@ namespace ExamGenerator.DocumentManager.PDFCreator
     {
         static int _fontsize = 12;
         static Font _polishFont = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.CP1257, _fontsize, Font.NORMAL);
+        static Image image = null;
+        static int _border = Rectangle.NO_BORDER;
 
         public static PdfPTable PDFTableCreator(QuestionDTO question, int questionNumber)
         {
-            PdfPTable table = new PdfPTable(2) {
-                KeepTogether=true,
-                WidthPercentage=100,
+            GetEmptySquare();
+            PdfPTable table = new PdfPTable(2)
+            {
+                KeepTogether = true,
+                WidthPercentage = 100,
             };
             table.SetWidths(new float[] { 1f, 12f });
 
             table.AddCell(new PdfPCell(new Paragraph(questionNumber + ". " + question.QuestionText, _polishFont))
             {
-                Border = Rectangle.NO_BORDER,
+                Border = _border,
                 Colspan = 2,
-                HorizontalAlignment = 0,//0=Left, 1=Centre, 2=Right
+                HorizontalAlignment = Element.ALIGN_LEFT
+
             });
 
-            foreach (var answer in question.Answers)
+            foreach (var answer in question.AnswersDTO)
             {
-                table.AddCell(new PdfPCell(new Paragraph("a"))
+                table.AddCell(new PdfPCell(GetEmptySquare())
                 {
+                    Border = _border,
                     HorizontalAlignment = Element.ALIGN_CENTER,
-                    PaddingTop = (float)_fontsize / 2,
-                    PaddingRight = (float)_fontsize / 2,
-                    Border = Rectangle.NO_BORDER
+                    Padding = 4
                 });
                 table.AddCell(new PdfPCell(new Paragraph(answer.TextAnswer, _polishFont))
                 {
-                    Border = Rectangle.NO_BORDER
+                    Border = _border,
                 });
             }
             return table;
         }
-
-
         public static PDFHeader CreatePageEventHelper(int testID)
         {
             return new PDFHeader(testID);
         }
+
+        public static Image GetEmptySquare()
+        {
+            if (image == null)
+            {
+                int size = 100;
+                int thickness = 10;
+                System.Drawing.Bitmap flag = new System.Drawing.Bitmap(size, size);
+                System.Drawing.Graphics flagGraphics = System.Drawing.Graphics.FromImage(flag);
+                flagGraphics.FillRectangle(System.Drawing.Brushes.White, 0, 0, size, size);
+                flagGraphics.FillRectangle(System.Drawing.Brushes.Black, 0, 0, thickness, size);
+                flagGraphics.FillRectangle(System.Drawing.Brushes.Black, size - thickness, 0, thickness, size);
+                flagGraphics.FillRectangle(System.Drawing.Brushes.Black, 0, 0, size, thickness);
+                flagGraphics.FillRectangle(System.Drawing.Brushes.Black, 0, size - thickness, size, thickness);
+                image = Image.GetInstance(flag, System.Drawing.Imaging.ImageFormat.Jpeg);
+                image.ScaleAbsolute(_fontsize, _fontsize);
+            }
+
+            return image;
+        }
+
+
     }
 
-    public class PDFHeader: PdfPageEventHelper
+    public class PDFHeader : PdfPageEventHelper
     {
         int _testID;
         public PDFHeader(int testID)

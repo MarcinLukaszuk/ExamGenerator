@@ -1,5 +1,6 @@
 ﻿using ExamGenerator.Service.EF;
 using ExamGenerator.Service.Interfaces;
+using ExamGeneratorModel;
 using ExamGeneratorModel.Model;
 using System;
 using System.Collections.Generic;
@@ -12,23 +13,23 @@ namespace ExamGenerator.Service.Services
     public class QuestionService : Service<Question>, IQuestionService
     {
         private readonly IDataModelEF _dataModelEF;
+        private readonly ExamGeneratorDBContext _context;
         public QuestionService(IDataModelEF dataModelEF) : base(dataModelEF)
         {
             _dataModelEF = dataModelEF;
+            _context = _dataModelEF.GetContext();
         }
 
         public void AddAnswerToQuestion(Question question, Answer answer)
         {
-            using (var db = _dataModelEF.CreateNew())
+            if (Find(question.Id) == null)
             {
-                if (Find(question.Id) == null)
-                {
-                    return;
-                }
-                answer.QuestionID = question.Id;
-                db.Answer.Add(answer);
-                db.SaveChanges();
+                return;
             }
+            answer.QuestionID = question.Id;
+           _context.Answer.Add(answer);
+           _context.SaveChanges();
+
         }
         public void AddAnswerToQuestion(int questionID, Answer answer)
         {
@@ -37,7 +38,7 @@ namespace ExamGenerator.Service.Services
             {
                 return;
             }
-            AddAnswerToQuestion(question,answer);
+            AddAnswerToQuestion(question, answer);
         }
         public new void Delete(int id)
         {
@@ -50,14 +51,11 @@ namespace ExamGenerator.Service.Services
             {
                 return;
             }
-            using (var db = _dataModelEF.CreateNew())
-            {
-                var answersToRemove = db.Answer.Where(x => x.QuestionID == returnedQuestion.Id).ToList();
-                var questionToRemove = db.Questions.Where(x => x.Id == returnedQuestion.Id).FirstOrDefault();
-                db.Answer.RemoveRange(answersToRemove);
-                db.Questions.Remove(questionToRemove);
-                db.SaveChanges();
-            }
+            var answersToRemove =_context.Answer.Where(x => x.QuestionID == returnedQuestion.Id).ToList();
+            var questionToRemove =_context.Questions.Where(x => x.Id == returnedQuestion.Id).FirstOrDefault();
+           _context.Answer.RemoveRange(answersToRemove);
+           _context.Questions.Remove(questionToRemove);
+           _context.SaveChanges();
         }
     }
 }

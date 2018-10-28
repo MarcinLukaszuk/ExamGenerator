@@ -10,9 +10,10 @@ using System.Threading.Tasks;
 namespace ExamGenerator.Service.Services
 {
     public class AnswerService : Service<Answer>, IAnswerService
-    {
+    { 
         public AnswerService(IDataModelEF dataModelEF) : base(dataModelEF)
         {
+
         }
     }
 }

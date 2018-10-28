@@ -16,11 +16,11 @@ namespace ExamGenerator.Service
         private readonly IDataModelEF _dataModelEF;
         private readonly DbContext _context;
         private readonly DbSet<TEntity> _dbSet;
-
+    
         public Service(IDataModelEF dataModelEF)
         {
             _dataModelEF = dataModelEF;
-            _context = _dataModelEF.CreateNew();
+            _context = _dataModelEF.GetContext();
             _dbSet = _context.Set<TEntity>();
         }
 

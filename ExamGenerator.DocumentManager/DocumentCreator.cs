@@ -15,12 +15,11 @@ namespace ExamGenerator.DocumentManager
         ExamDTO _exam;
         public DocumentCreator(ExamDTO exam)
         {
-            IPDFDocument doc = new PDFDocument(exam.Id);
-
-            for (int i = 0; i < 30; i++)
+            IPDFDocument doc = new PDFDocument(exam.Id);            
+            foreach (var item in exam.QuestionsDTO)
             {
-                doc.AddExercise(exam.Questions.First());
-            }
+                doc.AddExercise(item);
+            } 
             doc.SaveDocument();
         }
     }

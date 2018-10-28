@@ -10,12 +10,12 @@ namespace ExamGeneratorModel.DTO
     {
         public QuestionDTO()
         {
-            Answers = new List<AnswerDTO>();
+            AnswersDTO = new List<AnswerDTO>();
         }
 
         public int Id { get; set; }
         public int ExamID { get; set; }
         public string QuestionText { get; set; }
-        public List<AnswerDTO> Answers { get; set; }
+        public List<AnswerDTO> AnswersDTO { get; set; }
     }
 }

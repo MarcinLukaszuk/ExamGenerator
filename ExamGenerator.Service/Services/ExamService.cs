@@ -1,5 +1,6 @@
 ﻿using ExamGenerator.Service.EF;
 using ExamGenerator.Service.Interfaces;
+using ExamGeneratorModel;
 using ExamGeneratorModel.Model;
 using System;
 using System.Collections.Generic;
@@ -13,59 +14,48 @@ namespace ExamGenerator.Service.Services
     public class ExamService : Service<Exam>, IExamService
     {
         private readonly IDataModelEF _dataModelEF;
-
+        private readonly ExamGeneratorDBContext _context;
         public ExamService(IDataModelEF dataModelEF) : base(dataModelEF)
         {
             _dataModelEF = dataModelEF;
+            _context = _dataModelEF.GetContext();
         }
         public void AddQuestionToExam(int examID, Question question)
         {
-            using (var db = _dataModelEF.CreateNew())
+            var exam = Find(examID);
+            if (exam == null || question == null)
             {
-                var exam = Find(examID);
-                if (exam == null)
-                {
-                    return;
-                }
-                AddQuestionToExam(exam, question);
+                return;
             }
+            AddQuestionToExam(exam, question);
         }
         public void AddQuestionToExam(Exam exam, Question question)
         {
-            using (var db = _dataModelEF.CreateNew())
+            if (Find(exam?.Id) == null || question == null)
             {
-                if (Find(exam?.Id) == null)
-                {
-                    return;
-                }
-                question.ExamID = exam.Id;
-                db.Questions.Add(question);
-                db.SaveChanges();
+                return;
             }
+            question.ExamID = exam.Id;
+            _context.Questions.Add(question);
+            _context.SaveChanges();
         }
         public List<Question> GetAllQuestionOfExam(int examID)
         {
-            using (var db = _dataModelEF.CreateNew())
+            var returnedExam = Find(examID);
+            if (returnedExam == null)
             {
-                var returnedExam = Find(examID);
-                if (returnedExam == null)
-                {
-                    return null;
-                }
-                return GetAllQuestionOfExam(returnedExam);
+                return null;
             }
+            return GetAllQuestionOfExam(returnedExam);
         }
         public List<Question> GetAllQuestionOfExam(Exam exam)
         {
-            using (var db = _dataModelEF.CreateNew())
+            var returnedExam = Find(exam.Id);
+            if (returnedExam == null)
             {
-                var returnedExam = Find(exam.Id);
-                if (returnedExam == null)
-                {
-                    return null;
-                }
-                return returnedExam.Questions.ToList();
+                return null;
             }
+            return returnedExam.Questions.ToList();
         }
         public new void Delete(int id)
         {
@@ -78,14 +68,12 @@ namespace ExamGenerator.Service.Services
             {
                 return;
             }
-            using (var db = _dataModelEF.CreateNew())
-            {
-                var questionsToRemove = db.Questions.Where(x => x.ExamID == returnedExam.Id).ToList();
-                var examToRemove = db.Exams.Where(x => x.Id == returnedExam.Id).FirstOrDefault();
-                db.Questions.RemoveRange(questionsToRemove);
-                db.Exams.Remove(examToRemove);
-                db.SaveChanges();
-            }
+
+            var questionsToRemove = _context.Questions.Where(x => x.ExamID == returnedExam.Id).ToList();
+            var examToRemove = _context.Exams.Where(x => x.Id == returnedExam.Id).FirstOrDefault();
+            _context.Questions.RemoveRange(questionsToRemove);
+            _context.Exams.Remove(examToRemove);
+            _context.SaveChanges();
         }
     }
 }

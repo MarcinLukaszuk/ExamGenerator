@@ -4,9 +4,16 @@
 
     public class DataModelEF : IDataModelEF
     {
-        public ExamGeneratorDBContext CreateNew()
+        ExamGeneratorDBContext dbContext;
+        public DataModelEF GetNewInstance()
         {
-            return new ExamGeneratorDBContext();
+            return new DataModelEF();
+        }
+        public ExamGeneratorDBContext GetContext()
+        {
+            if (dbContext == null)
+                dbContext = new ExamGeneratorDBContext();
+            return dbContext;
         }
     }
 }

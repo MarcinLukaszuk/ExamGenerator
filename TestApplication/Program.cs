@@ -8,7 +8,8 @@ using ExamGenerator.Service.Services;
 using ExamGeneratorModel.DTO;
 using ExamGeneratorModel.Model;
 using System;
-
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TestApplication
 {
@@ -24,17 +25,29 @@ namespace TestApplication
             //builder.RegisterType<AnswerService>().As<IAnswerService>();
             //builder.Build();
 
-
-            AnswerService serviceA = new AnswerService(new DataModelEF());
-            QuestionService serviceQ = new QuestionService(new DataModelEF());
-            ExamService serviceE = new ExamService(new DataModelEF());
-
-
-            var exammm = Mapper.Map<ExamDTO>( serviceE.GetByID(3));
-            DocumentCreator dcr = new DocumentCreator(exammm);
+            var data = new DataModelEF();
+            var dataNew = data.GetNewInstance();
+            AnswerService serviceA = new AnswerService(dataNew);
+            QuestionService serviceQ = new QuestionService(dataNew);
+            ExamService serviceE = new ExamService(dataNew);
             
-            Console.WriteLine("koniec");
-            //  Console.Read();
+            //var iloscpytan = Mapper.Map<ExamDTO>(serviceE.GetByID(5)).QuestionsDTO.Where(x => x.AnswersDTO.Count == 0).ToList().Count();
+            //foreach (var item in Mapper.Map<ExamDTO>(serviceE.GetByID(5)).QuestionsDTO)
+            //{
+            //    var tmpQ = new Question() { QuestionText = item.QuestionText };
+            //    serviceE.AddQuestionToExam(serviceE.GetByID(5).Id, tmpQ);
+            //}
+
+            //var iloscpytan2 = Mapper.Map<ExamDTO>(serviceE.GetByID(5)).QuestionsDTO.Where(x => x.AnswersDTO.Count == 0).ToList().Count();
+            //foreach (var item in Mapper.Map<ExamDTO>(serviceE.GetByID(5)).QuestionsDTO.Where(x => x.AnswersDTO.Count == 0).ToList())
+            //{
+            //    serviceQ.Delete(item.Id);
+            //}
+            //var iloscpytan3 = Mapper.Map<ExamDTO>(serviceE.GetByID(5)).QuestionsDTO.Where(x => x.AnswersDTO.Count == 0).ToList().Count();
+        
+            DocumentCreator dcr = new DocumentCreator(Mapper.Map<ExamDTO>(serviceE.GetByID(5)));
+            
+            //Console.Read();
         }
     }
 
@@ -45,11 +58,17 @@ namespace TestApplication
             CreateMap<Answer, AnswerDTO>();
             CreateMap<AnswerDTO, Answer>();
 
-            CreateMap<Question, QuestionDTO>();
+            CreateMap<Question, QuestionDTO>()
+                .ForMember(
+                destination => destination.AnswersDTO,
+               opts => opts.MapFrom(source => source.Answers));
             CreateMap<QuestionDTO, Question>();
 
-            CreateMap<Exam, ExamDTO>();
-            CreateMap<ExamDTO, Exam>();
+            CreateMap<Exam, ExamDTO>()
+                .ForMember(destination => destination.QuestionsDTO, opts => opts.MapFrom(source => source.Questions));
+
+            CreateMap<ExamDTO, Exam>()
+                .ForMember(destination => destination.Questions, opts => opts.Ignore());
         }
     }
 }
