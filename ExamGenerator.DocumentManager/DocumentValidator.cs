@@ -14,28 +14,45 @@ namespace ExamGenerator.DocumentManager
 {
     public class DocumentValidator
     {
-        List<Bitmap> bitmaps;
+        private List<Bitmap> _bitmapList;
+        private Dictionary<int, List<Bitmap>> _exams;
 
-        public DocumentValidator(string filenamePath)
+        public DocumentValidator(List<Bitmap> bitmapList)
         {
-            bitmaps = ZIPDirectory.GetAllBitmapsOfZipArchive(filenamePath);
+            _bitmapList = bitmapList;
+            _exams = new Dictionary<int, List<Bitmap>>();
         }
 
         public List<int> GetExamIDs()
         {
-            return bitmaps.Select(x => new BitmapAnalyzer(x).ExamID).Distinct().ToList();
+            var tmp = new List<int>();
+            foreach (var item in _bitmapList)
+            {
+                var examID = BitmapAnalXD.GetExamID(item);
+
+                if (!_exams.ContainsKey(examID))
+                    _exams.Add(examID, new List<Bitmap>() { item });
+                else
+                    _exams[examID].Add(item);
+
+                tmp.Add(examID);
+            }
+            return tmp.Distinct().ToList();
         }
 
-        public void validateExam(int examID, List<AnswerPositionDTO> answerPositions)
+        public void CheckExam(int examID, List<AnswerPositionDTO> answerPositionsDTO)
         {
-            foreach (var bitmapAnalyzer in bitmaps.Select(x => new BitmapAnalyzer(x)).Where(x => x.ExamID == examID).ToList())
+            var bitmapList = _exams[examID];
+            foreach (var bitmap in bitmapList)
             {
-                var answerPos = answerPositions.Where(x => x.PageNumber == bitmapAnalyzer.PageNumber).ToList();
-                foreach (var answer in answerPos)
-                {
-                    var answerResult = bitmapAnalyzer.CheckAnswer(answer);
+                var pageNumber = BitmapAnalXD.GetExamPage(bitmap);
+                var pageAnswers = answerPositionsDTO.Where(x => x.PageNumber == pageNumber).ToList();
 
-                    Console.WriteLine(answer.AnswerDTO.IfCorrect == answerResult ? "Dobrze" : "Zle");
+                foreach (var answer in pageAnswers)
+                {
+                    var answerBitmap = BitmapAnalXD.GetAnswerBitmap(bitmap, answer);
+                    var answerBitmapp = BitmapAnalXD.CheckAnswerValue(answerBitmap);
+                  
                 }
             }
         }

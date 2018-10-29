@@ -68,6 +68,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BitmapAnalXD.cs" />
     <Compile Include="DocumentCreator.cs" />
     <Compile Include="DocumentValidator.cs" />
     <Compile Include="IPDFDocument.cs" />
@@ -75,6 +76,8 @@
     <Compile Include="PDFCreator\PDFHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QRCodeGenerator\QrCodeED.cs" />
+    <Compile Include="QRCodeGenerator\QrCodeEncoderDecoder.cs" />
+    <Compile Include="UnZipArchive\ArchiveUnZiper.cs" />
     <Compile Include="ZIPValidator\BitmapAnalyser.cs" />
     <Compile Include="ZIPValidator\ZIPDirectory.cs" />
   </ItemGroup>

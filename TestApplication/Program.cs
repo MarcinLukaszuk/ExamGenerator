@@ -2,6 +2,7 @@
 using AutoMapper;
 using ExamGenerator.DocumentManager;
 using ExamGenerator.DocumentManager.QRCodeGenerator;
+using ExamGenerator.DocumentManager.UnZipArchive;
 using ExamGenerator.Service.EF;
 using ExamGenerator.Service.Interfaces;
 using ExamGenerator.Service.Services;
@@ -50,20 +51,26 @@ namespace TestApplication
             //serviceQ.AddAnswerToQuestion(q1, a2);
             //serviceQ.AddAnswerToQuestion(q2, a3);
             //serviceQ.AddAnswerToQuestion(q2, a4);
-             
 
-            //DocumentCreator creator = new DocumentCreator(Mapper.Map<ExamDTO>( serviceE.GetByID(6)));
 
-            DocumentValidator valid = new DocumentValidator("lol.zip");
-            var examIDs = valid.GetExamIDs();
+            //DocumentCreator creator = new DocumentCreator(Mapper.Map<ExamDTO>(serviceE.GetByID(6)));
+            //var pozycje = creator.AnswerPositionDTO;
+            // serviceAP.InsertRange(6, Mapper.Map<List<AnswerPosition>>(pozycje));
 
-            foreach (var examID in examIDs)
-            {
-                var tmp = Mapper.Map<List<AnswerPositionDTO>>(serviceAP.GetAllAnswersPositionsByExamID(examID));
-                valid.validateExam(examID, tmp);
-            }
+            //var examIDs = valid.GetExamIDs();
 
-            Console.Read();
+            //foreach (var examID in examIDs)
+            //{
+            //    var tmp = Mapper.Map<List<AnswerPositionDTO>>(serviceAP.GetAllAnswersPositionsByExamID(examID));
+            //    valid.validateExam(examID, tmp);
+            //}
+
+            var bitmaps = ArchiveUnZiper.GetBitmapsFromZipArchive("E4DA3B7FBBCE2345D7772B0674A318D5.zip");
+            var validator = new DocumentValidator(bitmaps);
+            var examIDs = validator.GetExamIDs();
+            var egzaminAP = serviceAP.GetAllAnswersPositionsByExamID(examIDs.FirstOrDefault());
+            validator.CheckExam(examIDs.First(), Mapper.Map<List<AnswerPositionDTO>>(egzaminAP));
+            
         }
     }
 
