@@ -31,27 +31,39 @@ namespace TestApplication
             QuestionService serviceQ = new QuestionService(dataNew);
             ExamService serviceE = new ExamService(dataNew);
             AnswerPositionService serviceAP = new AnswerPositionService(dataNew);
-            //var iloscpytan = Mapper.Map<ExamDTO>(serviceE.GetByID(5)).QuestionsDTO.Where(x => x.AnswersDTO.Count == 0).ToList().Count();
-            //foreach (var item in Mapper.Map<ExamDTO>(serviceE.GetByID(5)).QuestionsDTO)
-            //{
-            //    var tmpQ = new Question() { QuestionText = item.QuestionText };
-            //    serviceE.AddQuestionToExam(serviceE.GetByID(5).Id, tmpQ);
-            //}
 
-            //var iloscpytan2 = Mapper.Map<ExamDTO>(serviceE.GetByID(5)).QuestionsDTO.Where(x => x.AnswersDTO.Count == 0).ToList().Count();
-            //foreach (var item in Mapper.Map<ExamDTO>(serviceE.GetByID(5)).QuestionsDTO.Where(x => x.AnswersDTO.Count == 0).ToList())
-            //{
-            //    serviceQ.Delete(item.Id);
-            //}
-            //var iloscpytan3 = Mapper.Map<ExamDTO>(serviceE.GetByID(5)).QuestionsDTO.Where(x => x.AnswersDTO.Count == 0).ToList().Count();
+            //Exam exam = new Exam() { Name = "Test Przykładowy" };
+            //Question q1 = new Question() { QuestionText = "Pytanie1" };
+            //Question q2 = new Question() { QuestionText = "Pytanie2" };
 
-           // DocumentCreator dcr = new DocumentCreator(Mapper.Map<ExamDTO>(serviceE.GetByID(5)));
-            // serviceAP.InsertRange(Mapper.Map<List<AnswerPosition>>(dcr.AnswerPositionDTO));
+            //Answer a1 = new Answer() { TextAnswer = "Tak", IfCorrect = true };
+            //Answer a2 = new Answer() { TextAnswer = "Nie", IfCorrect = false };
+            //Answer a3 = new Answer() { TextAnswer = "Tak", IfCorrect = true };
+            //Answer a4 = new Answer() { TextAnswer = "Nie", IfCorrect = false };
 
-            var costam = serviceAP.GetAllAnswersPositionsByExamID(5);
+            //serviceE.Insert(exam);
 
+            //serviceE.AddQuestionToExam(exam,q1);
+            //serviceE.AddQuestionToExam(exam,q2);
 
-            //Console.Read();
+            //serviceQ.AddAnswerToQuestion(q1, a1);
+            //serviceQ.AddAnswerToQuestion(q1, a2);
+            //serviceQ.AddAnswerToQuestion(q2, a3);
+            //serviceQ.AddAnswerToQuestion(q2, a4);
+             
+
+            //DocumentCreator creator = new DocumentCreator(Mapper.Map<ExamDTO>( serviceE.GetByID(6)));
+
+            DocumentValidator valid = new DocumentValidator("lol.zip");
+            var examIDs = valid.GetExamIDs();
+
+            foreach (var examID in examIDs)
+            {
+                var tmp = Mapper.Map<List<AnswerPositionDTO>>(serviceAP.GetAllAnswersPositionsByExamID(examID));
+                valid.validateExam(examID, tmp);
+            }
+
+            Console.Read();
         }
     }
 
@@ -73,7 +85,8 @@ namespace TestApplication
             CreateMap<ExamDTO, Exam>()
                 .ForMember(destination => destination.Questions, opts => opts.Ignore());
 
-            CreateMap<AnswerPosition, AnswerPositionDTO>();
+            CreateMap<AnswerPosition, AnswerPositionDTO>()
+                 .ForMember(destination => destination.AnswerDTO, opts => opts.MapFrom(source => source.Answer)); ;
             CreateMap<AnswerPositionDTO, AnswerPosition>();
         }
     }

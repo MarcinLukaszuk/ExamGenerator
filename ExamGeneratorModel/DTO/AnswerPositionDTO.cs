@@ -15,5 +15,6 @@ namespace ExamGeneratorModel.DTO
         public float Y { get; set; }
         public float Width { get; set; }
         public float Height { get; set; }
+        public virtual AnswerDTO AnswerDTO { get; set; }
     }
 }

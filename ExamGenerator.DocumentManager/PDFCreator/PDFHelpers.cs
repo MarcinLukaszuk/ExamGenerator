@@ -99,10 +99,7 @@ namespace ExamGenerator.DocumentManager.PDFCreator
                 });
 
                 lol = lol == BaseColor.YELLOW ? BaseColor.BLUE : BaseColor.YELLOW;
-                document.Add(new Rectangle(answerPositions.First().X, answerPositions.First().Y - answerPositions.First().Height, answerPositions.First().X + answerPositions.First().Width, answerPositions.First().Y, 0)
-                {
-                    BackgroundColor = lol
-                });
+               
                 end = answerPositions.First().Y;
                 ++i;
             }

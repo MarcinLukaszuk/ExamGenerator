@@ -17,7 +17,6 @@ namespace ExamGeneratorModel.Model
         [ForeignKey("Question")]
         public int QuestionID { get; set; }
         public bool IfCorrect { get; set; }
-
         public virtual Question Question { get; set; }
     }
 }

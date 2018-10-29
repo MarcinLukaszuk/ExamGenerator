@@ -12,7 +12,6 @@ namespace ExamGenerator.DocumentManager
 {
     public class DocumentCreator
     {
-        ExamDTO _exam;
         IPDFDocument doc;
         public List<AnswerPositionDTO> AnswerPositionDTO
         {
@@ -21,6 +20,7 @@ namespace ExamGenerator.DocumentManager
                 return doc.ExamAnswerPositions;
             }
         }
+
         public DocumentCreator(ExamDTO exam)
         {
             doc = new PDFDocument(exam.Id);

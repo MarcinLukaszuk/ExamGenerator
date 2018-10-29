@@ -9,7 +9,7 @@ namespace ExamGenerator.Service.Interfaces
 {
     public interface IAnswerPositionService
     {
-        void InsertRange(List<AnswerPosition> answerPositions);
+        void InsertRange(int examID,List<AnswerPosition> answerPositions);
         List<AnswerPosition> GetAllAnswersPositionsByExamID(int examID);
     }
 }

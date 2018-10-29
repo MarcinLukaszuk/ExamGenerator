@@ -25,8 +25,14 @@ namespace ExamGenerator.Service.Services
             return _context.AnswersPositions.Where(x => x.Answer.Question.Exam.Id == examID).ToList();
         }
 
-        public void InsertRange(List<AnswerPosition> answerPositions)
+        public void InsertRange(int examID, List<AnswerPosition> answerPositions)
         {
+            var answersPositions = GetAllAnswersPositionsByExamID(examID);
+            if (answersPositions.Any())
+            {
+                _context.AnswersPositions.RemoveRange(answersPositions);
+                _context.SaveChanges();
+            }
             _context.AnswersPositions.AddRange(answerPositions);
             _context.SaveChanges();
         }
