@@ -26,7 +26,7 @@ namespace ExamGenerator.DocumentManager
                 {
                     var whitePixels = countBlackPixels(btm);
                     var blackPixels = countAllPixels(btm) - whitePixels;
-
+                    btm.Dispose();
                     if (blackPixels >= whitePixels)
                     {
                         return true;
@@ -66,15 +66,16 @@ namespace ExamGenerator.DocumentManager
             }
 
             if (leftQRCode == null && rightQRCode == null)
+            {
                 bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
 
-            using (var leftBtm = getLeftQRCode(bitmap))
-            using (var rightBtm = getRightQRCode(bitmap))
-            {
-                leftQRCode = QrCodeEncoderDecoder.Decode(leftBtm);
-                rightQRCode = QrCodeEncoderDecoder.Decode(rightBtm);
+                using (var leftBtm = getLeftQRCode(bitmap))
+                using (var rightBtm = getRightQRCode(bitmap))
+                {
+                    leftQRCode = QrCodeEncoderDecoder.Decode(leftBtm);
+                    rightQRCode = QrCodeEncoderDecoder.Decode(rightBtm);
+                }
             }
-
             if (leftQRCode != null && leftQRCode == rightQRCode && int.TryParse(rightQRCode.Split('/')?[1], out int result))
                 return result;
             return 0;
@@ -113,48 +114,51 @@ namespace ExamGenerator.DocumentManager
 
         private static Bitmap extractOnlyCheckbox(Bitmap answerBitmap)
         {
-            answerBitmap =   bynarize(new Bitmap(answerBitmap, new Size(answerBitmap.Width * 4, answerBitmap.Height * 4)));
-          
+            answerBitmap = new Bitmap(answerBitmap, new Size(answerBitmap.Width * 4, answerBitmap.Height * 4));
+
             Image<Bgr, byte> img = new Image<Bgr, byte>(answerBitmap);
             var imageGray = img.Convert<Gray, byte>();
             var imageBynarize = new Image<Gray, byte>(imageGray.Width, imageGray.Height, new Gray(0));
-            CvInvoke.Threshold(imageGray, imageBynarize, 0, 255, ThresholdType.BinaryInv | ThresholdType.Otsu);
-            
-            List<RotatedRect> boxList = new List<RotatedRect>(); //a box is a rotated rectangle
-            UMat cannyEdges = new UMat();
-            double cannyThreshold = 180.0;
-            double cannyThresholdLinking = 120.0;
-            CvInvoke.Canny(imageBynarize, cannyEdges, cannyThreshold, cannyThresholdLinking);
-            using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
-            {
-                CvInvoke.FindContours(cannyEdges, contours, null, RetrType.List, ChainApproxMethod.ChainApproxSimple);
-                int count = contours.Size;
-                for (int i = 0; i < count; i++)
-                {
-                    using (VectorOfPoint contour = contours[i])
-                    using (VectorOfPoint approxContour = new VectorOfPoint())
-                    {
-                        CvInvoke.ApproxPolyDP(contour, approxContour, CvInvoke.ArcLength(contour, true) * 0.05, true);
-                        if (CvInvoke.ContourArea(approxContour, false) > 250)
-                        {
-                            if (approxContour.Size == 4)
-                            {
-                                bool isRectangle = true;
-                                Point[] pts = approxContour.ToArray();
-                                LineSegment2D[] edges = PointCollection.PolyLine(pts, true);
+            CvInvoke.Threshold(imageGray, imageBynarize, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
 
-                                for (int j = 0; j < edges.Length; j++)
+            List<RotatedRect> boxList = new List<RotatedRect>(); //a box is a rotated rectangle
+
+            using (UMat cannyEdges = new UMat())
+            {
+                double cannyThreshold = 180.0;
+                double cannyThresholdLinking = 120.0;
+                CvInvoke.Canny(imageBynarize, cannyEdges, cannyThreshold, cannyThresholdLinking);
+                using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+                {
+                    CvInvoke.FindContours(cannyEdges, contours, null, RetrType.List, ChainApproxMethod.ChainApproxSimple);
+                    int count = contours.Size;
+                    for (int i = 0; i < count; i++)
+                    {
+                        using (VectorOfPoint contour = contours[i])
+                        using (VectorOfPoint approxContour = new VectorOfPoint())
+                        {
+                            CvInvoke.ApproxPolyDP(contour, approxContour, CvInvoke.ArcLength(contour, true) * 0.05, true);
+                            if (CvInvoke.ContourArea(approxContour, false) > 250)
+                            {
+                                if (approxContour.Size == 4)
                                 {
-                                    double angle = Math.Abs(
-                                       edges[(j + 1) % edges.Length].GetExteriorAngleDegree(edges[j]));
-                                    if (angle < 80 || angle > 100)
+                                    bool isRectangle = true;
+                                    Point[] pts = approxContour.ToArray();
+                                    LineSegment2D[] edges = PointCollection.PolyLine(pts, true);
+
+                                    for (int j = 0; j < edges.Length; j++)
                                     {
-                                        isRectangle = false;
-                                        break;
+                                        double angle = Math.Abs(
+                                           edges[(j + 1) % edges.Length].GetExteriorAngleDegree(edges[j]));
+                                        if (angle < 80 || angle > 100)
+                                        {
+                                            isRectangle = false;
+                                            break;
+                                        }
                                     }
+                                    if (isRectangle)
+                                        boxList.Add(CvInvoke.MinAreaRect(approxContour));
                                 }
-                                if (isRectangle)
-                                    boxList.Add(CvInvoke.MinAreaRect(approxContour));
                             }
                         }
                     }
@@ -169,7 +173,8 @@ namespace ExamGenerator.DocumentManager
             int absoluteX = (int)(centerX - (edgeLenght / 2));
             int absoluteY = (int)(centerY - (edgeLenght / 2));
             Rectangle cloneRect = new Rectangle(absoluteX, absoluteY, edgeLenght, edgeLenght);
-            return answerBitmap.Clone(cloneRect, answerBitmap.PixelFormat);
+
+            return imageBynarize.ToBitmap().Clone(cloneRect, answerBitmap.PixelFormat);
         }
         private static int countBlackPixels(Bitmap bitmap)
         {

@@ -46,13 +46,13 @@ namespace ExamGenerator.DocumentManager
             foreach (var bitmap in bitmapList)
             {
                 var pageNumber = BitmapAnalXD.GetExamPage(bitmap);
-                var pageAnswers = answerPositionsDTO.Where(x => x.PageNumber == pageNumber).ToList();
+                var pageAnswers = answerPositionsDTO.Where(x => x.PageNumber == pageNumber).OrderBy(x=>x.Y).ToList();
 
                 foreach (var answer in pageAnswers)
                 {
                     var answerBitmap = BitmapAnalXD.GetAnswerBitmap(bitmap, answer);
                     var answerBitmapp = BitmapAnalXD.CheckAnswerValue(answerBitmap);
-                  
+                    Console.WriteLine(answerBitmapp==answer.AnswerDTO.IfCorrect?"Dobrze":"Zle");
                 }
             }
         }

@@ -11,6 +11,7 @@ using ExamGeneratorModel.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace TestApplication
 {
@@ -69,8 +70,9 @@ namespace TestApplication
             var validator = new DocumentValidator(bitmaps);
             var examIDs = validator.GetExamIDs();
             var egzaminAP = serviceAP.GetAllAnswersPositionsByExamID(examIDs.FirstOrDefault());
+     
             validator.CheckExam(examIDs.First(), Mapper.Map<List<AnswerPositionDTO>>(egzaminAP));
-            
+         
         }
     }
 
