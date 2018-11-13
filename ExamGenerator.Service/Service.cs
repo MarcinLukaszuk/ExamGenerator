@@ -1,4 +1,5 @@
-﻿using ExamGenerator.Service.EF;
+﻿
+using ExamGeneratorModel;
 using ExamGeneratorModel.Model;
 using System;
 using System.Collections.Generic;
@@ -12,15 +13,13 @@ namespace ExamGenerator.Service
 {
 
     public abstract class Service<TEntity> : IService<TEntity> where TEntity : Entity
-    {
-        private readonly IDataModelEF _dataModelEF;
-        private readonly DbContext _context;
+    { 
+        private readonly IDbContext _context;
         private readonly DbSet<TEntity> _dbSet;
     
-        public Service(IDataModelEF dataModelEF)
-        {
-            _dataModelEF = dataModelEF;
-            _context = _dataModelEF.GetContext();
+        public Service(IDbContext dbContext)
+        { 
+            _context = (IDbContext)dbContext;
             _dbSet = _context.Set<TEntity>();
         }
 

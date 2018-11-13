@@ -1,4 +1,4 @@
-﻿using ExamGenerator.Service.EF;
+﻿
 using ExamGenerator.Service.Interfaces;
 using ExamGeneratorModel;
 using ExamGeneratorModel.Model;
@@ -13,12 +13,10 @@ namespace ExamGenerator.Service.Services
 {
     public class ExamService : Service<Exam>, IExamService
     {
-        private readonly IDataModelEF _dataModelEF;
-        private readonly ExamGeneratorDBContext _context;
-        public ExamService(IDataModelEF dataModelEF) : base(dataModelEF)
-        {
-            _dataModelEF = dataModelEF;
-            _context = _dataModelEF.GetContext();
+         private readonly IDbContext _context;
+        public ExamService(IDbContext dbContext) : base(dbContext)
+        { 
+            _context =  dbContext;
         }
         public void AddQuestionToExam(int examID, Question question)
         {

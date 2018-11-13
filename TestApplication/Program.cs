@@ -3,9 +3,9 @@ using AutoMapper;
 using ExamGenerator.DocumentManager;
 using ExamGenerator.DocumentManager.QRCodeGenerator;
 using ExamGenerator.DocumentManager.UnZipArchive;
-using ExamGenerator.Service.EF;
 using ExamGenerator.Service.Interfaces;
 using ExamGenerator.Service.Services;
+using ExamGeneratorModel;
 using ExamGeneratorModel.DTO;
 using ExamGeneratorModel.Model;
 using System;
@@ -27,12 +27,13 @@ namespace TestApplication
             //builder.RegisterType<AnswerService>().As<IAnswerService>();
             //builder.Build();
 
-            var data = new DataModelEF();
-            var dataNew = data.GetNewInstance();
-            AnswerService serviceA = new AnswerService(dataNew);
-            QuestionService serviceQ = new QuestionService(dataNew);
-            ExamService serviceE = new ExamService(dataNew);
-            AnswerPositionService serviceAP = new AnswerPositionService(dataNew);
+            ExamGeneratorDBContext cont = new ExamGeneratorDBContext();
+
+         
+            AnswerService serviceA = new AnswerService(cont);
+            QuestionService serviceQ = new QuestionService(cont);
+            ExamService serviceE = new ExamService(cont);
+            AnswerPositionService serviceAP = new AnswerPositionService(cont);
 
             //Exam exam = new Exam() { Name = "Test Przykładowy" };
             //Question q1 = new Question() { QuestionText = "Pytanie1" };
@@ -70,9 +71,12 @@ namespace TestApplication
             var validator = new DocumentValidator(bitmaps);
             var examIDs = validator.GetExamIDs();
             var egzaminAP = serviceAP.GetAllAnswersPositionsByExamID(examIDs.FirstOrDefault());
-     
-            validator.CheckExam(examIDs.First(), Mapper.Map<List<AnswerPositionDTO>>(egzaminAP));
-         
+
+           var lool= serviceE.GetAll();
+
+
+          //  validator.CheckExam(examIDs.First(), Mapper.Map<List<AnswerPositionDTO>>(egzaminAP));
+
         }
     }
 

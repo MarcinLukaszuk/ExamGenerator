@@ -49,8 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EF\DataModelEF.cs" />
-    <Compile Include="EF\IDataModelEF.cs" />
     <Compile Include="Interfaces\IAnswerPositionService.cs" />
     <Compile Include="Interfaces\IAnswerService.cs" />
     <Compile Include="Interfaces\IExamService.cs" />
