@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamGenerator.Service", "Ex
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamGenerator.DocumentManager", "ExamGenerator.DocumentManager\ExamGenerator.DocumentManager.csproj", "{7E4CBE6A-21DC-499A-AE41-716BA3317C79}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamGenerator.UnitTests", "ExamGenerator.UnitTests\ExamGenerator.UnitTests.csproj", "{D1AABBD6-D221-4D81-8452-F35BE37D8A0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{7E4CBE6A-21DC-499A-AE41-716BA3317C79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E4CBE6A-21DC-499A-AE41-716BA3317C79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E4CBE6A-21DC-499A-AE41-716BA3317C79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1AABBD6-D221-4D81-8452-F35BE37D8A0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1AABBD6-D221-4D81-8452-F35BE37D8A0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1AABBD6-D221-4D81-8452-F35BE37D8A0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1AABBD6-D221-4D81-8452-F35BE37D8A0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

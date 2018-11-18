@@ -20,11 +20,11 @@ namespace ExamGeneratorModel
     }
     public class ExamGeneratorDBContext : DbContext, IDbContext
     {
-        public DbSet<Exam> Exams { get; set; }
-        public DbSet<Answer> Answer { get; set; }
-        public DbSet<Question> Questions { get; set; }
-        public DbSet<AnswerPosition> AnswersPositions { get; set; }
+        public virtual DbSet<Exam> Exams { get; set; }
+        public virtual DbSet<Answer> Answer { get; set; }
+        public virtual DbSet<Question> Questions { get; set; }
+        public virtual DbSet<AnswerPosition> AnswersPositions { get; set; }
 
-         void IDbContext.SaveChanges()        {                  }
+         void IDbContext.SaveChanges(){}
     }
 }
