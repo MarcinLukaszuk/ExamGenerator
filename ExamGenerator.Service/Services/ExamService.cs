@@ -18,6 +18,19 @@ namespace ExamGenerator.Service.Services
         { 
             _context =  dbContext;
         }
+
+        public void AddQuestionsToExam(int examID, List<Question> questions)
+        {
+            foreach (var question in questions)            
+                AddQuestionToExam(examID, question);            
+        }
+
+        public void AddQuestionsToExam(Exam exam, List<Question> questions)
+        {
+            foreach (var question in questions)
+                AddQuestionToExam(exam, question);
+        }
+
         public void AddQuestionToExam(int examID, Question question)
         {
             var exam = Find(examID);
@@ -73,5 +86,7 @@ namespace ExamGenerator.Service.Services
             _context.Exams.Remove(examToRemove);
             _context.SaveChanges();
         }
+
+     
     }
 }

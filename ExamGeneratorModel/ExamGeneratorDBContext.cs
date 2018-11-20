@@ -16,15 +16,16 @@ namespace ExamGeneratorModel
         DbSet<Question> Questions { get; set; }
         DbSet<AnswerPosition> AnswersPositions { get; set; }
         Task<int> SaveChangesAsync();
-        void SaveChanges();
+        int SaveChanges();
     }
     public class ExamGeneratorDBContext : DbContext, IDbContext
     {
+        public ExamGeneratorDBContext() : base("Name=DefaultConnection")
+        { }
         public virtual DbSet<Exam> Exams { get; set; }
         public virtual DbSet<Answer> Answer { get; set; }
         public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<AnswerPosition> AnswersPositions { get; set; }
-
-         void IDbContext.SaveChanges(){}
+        
     }
 }

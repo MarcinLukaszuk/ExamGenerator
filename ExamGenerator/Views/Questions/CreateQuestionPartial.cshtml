@@ -1,0 +1,33 @@
+﻿@model ExamGeneratorModel.ViewModel.ExamViewModel
+@{
+    int i = ViewBag.index ?? 0;
+}
+
+@{
+    ViewBag.Title = "Create";
+}
+<div id="question_@i" tag="0">
+    <div class="form-group">
+        @Html.LabelFor(model => model.Questions[i].QuestionText, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.EditorFor(model => model.Questions[i].Remove, new { htmlAttributes = new { @class = "form-control hidden" } })
+
+        <div class="col-md-7">
+            @Html.EditorFor(model => model.Questions[i].QuestionText, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Questions[i].QuestionText, "", new { @class = "text-danger" })
+
+        </div>
+        <div class="col-md-3">
+            @Ajax.ActionLink(linkText: "Add Answer", actionName: "CreateAnswerPartial", controllerName: "Answers", routeValues: new {questionID=i, index = 0 }, ajaxOptions: new AjaxOptions{
+        InsertionMode = InsertionMode.InsertAfter,
+        UpdateTargetId = "question_" + i,
+        OnSuccess = "answerIterate('" + i+"');",
+        HttpMethod = "POST"
+    },
+    htmlAttributes: new { id = "addAnswer"+i, @class = "btn btn-success" })
+            <button type="button" class="btn btn-danger">Remove Question</button>
+        </div>
+    </div>
+    </div>
+
+
+
