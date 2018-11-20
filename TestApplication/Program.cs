@@ -30,10 +30,10 @@ namespace TestApplication
             ExamGeneratorDBContext cont = new ExamGeneratorDBContext();
 
          
-            AnswerService serviceA = new AnswerService(cont);
-            QuestionService serviceQ = new QuestionService(cont);
-            ExamService serviceE = new ExamService(cont);
-            AnswerPositionService serviceAP = new AnswerPositionService(cont);
+           // AnswerService serviceA = new AnswerService(cont);
+           // QuestionService serviceQ = new QuestionService(cont);
+           // ExamService serviceE = new ExamService(cont);
+//AnswerPositionService serviceAP = new AnswerPositionService(cont);
 
             //Exam exam = new Exam() { Name = "Test Przykładowy" };
             //Question q1 = new Question() { QuestionText = "Pytanie1" };
@@ -70,9 +70,9 @@ namespace TestApplication
             var bitmaps = ArchiveUnZiper.GetBitmapsFromZipArchive("E4DA3B7FBBCE2345D7772B0674A318D5.zip");
             var validator = new DocumentValidator(bitmaps);
             var examIDs = validator.GetExamIDs();
-            var egzaminAP = serviceAP.GetAllAnswersPositionsByExamID(examIDs.FirstOrDefault());
+          //  var egzaminAP = serviceAP.GetAllAnswersPositionsByExamID(examIDs.FirstOrDefault());
 
-           var lool= serviceE.GetAll();
+           //var lool= serviceE.GetAll();
 
 
           //  validator.CheckExam(examIDs.First(), Mapper.Map<List<AnswerPositionDTO>>(egzaminAP));

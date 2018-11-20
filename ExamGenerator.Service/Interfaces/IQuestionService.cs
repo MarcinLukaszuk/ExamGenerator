@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ExamGenerator.Service.Interfaces
 {
-    public interface IQuestionService
+    public interface IQuestionService : IService<Question>
     {
         void AddAnswerToQuestion(Question question, Answer answer);
         void AddAnswerToQuestion(int questionID, Answer answer);

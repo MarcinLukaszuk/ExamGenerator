@@ -52,9 +52,10 @@ namespace ExamGenerator.Controllers
         // GET: Exams/Create
         public ActionResult Create()
         {
-            ExamViewModel model = new ExamViewModel();
-            return View(model);
+            var tmp = new ExamViewModel();
+            return View(tmp);
         }
+
 
 
         // POST: Exams/Create
@@ -67,6 +68,7 @@ namespace ExamGenerator.Controllers
             Exam tmpExam;
             Question tmpQuestion;
             Answer tmpAnswer;
+
             if (ModelState.IsValid)
             {
                 tmpExam = Mapper.Map<Exam>(examViewModel);
@@ -94,11 +96,12 @@ namespace ExamGenerator.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Exam exam = _examService.Find(id);
-            if (exam == null)
+            var examViewModel = Mapper.Map<ExamViewModel>(exam);
+            if (examViewModel == null)
             {
                 return HttpNotFound();
             }
-            return View(exam);
+            return View(examViewModel);
         }
 
         // POST: Exams/Edit/5
@@ -106,14 +109,15 @@ namespace ExamGenerator.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name")] Exam exam)
+        public ActionResult Edit([Bind(Include = "Id,Name,Questions")] ExamViewModel examViewModel)
         {
+            Exam editedExam = Mapper.Map<Exam>(examViewModel);
             if (ModelState.IsValid)
             {
-                _examService.Update(exam);
+                _examService.Update(editedExam);
                 return RedirectToAction("Index");
             }
-            return View(exam);
+            return View(examViewModel);
         }
 
         // GET: Exams/Delete/5

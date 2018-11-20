@@ -58,29 +58,33 @@ namespace ExamGenerator
             CreateMap<ExamDTO, Exam>()
                 .ForMember(destination => destination.Questions, opts => opts.MapFrom(source => source.QuestionsDTO));
             CreateMap<ExamViewModel, Exam>()
-                .ForMember(destination => destination.Questions, opts => opts.Ignore());
+                    .ForMember(destination => destination.Questions, opts => opts.MapFrom(source => source.Questions));
+            CreateMap<Exam, ExamViewModel>()
+                               .ForMember(destination => destination.Questions, opts => opts.MapFrom(source => source.Questions));
 
 
             CreateMap<Question, QuestionDTO>()
-             .ForMember(
-             destination => destination.AnswersDTO,
+             .ForMember(destination => destination.AnswersDTO,
             opts => opts.MapFrom(source => source.Answers));
             CreateMap<QuestionDTO, Question>();
             CreateMap<QuestionViewModel, Question>()
-                .ForMember(destination => destination.Answers, opts => opts.Ignore());
+               .ForMember(destination => destination.Answers, opts => opts.MapFrom(source => source.Answers));
+            CreateMap<Question, QuestionViewModel>()
+                .ForMember(destination => destination.Answers, opts => opts.MapFrom(source => source.Answers));
 
 
 
             CreateMap<Answer, AnswerDTO>();
             CreateMap<AnswerDTO, Answer>();
             CreateMap<AnswerViewModel, Answer>();
-
+            CreateMap<Answer, AnswerViewModel>();
 
 
 
             CreateMap<AnswerPosition, AnswerPositionDTO>()
                  .ForMember(destination => destination.AnswerDTO, opts => opts.MapFrom(source => source.Answer)); ;
             CreateMap<AnswerPositionDTO, AnswerPosition>();
+
         }
     }
 }

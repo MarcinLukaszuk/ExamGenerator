@@ -42,8 +42,8 @@ namespace ExamGenerator.UnitTests
             ctx.Setup(c => c.Questions).Returns(mockDbSet2.Object);
 
             var fakectx = ctx.Object;
-            ExamService service = new ExamService(fakectx);
-            QuestionService qservice = new QuestionService(fakectx);
+           // ExamService service = new ExamService(fakectx);
+           // QuestionService qservice = new QuestionService(fakectx);
                var examTmp = new Exam()
             {
                 Id = 1,
@@ -55,14 +55,14 @@ namespace ExamGenerator.UnitTests
                 QuestionText = "JakiesPytanie"
             };
 
-            service.Insert(examTmp);
+           // service.Insert(examTmp);
           
-            service.AddQuestionToExam(1, question);
+         ///   service.AddQuestionToExam(1, question);
 
 
 
-             var tmp = service.GetAll().FirstOrDefault();
-            var tmp2 = qservice.GetAll().FirstOrDefault();
+          //   var tmp = service.GetAll().FirstOrDefault();
+          //  var tmp2 = qservice.GetAll().FirstOrDefault();
         }
     }
     static class ServiceTestsHelper

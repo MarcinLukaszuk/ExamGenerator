@@ -3,10 +3,10 @@
 @{
     ViewBag.Title = "Create";
 }
-
+@index
 <h2>Create</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Create", "Exams"))
 {
     @Html.AntiForgeryToken()
 
@@ -15,7 +15,6 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-
         <div class="form-group">
             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-7">
@@ -23,27 +22,47 @@
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
             <div class="col-md-3">
-                @Ajax.ActionLink(linkText: "Add Question", actionName: "CreateQuestionPartial", controllerName: "Questions", routeValues: new { index = index }, ajaxOptions: new AjaxOptions{
-         InsertionMode = InsertionMode.InsertAfter,
-         UpdateTargetId = "question-group",
-         OnSuccess = "questionIterate",
-         HttpMethod = "POST"
-      },
-      htmlAttributes: new { id = "addQuestion", @class = "btn btn-primary" })
-            </div>
+               
+                        <input type="submit" value="Add Question" formaction= @Url.Action("AddQuestionCreate", "Questions", new { }) class="btn btn-primary" />
+                    </div>
         </div>
 
-        <div id="question-group"></div>
+        @for (int i = 0; i < Model.Questions.Count(); i++)
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.Questions[i].QuestionText, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-7">
+                    @Html.EditorFor(model => model.Questions[i].QuestionText, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Questions[i].QuestionText, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-3">
+                    <input type="submit" value="Add Answer" formaction=@Url.Action("AddAnswerCreate","Exams",new { questionID =i}) class="btn btn-success" />
+                    <input type="submit" value="Remove Question" formaction=@Url.Action("RemoveQuestionCreate","Questions",new { questionID =i }) class="btn btn-danger" />
+                </div>
+            </div>
 
-
+            for (int j = 0; j < Model.Questions[i].Answers.Count(); j++)
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => Model.Questions[i].Answers[j].TextAnswer, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-7">
+                        @Html.EditorFor(model => Model.Questions[i].Answers[j].TextAnswer, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => Model.Questions[i].Answers[j].TextAnswer, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-3">
+                        <input type="submit" value="Remove Answer" formaction=@Url.Action("RemoveAnswerCreate","Exams",new {questionID =i , answerID  = j}) class="btn btn-danger" />
+                    </div>
+                </div>
+            }
+        }
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" formaction="Create" class="btn btn-default" />
             </div>
         </div>
     </div>
-} 
+}
 
 
 <div>

@@ -12,6 +12,5 @@ namespace ExamGeneratorModel.ViewModel
         public string TextAnswer { get; set; }
         public int QuestionID { get; set; }
         public bool IfCorrect { get; set; }
-        public bool Remove  { get; set; }
     }
 }

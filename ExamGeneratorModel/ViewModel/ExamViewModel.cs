@@ -16,7 +16,7 @@ namespace ExamGeneratorModel.ViewModel
             Questions = new List<QuestionViewModel>();
         }
         public int Id { get; set; }
-        [Required, DisplayName("Exam Name"), DataType(DataType.MultilineText)]  
+        [ DisplayName("Exam Name"), DataType(DataType.MultilineText)]  
         public string Name { get; set; }
         public virtual List<QuestionViewModel> Questions { get; set; }
     }

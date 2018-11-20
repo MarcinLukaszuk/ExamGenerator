@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using ExamGenerator.Service.Interfaces;
 using ExamGeneratorModel;
 using ExamGeneratorModel.Model;
 using ExamGeneratorModel.ViewModel;
@@ -14,13 +15,21 @@ namespace ExamGenerator.Controllers
 {
     public class QuestionsController : Controller
     {
-        private ExamGeneratorDBContext db = new ExamGeneratorDBContext();
+        private IExamService _examService;
+        private IAnswerService _answerService;
+        private IQuestionService _questionService;
 
+        public QuestionsController() { }
+        public QuestionsController(IExamService examService, IAnswerService answerService, IQuestionService questionService)
+        {
+            _examService = examService;
+            _answerService = answerService;
+            _questionService = questionService;
+        } 
         // GET: Questions
         public ActionResult Index()
         {
-            var questions = db.Questions.Include(q => q.Exam);
-            return View(questions.ToList());
+            return View(_questionService.GetAll());
         }
 
         // GET: Questions/Details/5
@@ -30,30 +39,49 @@ namespace ExamGenerator.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Question question = db.Questions.Find(id);
+            Question question = _questionService.Find(id);
             if (question == null)
             {
                 return HttpNotFound();
             }
             return View(question);
         }
-
-        [HttpPost]
-        public ActionResult CreateQuestionPartial([Bind(Include = "Id,Name")] ExamViewModel model, int? index)
-        {
-            ViewBag.Index = index ?? 0;
-            for (int i = 0; i <= index+1; i++)
-            {
-                model.Questions.Add(new QuestionViewModel() { Remove = false });
-            }
-
-            return PartialView(model);
-        }
+        
         // GET: Questions/Create
         public ActionResult Create()
         {
-            ViewBag.ExamID = new SelectList(db.Exams, "Id", "Name");
+            ViewBag.ExamID = new SelectList(_examService.GetAll(), "Id", "Name");
             return View();
+        }
+
+
+        public ActionResult AddQuestionCreate([Bind(Include = "Id,Name,Questions")] ExamViewModel examViewModel)
+        {
+            ModelState.Clear();
+            examViewModel.Questions.Add(new QuestionViewModel() { ExamID= examViewModel .Id});
+            return View("~/Views/Exams/Create.cshtml", examViewModel);
+        }
+
+        public ActionResult RemoveQuestionCreate([Bind(Include = "Id,Name,Questions")] ExamViewModel examViewModel, int? questionID)
+        {
+            ModelState.Clear();
+            if (questionID != null)
+                examViewModel.Questions.RemoveAt((int)questionID);
+            return View("~/Views/Exams/Create.cshtml", examViewModel);
+        }
+
+        public ActionResult AddQuestionEdit([Bind(Include = "Id,Name,Questions")] ExamViewModel examViewModel)
+        {
+            ModelState.Clear();
+            examViewModel.Questions.Add(new QuestionViewModel() { ExamID = examViewModel.Id });
+            return View("~/Views/Exams/Edit.cshtml", examViewModel);
+        }
+        public ActionResult RemoveQuestionEdit([Bind(Include = "Id,Name,Questions")] ExamViewModel examViewModel, int? questionID)
+        {
+            ModelState.Clear();
+            if (questionID != null)
+                examViewModel.Questions.RemoveAt((int)questionID);
+            return View("~/Views/Exams/Edit.cshtml", examViewModel);
         }
 
         // POST: Questions/Create
@@ -65,12 +93,12 @@ namespace ExamGenerator.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Questions.Add(question);
-                db.SaveChanges();
+               _questionService.Insert(question);
+               
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ExamID = new SelectList(db.Exams, "Id", "Name", question.ExamID);
+            ViewBag.ExamID = new SelectList(_examService.GetAll(), "Id", "Name", question.ExamID);
             return View(question);
         }
 
@@ -81,12 +109,12 @@ namespace ExamGenerator.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Question question = db.Questions.Find(id);
+            Question question = _questionService.Find(id);
             if (question == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ExamID = new SelectList(db.Exams, "Id", "Name", question.ExamID);
+            ViewBag.ExamID = new SelectList(_examService.GetAll(), "Id", "Name", question.ExamID);
             return View(question);
         }
 
@@ -99,11 +127,10 @@ namespace ExamGenerator.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(question).State = EntityState.Modified;
-                db.SaveChanges();
+                _questionService.Update(question); 
                 return RedirectToAction("Index");
             }
-            ViewBag.ExamID = new SelectList(db.Exams, "Id", "Name", question.ExamID);
+            ViewBag.ExamID = new SelectList(_examService.GetAll(), "Id", "Name", question.ExamID);
             return View(question);
         }
 
@@ -114,7 +141,7 @@ namespace ExamGenerator.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Question question = db.Questions.Find(id);
+            Question question = _questionService.Find(id);
             if (question == null)
             {
                 return HttpNotFound();
@@ -127,18 +154,13 @@ namespace ExamGenerator.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Question question = db.Questions.Find(id);
-            db.Questions.Remove(question);
-            db.SaveChanges();
+            Question question = _questionService.Find(id);
+            _questionService.Delete(question); 
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+        { 
             base.Dispose(disposing);
         }
     }

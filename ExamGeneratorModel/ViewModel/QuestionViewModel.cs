@@ -16,6 +16,5 @@ namespace ExamGeneratorModel.ViewModel
         public int ExamID { get; set; }
         public string QuestionText { get; set; }
         public virtual List<AnswerViewModel> Answers { get; set; }
-        public bool Remove { get; set; }
     }
 }

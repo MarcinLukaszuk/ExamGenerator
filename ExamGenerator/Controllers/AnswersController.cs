@@ -26,15 +26,7 @@ namespace ExamGenerator.Controllers
         public ActionResult CreateAnswerPartial([Bind(Include = "Id,Name")] ExamViewModel model, int? questionID, int? index)
         {
             ViewBag.tmpQuestionID = questionID ?? 0;
-            ViewBag.tmpAnswerID = index ?? 0;
-            for (int i = 0; i <= questionID + 1; i++)
-            {
-                model.Questions.Add(new QuestionViewModel() { Remove = false });
-            }
-            for (int i = 0; i <= index + 1; i++)
-            {
-                model.Questions[(int)questionID].Answers.Add(new AnswerViewModel() { Remove = false });
-            }
+
             return PartialView(model);
         }
 
@@ -54,6 +46,35 @@ namespace ExamGenerator.Controllers
             return View(answer);
         }
 
+        public ActionResult AddAnswerCreate([Bind(Include = "Id,Name,Questions")] ExamViewModel examViewModel, int? questionID)
+        {
+            ModelState.Clear();
+            examViewModel.Questions[(int)questionID].Answers.Add(new AnswerViewModel() { QuestionID = examViewModel.Questions[(int)questionID].Id });
+            return View("~/Views/Exams/Create.cshtml", examViewModel);
+        }
+
+        public ActionResult RemoveAnswerCreate([Bind(Include = "Id,Name,Questions")] ExamViewModel examViewModel, int? questionID, int? answerID)
+        {
+            ModelState.Clear();
+            if (questionID != null)
+                examViewModel.Questions[(int)questionID].Answers.RemoveAt((int)answerID);
+            return View("~/Views/Exams/Create.cshtml", examViewModel);
+        }
+
+        public ActionResult AddAnswerEdit([Bind(Include = "Id,Name,Questions")] ExamViewModel examViewModel, int? questionID)
+        {
+            ModelState.Clear();
+            examViewModel.Questions[(int)questionID].Answers.Add(new AnswerViewModel() { QuestionID = examViewModel.Questions[(int)questionID].Id });
+            return View("~/Views/Exams/Edit.cshtml", examViewModel);
+        }
+
+        public ActionResult RemoveAnswerEdit([Bind(Include = "Id,Name,Questions")] ExamViewModel examViewModel, int? questionID, int? answerID)
+        {
+            ModelState.Clear();
+            if (questionID != null)
+                examViewModel.Questions[(int)questionID].Answers.RemoveAt((int)answerID);
+            return View("~/Views/Exams/Edit.cshtml", examViewModel);
+        }
         // GET: Answers/Create
         public ActionResult Create()
         {
