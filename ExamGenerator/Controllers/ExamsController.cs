@@ -53,7 +53,6 @@ namespace ExamGenerator.Controllers
         public ActionResult Create()
         {
             ExamViewModel model = new ExamViewModel();
-            model.Questions = new List<QuestionViewModel>();
             return View(model);
         }
 
@@ -78,8 +77,8 @@ namespace ExamGenerator.Controllers
                     _examService.AddQuestionToExam(tmpExam, tmpQuestion);
                     foreach (var answer in question.Answers)
                     {
-                        tmpAnswer= Mapper.Map<Answer>(answer); ;
-                        _questionService.AddAnswerToQuestion(tmpQuestion,tmpAnswer);
+                        tmpAnswer = Mapper.Map<Answer>(answer); ;
+                        _questionService.AddAnswerToQuestion(tmpQuestion, tmpAnswer);
                     }
                 }
                 return RedirectToAction("Index");
@@ -87,22 +86,6 @@ namespace ExamGenerator.Controllers
 
             return View(examViewModel);
         }
-
-        [HttpPost]
-        public ActionResult TMP([Bind(Include = "Id,Name,Questions")] ExamViewModel examViewModel)
-        {
-            Exam tmpExam;
-            Question tmpQuestion;
-            Answer tmpAnswer;
-            if (ModelState.IsValid)
-            {
-                 
-               
-            }
-
-            return RedirectToAction("Index");
-        }
-
         // GET: Exams/Edit/5
         public ActionResult Edit(int? id)
         {
