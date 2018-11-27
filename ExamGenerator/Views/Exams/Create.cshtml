@@ -3,7 +3,6 @@
 @{
     ViewBag.Title = "Create";
 }
-@index
 <h2>Create</h2>
 
 @using (Html.BeginForm("Create", "Exams"))
@@ -36,7 +35,7 @@
                     @Html.ValidationMessageFor(model => model.Questions[i].QuestionText, "", new { @class = "text-danger" })
                 </div>
                 <div class="col-md-3">
-                    <input type="submit" value="Add Answer" formaction=@Url.Action("AddAnswerCreate","Exams",new { questionID =i}) class="btn btn-success" />
+                    <input type="submit" value="Add Answer" formaction=@Url.Action("AddAnswerCreate","Answers",new { questionID =i}) class="btn btn-success" />
                     <input type="submit" value="Remove Question" formaction=@Url.Action("RemoveQuestionCreate","Questions",new { questionID =i }) class="btn btn-danger" />
                 </div>
             </div>
@@ -50,7 +49,7 @@
                         @Html.ValidationMessageFor(model => Model.Questions[i].Answers[j].TextAnswer, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-md-3">
-                        <input type="submit" value="Remove Answer" formaction=@Url.Action("RemoveAnswerCreate","Exams",new {questionID =i , answerID  = j}) class="btn btn-danger" />
+                        <input type="submit" value="Remove Answer" formaction=@Url.Action("RemoveAnswerCreate","Answers",new {questionID =i , answerID  = j}) class="btn btn-danger" />
                     </div>
                 </div>
             }
@@ -58,7 +57,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" formaction="Create" class="btn btn-default" />
+                <input type="submit" value="Create" formaction=@Url.Action("Create","Exams",new {}) class="btn btn-default" />
             </div>
         </div>
     </div>

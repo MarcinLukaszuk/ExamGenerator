@@ -13,5 +13,6 @@ namespace ExamGenerator.DocumentManager
         void SaveDocument();
         List<AnswerPositionDTO> ExamAnswerPositions { get; }
         string Filename { get; }
+        string Filepath{ get; }
     }
 }

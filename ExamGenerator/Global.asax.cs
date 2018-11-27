@@ -41,6 +41,7 @@ namespace ExamGenerator
             builder.RegisterType<ExamService>().As<IExamService>();
             builder.RegisterType<QuestionService>().As<IQuestionService>();
             builder.RegisterType<AnswerService>().As<IAnswerService>();
+            builder.RegisterType<AnswerPositionService>().As<IAnswerPositionService>();
 
             var container = builder.Build();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));

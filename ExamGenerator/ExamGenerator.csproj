@@ -255,7 +255,9 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Script\exam.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -309,6 +311,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\TemporaryFiles\" />
+    <Folder Include="GeneratedExams\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -324,6 +328,10 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ExamGenerator.DocumentManager\ExamGenerator.DocumentManager.csproj">
+      <Project>{7e4cbe6a-21dc-499a-ae41-716ba3317c79}</Project>
+      <Name>ExamGenerator.DocumentManager</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ExamGenerator.Service\ExamGenerator.Service.csproj">
       <Project>{34bff91d-7be7-427f-8477-52eff995b25b}</Project>
       <Name>ExamGenerator.Service</Name>

@@ -35,3 +35,8 @@ function removeAnswer(button) {
 function createAnswerDivID(questionID, answerID) {
     return '#question_' + questionID +  '/'+ 'answer_' + answerID;
 }
+
+
+function pdfDownload(result) { 
+    window.location =  getUrl ;
+}

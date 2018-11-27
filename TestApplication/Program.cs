@@ -20,63 +20,18 @@ namespace TestApplication
         static void Main(string[] args)
         {
             Mapper.Initialize(cfg => cfg.AddProfile<DTOProfile>());
-            //var builder = new ContainerBuilder();
-            //builder.RegisterType<DataModelEF>().As<IDataModelEF>();
-            //builder.RegisterType<ExamService>().As<IExamService>();
-            //builder.RegisterType<QuestionService>().As<IQuestionService>();
-            //builder.RegisterType<AnswerService>().As<IAnswerService>();
-            //builder.Build();
-
             ExamGeneratorDBContext cont = new ExamGeneratorDBContext();
+            AnswerService serviceA = new AnswerService(cont);
+            QuestionService serviceQ = new QuestionService(cont);
+            ExamService serviceE = new ExamService(cont, serviceA, serviceQ);
+            AnswerPositionService serviceAP = new AnswerPositionService(cont);
 
-         
-           // AnswerService serviceA = new AnswerService(cont);
-           // QuestionService serviceQ = new QuestionService(cont);
-           // ExamService serviceE = new ExamService(cont);
-//AnswerPositionService serviceAP = new AnswerPositionService(cont);
-
-            //Exam exam = new Exam() { Name = "Test Przykładowy" };
-            //Question q1 = new Question() { QuestionText = "Pytanie1" };
-            //Question q2 = new Question() { QuestionText = "Pytanie2" };
-
-            //Answer a1 = new Answer() { TextAnswer = "Tak", IfCorrect = true };
-            //Answer a2 = new Answer() { TextAnswer = "Nie", IfCorrect = false };
-            //Answer a3 = new Answer() { TextAnswer = "Tak", IfCorrect = true };
-            //Answer a4 = new Answer() { TextAnswer = "Nie", IfCorrect = false };
-
-            //serviceE.Insert(exam);
-
-            //serviceE.AddQuestionToExam(exam,q1);
-            //serviceE.AddQuestionToExam(exam,q2);
-
-            //serviceQ.AddAnswerToQuestion(q1, a1);
-            //serviceQ.AddAnswerToQuestion(q1, a2);
-            //serviceQ.AddAnswerToQuestion(q2, a3);
-            //serviceQ.AddAnswerToQuestion(q2, a4);
-
-
-            //DocumentCreator creator = new DocumentCreator(Mapper.Map<ExamDTO>(serviceE.GetByID(6)));
-            //var pozycje = creator.AnswerPositionDTO;
-            // serviceAP.InsertRange(6, Mapper.Map<List<AnswerPosition>>(pozycje));
-
-            //var examIDs = valid.GetExamIDs();
-
-            //foreach (var examID in examIDs)
-            //{
-            //    var tmp = Mapper.Map<List<AnswerPositionDTO>>(serviceAP.GetAllAnswersPositionsByExamID(examID));
-            //    valid.validateExam(examID, tmp);
-            //}
-
-            var bitmaps = ArchiveUnZiper.GetBitmapsFromZipArchive("E4DA3B7FBBCE2345D7772B0674A318D5.zip");
+            var bitmaps = ArchiveUnZiper.GetBitmapsFromZipArchive("skanTestu.zip");
             var validator = new DocumentValidator(bitmaps);
             var examIDs = validator.GetExamIDs();
-          //  var egzaminAP = serviceAP.GetAllAnswersPositionsByExamID(examIDs.FirstOrDefault());
-
-           //var lool= serviceE.GetAll();
-
-
-          //  validator.CheckExam(examIDs.First(), Mapper.Map<List<AnswerPositionDTO>>(egzaminAP));
-
+            var egzaminAP = serviceAP.GetAllAnswersPositionsByExamID(examIDs.FirstOrDefault());
+            validator.CheckExam(examIDs.First(), Mapper.Map<List<AnswerPositionDTO>>(egzaminAP));
+            Console.Read();
         }
     }
 

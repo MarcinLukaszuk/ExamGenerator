@@ -2,13 +2,18 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using AutoMapper;
+using ExamGenerator.DocumentManager;
+using ExamGenerator.DocumentManager.PDFCreator;
 using ExamGenerator.Service.Interfaces;
 using ExamGeneratorModel;
+using ExamGeneratorModel.DTO;
 using ExamGeneratorModel.Model;
 using ExamGeneratorModel.ViewModel;
 
@@ -19,13 +24,15 @@ namespace ExamGenerator.Controllers
         private IExamService _examService;
         private IAnswerService _answerService;
         private IQuestionService _questionService;
+        private IAnswerPositionService _answerPositionService;
 
         public ExamsController() { }
-        public ExamsController(IExamService examService, IAnswerService answerService, IQuestionService questionService)
+        public ExamsController(IExamService examService, IAnswerService answerService, IQuestionService questionService, IAnswerPositionService answerPositionService)
         {
             _examService = examService;
             _answerService = answerService;
             _questionService = questionService;
+            _answerPositionService = answerPositionService;
         }
 
         // GET: Exams
@@ -46,7 +53,8 @@ namespace ExamGenerator.Controllers
             {
                 return HttpNotFound();
             }
-            return View(exam);
+            ExamViewModel examVM = Mapper.Map<ExamViewModel>(exam);
+            return View(examVM);
         }
 
         // GET: Exams/Create
@@ -73,16 +81,16 @@ namespace ExamGenerator.Controllers
             {
                 tmpExam = Mapper.Map<Exam>(examViewModel);
                 _examService.Insert(tmpExam);
-                foreach (var question in examViewModel.Questions)
-                {
-                    tmpQuestion = Mapper.Map<Question>(question);
-                    _examService.AddQuestionToExam(tmpExam, tmpQuestion);
-                    foreach (var answer in question.Answers)
-                    {
-                        tmpAnswer = Mapper.Map<Answer>(answer); ;
-                        _questionService.AddAnswerToQuestion(tmpQuestion, tmpAnswer);
-                    }
-                }
+                //foreach (var question in examViewModel.Questions)
+                //{
+                //    tmpQuestion = Mapper.Map<Question>(question);
+                //    _examService.AddQuestionToExam(tmpExam, tmpQuestion);
+                //    foreach (var answer in question.Answers)
+                //    {
+                //        tmpAnswer = Mapper.Map<Answer>(answer); ;
+                //        _questionService.AddAnswerToQuestion(tmpQuestion, tmpAnswer);
+                //    }
+                //}
                 return RedirectToAction("Index");
             }
 
@@ -142,6 +150,41 @@ namespace ExamGenerator.Controllers
         {
             _examService.Delete(id);
             return RedirectToAction("Index");
+        }
+
+        public JsonResult GetProducts(int id)
+        { 
+            Exam exam = _examService.Find(id);
+            if (exam==null)
+            {
+                return null;
+            }
+            var path = HostingEnvironment.MapPath("~/GeneratedExams");
+            ExamDTO examDTO = Mapper.Map<ExamDTO>(exam);
+            DocumentCreator creator = new DocumentCreator(examDTO, path);
+            var answerPositions = creator.AnswerPositionDTO;
+           // serviceAP.InsertRange(6, Mapper.Map<List<AnswerPosition>>(pozycje));
+
+
+
+            return Json("aaaa", JsonRequestBehavior.AllowGet);
+        }
+        public FileResult GetPdfExam(int id)
+        {
+            Exam exam = _examService.Find(id);
+            if (exam == null)
+            {
+                return null;
+            }
+            var path = HostingEnvironment.MapPath("~/GeneratedExams");
+            ExamDTO examDTO = Mapper.Map<ExamDTO>(exam);
+            DocumentCreator creator = new DocumentCreator(examDTO, path);
+            var answerPositions = creator.AnswerPositionDTO;
+           _answerPositionService.InsertRange(6, Mapper.Map<List<AnswerPosition>>(answerPositions));
+
+
+            string fullPath = Path.Combine(path, creator.Filename);
+            return File(fullPath, "application/pdf", creator.Filename); 
         }
 
     }

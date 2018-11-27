@@ -50,9 +50,9 @@ namespace ExamGenerator.DocumentManager.PDFCreator
             }
             return table;
         }
-        public static PDFHeader CreatePageEventHelper(int testID)
+        public static PDFHeader CreatePageEventHelper(ExamDTO exam)
         {
-            return new PDFHeader(testID);
+            return new PDFHeader(exam);
         }
 
         public static Image GetEmptySquare()
@@ -125,9 +125,11 @@ namespace ExamGenerator.DocumentManager.PDFCreator
     public class PDFHeader : PdfPageEventHelper
     {
         int _testID;
-        public PDFHeader(int testID)
+        string _examName;
+        public PDFHeader(ExamDTO examDTO)
         {
-            _testID = testID;
+            _testID = examDTO.Id;
+            _examName = examDTO.Name;
         }
         public override void OnStartPage(PdfWriter writer, Document document)
         {
@@ -157,7 +159,10 @@ namespace ExamGenerator.DocumentManager.PDFCreator
             };
 
 
-            PdfPCell centerCell = new PdfPCell(new Paragraph("NAZWA TESTU \nDATA \nNAZWISKO IMIE"));
+            PdfPCell centerCell = new PdfPCell(new Paragraph("Nazwa: "+_examName))
+            {
+                Border = Rectangle.NO_BORDER
+            };
 
             PdfPCell rightCell = new PdfPCell(pdfImage)
             {
@@ -171,9 +176,4 @@ namespace ExamGenerator.DocumentManager.PDFCreator
             document.Add(table);
         }
     }
-
-
-
-
-
 }

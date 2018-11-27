@@ -20,10 +20,23 @@ namespace ExamGenerator.DocumentManager
                 return doc.ExamAnswerPositions;
             }
         }
-
-        public DocumentCreator(ExamDTO exam)
+        public string Filename
         {
-            doc = new PDFDocument(exam.Id);
+            get
+            {
+                return doc.Filename; 
+            }
+        }
+        public string Filepath
+        {
+            get
+            {
+                return doc.Filepath;
+            }
+        }
+        public DocumentCreator(ExamDTO exam,string path)
+        {
+            doc = new PDFDocument(exam,path);
             foreach (var item in exam.QuestionsDTO)
             {
                 doc.AddExercise(item);

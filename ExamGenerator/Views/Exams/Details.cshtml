@@ -1,4 +1,4 @@
-﻿@model ExamGeneratorModel.Model.Exam
+﻿@model ExamGeneratorModel.ViewModel.ExamViewModel
 
 @{
     ViewBag.Title = "Details";
@@ -8,7 +8,10 @@
 
 <div>
     <h4>Exam</h4>
+     
+    <button onclick="pdfDownload()">Download PDF</button>
     <hr />
+
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Name)
@@ -18,9 +21,37 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
 
+
+        @for (int i = 0; i < Model.Questions.Count(); i++)
+        {
+
+            <dt>
+                @Html.DisplayNameFor(model => Model.Questions[i].QuestionText)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => Model.Questions[i].QuestionText)
+            </dd>
+
+
+            for (int j = 0; j < Model.Questions[i].Answers.Count(); j++)
+            {
+                <dt>
+                    @Html.DisplayNameFor(model => Model.Questions[i].Answers[j].TextAnswer)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => Model.Questions[i].Answers[j].TextAnswer)
+                </dd>
+            }
+        }
+
     </dl>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+<script>
+   var getUrl = '@Url.Action("GetPdfExam", "Exams", new { id = Model.Id })';
+
+</script>
+<script src="~/Script/exam.js"></script>

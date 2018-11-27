@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ExamGeneratorModel.DTO;
+using ExamGeneratorModel.Model;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 
@@ -14,6 +15,7 @@ namespace ExamGenerator.DocumentManager.PDFCreator
     {
         Document _document;
         PdfWriter _writer;
+        string _filepath;
         string _filename;
         LinkedList<PdfPTable> tables;
         LinkedList<QuestionDTO> questions;
@@ -25,6 +27,13 @@ namespace ExamGenerator.DocumentManager.PDFCreator
                 return _filename;
             }
         }
+        public string Filepath
+        {
+            get
+            {
+                return _filepath;
+            }
+        }
         public List<AnswerPositionDTO> ExamAnswerPositions
         {
             get
@@ -33,12 +42,13 @@ namespace ExamGenerator.DocumentManager.PDFCreator
             }
         }
 
-        public PDFDocument(int examID)
+        public PDFDocument(ExamDTO exam,string path)
         {
-            _filename = PDFHelpers.GetMD5(examID.ToString()) + ".pdf";
+            _filename = PDFHelpers.GetMD5(exam.Id.ToString()) + ".pdf";
+            _filepath = path+"\\";
             _document = new Document(PageSize.A4, 36, 36, 36, 36);
-            _writer = PdfWriter.GetInstance(_document, new FileStream(Filename, FileMode.Create));
-            _writer.PageEvent = PDFHelpers.CreatePageEventHelper(examID);
+            _writer = PdfWriter.GetInstance(_document, new FileStream(_filepath + _filename, FileMode.Create));
+            _writer.PageEvent = PDFHelpers.CreatePageEventHelper(exam);
             _document.Open();
 
             tables = new LinkedList<PdfPTable>();
