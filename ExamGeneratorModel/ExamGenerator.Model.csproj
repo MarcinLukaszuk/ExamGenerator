@@ -105,16 +105,24 @@
     <Compile Include="Migrations\201810281036502_AddAnswerPositions1.Designer.cs">
       <DependentUpon>201810281036502_AddAnswerPositions1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811271421239_addStudents.cs" />
+    <Compile Include="Migrations\201811271421239_addStudents.Designer.cs">
+      <DependentUpon>201811271421239_addStudents.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Answer.cs" />
     <Compile Include="Model\AnswersPositions.cs" />
+    <Compile Include="Model\StudentGroupStudent.cs" />
     <Compile Include="Model\Entity.cs" />
     <Compile Include="Model\Exam.cs" />
     <Compile Include="Model\Question.cs" />
+    <Compile Include="Model\Student.cs" />
+    <Compile Include="Model\StudentGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\AnswerViewModel.cs" />
     <Compile Include="ViewModel\ExamViewModel.cs" />
     <Compile Include="ViewModel\QuestionViewModel.cs" />
+    <Compile Include="ViewModel\StudentGroupViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -142,6 +150,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810281036502_AddAnswerPositions1.resx">
       <DependentUpon>201810281036502_AddAnswerPositions1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811271421239_addStudents.resx">
+      <DependentUpon>201811271421239_addStudents.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

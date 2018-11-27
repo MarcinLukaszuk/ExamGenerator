@@ -15,6 +15,10 @@ namespace ExamGeneratorModel
         DbSet<Answer> Answer { get; set; }
         DbSet<Question> Questions { get; set; }
         DbSet<AnswerPosition> AnswersPositions { get; set; }
+        DbSet<Student> Students { get; set; }
+        DbSet<StudentGroup> StudentGroups { get; set; }
+        DbSet<StudentGroupStudent> StudentGroupStudents { get; set; }
+        
         Task<int> SaveChangesAsync();
         int SaveChanges();
     }
@@ -26,6 +30,8 @@ namespace ExamGeneratorModel
         public virtual DbSet<Answer> Answer { get; set; }
         public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<AnswerPosition> AnswersPositions { get; set; }
-        
+        public virtual DbSet<Student> Students { get; set; }
+        public virtual DbSet<StudentGroup> StudentGroups { get; set; }
+        public virtual DbSet<StudentGroupStudent> StudentGroupStudents { get; set; }
     }
 }

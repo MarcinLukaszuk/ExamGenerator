@@ -213,12 +213,18 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\QuestionsController.cs" />
+    <Compile Include="Controllers\StudentGroupsController.cs" />
+    <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201811181424476_init.cs" />
     <Compile Include="Migrations\201811181424476_init.Designer.cs">
       <DependentUpon>201811181424476_init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811271418512_addStudents.cs" />
+    <Compile Include="Migrations\201811271418512_addStudents.Designer.cs">
+      <DependentUpon>201811271418512_addStudents.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -308,11 +314,21 @@
     <Content Include="Views\Answers\Edit.cshtml" />
     <Content Include="Views\Answers\Index.cshtml" />
     <Content Include="Views\Answers\CreateAnswerPartial.cshtml" />
+    <Content Include="Views\Students\Create.cshtml" />
+    <Content Include="Views\Students\Delete.cshtml" />
+    <Content Include="Views\Students\Details.cshtml" />
+    <Content Include="Views\Students\Edit.cshtml" />
+    <Content Include="Views\Students\Index.cshtml" />
+    <Content Include="Views\StudentGroups\Create.cshtml" />
+    <Content Include="Views\StudentGroups\Delete.cshtml" />
+    <Content Include="Views\StudentGroups\Details.cshtml" />
+    <Content Include="Views\StudentGroups\Edit.cshtml" />
+    <Content Include="Views\StudentGroups\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\TemporaryFiles\" />
     <Folder Include="GeneratedExams\" />
+    <Folder Include="TemporaryFiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -344,6 +360,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201811181424476_init.resx">
       <DependentUpon>201811181424476_init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811271418512_addStudents.resx">
+      <DependentUpon>201811271418512_addStudents.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

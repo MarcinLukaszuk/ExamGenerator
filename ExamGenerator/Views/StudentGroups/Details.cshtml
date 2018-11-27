@@ -1,0 +1,51 @@
+﻿@model ExamGeneratorModel.ViewModel.StudentGroupViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+
+<div>
+    <h2>StudentGroup:  <b>@Html.DisplayFor(model => model.StudentGroup.Name)</b></h2>
+</div>
+<table class="table">
+    @if (Model.students.Any())
+    {
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.students.First().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.students.First().SurName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.students.First().Email)
+            </th>
+            <th></th>
+        </tr>
+    }
+
+    @foreach (var item in Model.students)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SurName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.StudentGroup.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
