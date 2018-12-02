@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace ExamGenerator.Service.Services
 {
-    public class ExamService : Service<Exam>, IExamService
+    public class ExamCoreService : Service<ExamCore>, IExamCoreService
     {
         private readonly IDbContext _context;
         private IAnswerService _answerService;
         private IQuestionService _questionService;
-        public ExamService(IDbContext dbContext, IAnswerService answerService, IQuestionService questionService) : base(dbContext)
+        public ExamCoreService(IDbContext dbContext, IAnswerService answerService, IQuestionService questionService) : base(dbContext)
         {
             _context = dbContext;
             _answerService = answerService;
@@ -30,7 +30,7 @@ namespace ExamGenerator.Service.Services
                 AddQuestionToExam(examID, question);
         }
 
-        public void AddQuestionsToExam(Exam exam, List<Question> questions)
+        public void AddQuestionsToExam(ExamCore exam, List<Question> questions)
         {
             foreach (var question in questions)
                 AddQuestionToExam(exam, question);
@@ -45,13 +45,13 @@ namespace ExamGenerator.Service.Services
             }
             AddQuestionToExam(exam, question);
         }
-        public void AddQuestionToExam(Exam exam, Question question)
+        public void AddQuestionToExam(ExamCore exam, Question question)
         {
             if (Find(exam?.Id) == null || question == null)
             {
                 return;
             }
-            question.ExamID = exam.Id;
+            question.ExamCoreID = exam.Id;
             _context.Questions.Add(question);
             _context.SaveChanges();
         }
@@ -64,7 +64,7 @@ namespace ExamGenerator.Service.Services
             }
             return GetAllQuestionOfExam(returnedExam);
         }
-        public List<Question> GetAllQuestionOfExam(Exam exam)
+        public List<Question> GetAllQuestionOfExam(ExamCore exam)
         {
             var returnedExam = Find(exam.Id);
             if (returnedExam == null)
@@ -74,7 +74,7 @@ namespace ExamGenerator.Service.Services
             return returnedExam.Questions.ToList();
         }
 
-        public new void Update(Exam editedExam)
+        public new void Update(ExamCore editedExam)
         {
             var questionsToRemove = getQuestionsToRemove(editedExam).ToList();
             var questionsToEdit = getQuestionsToEdit(editedExam).ToList();
@@ -118,7 +118,7 @@ namespace ExamGenerator.Service.Services
         {
             this.Delete(Find(id));
         }
-        public new void Delete(Exam exam)
+        public new void Delete(ExamCore exam)
         {
             var returnedExam = Find(exam.Id);
             if (returnedExam == null)
@@ -126,14 +126,14 @@ namespace ExamGenerator.Service.Services
                 return;
             }
 
-            var questionsToRemove = _context.Questions.Where(x => x.ExamID == returnedExam.Id).ToList();
+            var questionsToRemove = _context.Questions.Where(x => x.ExamCoreID == returnedExam.Id).ToList();
             var examToRemove = _context.Exams.Where(x => x.Id == returnedExam.Id).FirstOrDefault();
             _context.Questions.RemoveRange(questionsToRemove);
             _context.Exams.Remove(examToRemove);
             _context.SaveChanges();
         }
 
-        private IEnumerable<Question> getQuestionsToRemove(Exam exam)
+        private IEnumerable<Question> getQuestionsToRemove(ExamCore exam)
         {
             foreach (var item in Find(exam.Id).Questions)
             {
@@ -144,7 +144,7 @@ namespace ExamGenerator.Service.Services
                 }
             }
         }
-        private IEnumerable<Question> getQuestionsToEdit(Exam exam)
+        private IEnumerable<Question> getQuestionsToEdit(ExamCore exam)
         {
             foreach (var item in Find(exam.Id).Questions)
             {
@@ -165,7 +165,7 @@ namespace ExamGenerator.Service.Services
             }
         }
 
-        private IEnumerable<Question> getQuestionsToAdd(Exam exam)
+        private IEnumerable<Question> getQuestionsToAdd(ExamCore exam)
         {
             return exam.Questions.Where(x => x.Id == 0).ToList();
         }

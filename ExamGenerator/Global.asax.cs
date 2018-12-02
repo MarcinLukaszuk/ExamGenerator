@@ -38,7 +38,7 @@ namespace ExamGenerator
             builder.RegisterFilterProvider();
 
             builder.RegisterType<ExamGeneratorDBContext>().As<IDbContext>();
-            builder.RegisterType<ExamService>().As<IExamService>();
+            builder.RegisterType<ExamCoreService>().As<IExamCoreService>();
             builder.RegisterType<QuestionService>().As<IQuestionService>();
             builder.RegisterType<AnswerService>().As<IAnswerService>();
             builder.RegisterType<AnswerPositionService>().As<IAnswerPositionService>();
@@ -57,13 +57,13 @@ namespace ExamGenerator
     {
         public DTOProfile()
         {
-            CreateMap<Exam, ExamDTO>()
+            CreateMap<ExamCore, ExamDTO>()
                  .ForMember(destination => destination.QuestionsDTO, opts => opts.MapFrom(source => source.Questions));
-            CreateMap<ExamDTO, Exam>()
+            CreateMap<ExamDTO, ExamCore>()
                 .ForMember(destination => destination.Questions, opts => opts.MapFrom(source => source.QuestionsDTO));
-            CreateMap<ExamViewModel, Exam>()
+            CreateMap<ExamCoreViewModel, ExamCore>()
                     .ForMember(destination => destination.Questions, opts => opts.MapFrom(source => source.Questions));
-            CreateMap<Exam, ExamViewModel>()
+            CreateMap<ExamCore, ExamCoreViewModel>()
                                .ForMember(destination => destination.Questions, opts => opts.MapFrom(source => source.Questions));
 
 

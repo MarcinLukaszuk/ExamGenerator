@@ -25,9 +25,9 @@ namespace ExamGenerator.UnitTests
             string username = "testUser1";
             var ctx = new Mock<IDbContext>();
 
-            var exams = new List<Exam>();
+            var exams = new List<ExamCore>();
             var questions = new List<Question>();
-            var mockDbSet1 = ServiceTestsHelper.GetMockDbSet<Exam>(exams);
+            var mockDbSet1 = ServiceTestsHelper.GetMockDbSet<ExamCore>(exams);
             var mockDbSet2 = ServiceTestsHelper.GetMockDbSet<Question>(questions);
             mockDbSet1.Setup(m => m.Find(It.IsAny<object[]>()))
                 .Returns<object[]>(ids => exams.FirstOrDefault(d => d.Id == (int)ids[0]));
@@ -35,7 +35,7 @@ namespace ExamGenerator.UnitTests
             mockDbSet2.Setup(m => m.Find(It.IsAny<object[]>()))
               .Returns<object[]>(ids => questions.FirstOrDefault(d => d.Id == (int)ids[0]));
             
-            ctx.Setup(c => c.Set<Exam>()).Returns(mockDbSet1.Object);
+            ctx.Setup(c => c.Set<ExamCore>()).Returns(mockDbSet1.Object);
             ctx.Setup(c => c.Set<Question>()).Returns(mockDbSet2.Object);
 
             ctx.Setup(c => c.Exams).Returns(mockDbSet1.Object);
@@ -44,7 +44,7 @@ namespace ExamGenerator.UnitTests
             var fakectx = ctx.Object;
            // ExamService service = new ExamService(fakectx);
            // QuestionService qservice = new QuestionService(fakectx);
-               var examTmp = new Exam()
+               var examTmp = new ExamCore()
             {
                 Id = 1,
                 Name = username

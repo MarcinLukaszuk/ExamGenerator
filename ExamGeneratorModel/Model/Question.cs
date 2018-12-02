@@ -8,12 +8,12 @@ namespace ExamGeneratorModel.Model
     {
         [Key]
         public int Id { get; set; }
-        [ForeignKey("Exam")]
-        public int ExamID { get; set; } 
-
+        [ForeignKey("ExamCore")]
+        public int ExamCoreID { get; set; } 
         [StringLength(500)] 
         public string QuestionText { get; set; }
-        public virtual Exam Exam { get; set; }
+
+        public virtual ExamCore ExamCore { get; set; }
         public virtual ICollection<Answer> Answers { get; set; }
     }
 }

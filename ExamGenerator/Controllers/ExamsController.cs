@@ -19,15 +19,15 @@ using ExamGeneratorModel.ViewModel;
 
 namespace ExamGenerator.Controllers
 {
-    public class ExamsController : Controller
+    public class ExamCoresController : Controller
     {
-        private IExamService _examService;
+        private IExamCoreService _examService;
         private IAnswerService _answerService;
         private IQuestionService _questionService;
         private IAnswerPositionService _answerPositionService;
 
-        public ExamsController() { }
-        public ExamsController(IExamService examService, IAnswerService answerService, IQuestionService questionService, IAnswerPositionService answerPositionService)
+        public ExamCoresController() { }
+        public ExamCoresController(IExamCoreService examService, IAnswerService answerService, IQuestionService questionService, IAnswerPositionService answerPositionService)
         {
             _examService = examService;
             _answerService = answerService;
@@ -48,19 +48,19 @@ namespace ExamGenerator.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Exam exam = _examService.Find(id);
+            ExamCore exam = _examService.Find(id);
             if (exam == null)
             {
                 return HttpNotFound();
             }
-            ExamViewModel examVM = Mapper.Map<ExamViewModel>(exam);
+            ExamCoreViewModel examVM = Mapper.Map<ExamCoreViewModel>(exam);
             return View(examVM);
         }
 
         // GET: Exams/Create
         public ActionResult Create()
         {
-            var tmp = new ExamViewModel();
+            var tmp = new ExamCoreViewModel();
             return View(tmp);
         }
 
@@ -71,15 +71,15 @@ namespace ExamGenerator.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Questions")] ExamViewModel examViewModel)
+        public ActionResult Create([Bind(Include = "Id,Name,Questions")] ExamCoreViewModel examViewModel)
         {
-            Exam tmpExam;
+            ExamCore tmpExam;
             Question tmpQuestion;
             Answer tmpAnswer;
 
             if (ModelState.IsValid)
             {
-                tmpExam = Mapper.Map<Exam>(examViewModel);
+                tmpExam = Mapper.Map<ExamCore>(examViewModel);
                 _examService.Insert(tmpExam);
                 //foreach (var question in examViewModel.Questions)
                 //{
@@ -103,8 +103,8 @@ namespace ExamGenerator.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Exam exam = _examService.Find(id);
-            var examViewModel = Mapper.Map<ExamViewModel>(exam);
+            ExamCore exam = _examService.Find(id);
+            var examViewModel = Mapper.Map<ExamCoreViewModel>(exam);
             if (examViewModel == null)
             {
                 return HttpNotFound();
@@ -117,9 +117,9 @@ namespace ExamGenerator.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Questions")] ExamViewModel examViewModel)
+        public ActionResult Edit([Bind(Include = "Id,Name,Questions")] ExamCoreViewModel examViewModel)
         {
-            Exam editedExam = Mapper.Map<Exam>(examViewModel);
+            ExamCore editedExam = Mapper.Map<ExamCore>(examViewModel);
             if (ModelState.IsValid)
             {
                 _examService.Update(editedExam);
@@ -135,7 +135,7 @@ namespace ExamGenerator.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Exam exam = _examService.Find(id);
+            ExamCore exam = _examService.Find(id);
             if (exam == null)
             {
                 return HttpNotFound();
@@ -154,7 +154,7 @@ namespace ExamGenerator.Controllers
 
         public JsonResult GetProducts(int id)
         { 
-            Exam exam = _examService.Find(id);
+            ExamCore exam = _examService.Find(id);
             if (exam==null)
             {
                 return null;
@@ -171,7 +171,7 @@ namespace ExamGenerator.Controllers
         }
         public FileResult GetPdfExam(int id)
         {
-            Exam exam = _examService.Find(id);
+            ExamCore exam = _examService.Find(id);
             if (exam == null)
             {
                 return null;

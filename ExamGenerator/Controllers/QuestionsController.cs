@@ -15,12 +15,12 @@ namespace ExamGenerator.Controllers
 {
     public class QuestionsController : Controller
     {
-        private IExamService _examService;
+        private IExamCoreService _examService;
         private IAnswerService _answerService;
         private IQuestionService _questionService;
 
         public QuestionsController() { }
-        public QuestionsController(IExamService examService, IAnswerService answerService, IQuestionService questionService)
+        public QuestionsController(IExamCoreService examService, IAnswerService answerService, IQuestionService questionService)
         {
             _examService = examService;
             _answerService = answerService;
@@ -55,14 +55,14 @@ namespace ExamGenerator.Controllers
         }
 
 
-        public ActionResult AddQuestionCreate([Bind(Include = "Id,Name,Questions")] ExamViewModel examViewModel)
+        public ActionResult AddQuestionCreate([Bind(Include = "Id,Name,Questions")] ExamCoreViewModel examViewModel)
         {
             ModelState.Clear();
-            examViewModel.Questions.Add(new QuestionViewModel() { ExamID= examViewModel .Id});
+            examViewModel.Questions.Add(new QuestionViewModel() { ExamCoreID= examViewModel .Id});
             return View("~/Views/Exams/Create.cshtml", examViewModel);
         }
 
-        public ActionResult RemoveQuestionCreate([Bind(Include = "Id,Name,Questions")] ExamViewModel examViewModel, int? questionID)
+        public ActionResult RemoveQuestionCreate([Bind(Include = "Id,Name,Questions")] ExamCoreViewModel examViewModel, int? questionID)
         {
             ModelState.Clear();
             if (questionID != null)
@@ -70,13 +70,13 @@ namespace ExamGenerator.Controllers
             return View("~/Views/Exams/Create.cshtml", examViewModel);
         }
 
-        public ActionResult AddQuestionEdit([Bind(Include = "Id,Name,Questions")] ExamViewModel examViewModel)
+        public ActionResult AddQuestionEdit([Bind(Include = "Id,Name,Questions")] ExamCoreViewModel examViewModel)
         {
             ModelState.Clear();
-            examViewModel.Questions.Add(new QuestionViewModel() { ExamID = examViewModel.Id });
+            examViewModel.Questions.Add(new QuestionViewModel() { ExamCoreID = examViewModel.Id });
             return View("~/Views/Exams/Edit.cshtml", examViewModel);
         }
-        public ActionResult RemoveQuestionEdit([Bind(Include = "Id,Name,Questions")] ExamViewModel examViewModel, int? questionID)
+        public ActionResult RemoveQuestionEdit([Bind(Include = "Id,Name,Questions")] ExamCoreViewModel examViewModel, int? questionID)
         {
             ModelState.Clear();
             if (questionID != null)
@@ -98,7 +98,7 @@ namespace ExamGenerator.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ExamID = new SelectList(_examService.GetAll(), "Id", "Name", question.ExamID);
+            ViewBag.ExamID = new SelectList(_examService.GetAll(), "Id", "Name", question.ExamCoreID);
             return View(question);
         }
 
@@ -114,7 +114,7 @@ namespace ExamGenerator.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ExamID = new SelectList(_examService.GetAll(), "Id", "Name", question.ExamID);
+            ViewBag.ExamID = new SelectList(_examService.GetAll(), "Id", "Name", question.ExamCoreID);
             return View(question);
         }
 
@@ -130,7 +130,7 @@ namespace ExamGenerator.Controllers
                 _questionService.Update(question); 
                 return RedirectToAction("Index");
             }
-            ViewBag.ExamID = new SelectList(_examService.GetAll(), "Id", "Name", question.ExamID);
+            ViewBag.ExamID = new SelectList(_examService.GetAll(), "Id", "Name", question.ExamCoreID);
             return View(question);
         }
 

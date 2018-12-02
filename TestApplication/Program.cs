@@ -23,7 +23,7 @@ namespace TestApplication
             ExamGeneratorDBContext cont = new ExamGeneratorDBContext();
             AnswerService serviceA = new AnswerService(cont);
             QuestionService serviceQ = new QuestionService(cont);
-            ExamService serviceE = new ExamService(cont, serviceA, serviceQ);
+            ExamCoreService serviceE = new ExamCoreService(cont, serviceA, serviceQ);
             AnswerPositionService serviceAP = new AnswerPositionService(cont);
 
             var bitmaps = ArchiveUnZiper.GetBitmapsFromZipArchive("skanTestu.zip");
@@ -48,9 +48,9 @@ namespace TestApplication
                opts => opts.MapFrom(source => source.Answers));
             CreateMap<QuestionDTO, Question>();
 
-            CreateMap<Exam, ExamDTO>()
+            CreateMap<ExamCore, ExamDTO>()
                 .ForMember(destination => destination.QuestionsDTO, opts => opts.MapFrom(source => source.Questions));
-            CreateMap<ExamDTO, Exam>()
+            CreateMap<ExamDTO, ExamCore>()
                 .ForMember(destination => destination.Questions, opts => opts.Ignore());
 
             CreateMap<AnswerPosition, AnswerPositionDTO>()

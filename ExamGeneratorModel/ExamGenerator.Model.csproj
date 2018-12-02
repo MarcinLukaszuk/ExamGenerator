@@ -109,18 +109,26 @@
     <Compile Include="Migrations\201811271421239_addStudents.Designer.cs">
       <DependentUpon>201811271421239_addStudents.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201812021916441_changename.cs" />
+    <Compile Include="Migrations\201812021916441_changename.Designer.cs">
+      <DependentUpon>201812021916441_changename.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812022055188_changename1.cs" />
+    <Compile Include="Migrations\201812022055188_changename1.Designer.cs">
+      <DependentUpon>201812022055188_changename1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Answer.cs" />
     <Compile Include="Model\AnswersPositions.cs" />
     <Compile Include="Model\StudentGroupStudent.cs" />
     <Compile Include="Model\Entity.cs" />
-    <Compile Include="Model\Exam.cs" />
+    <Compile Include="Model\ExamCore.cs" />
     <Compile Include="Model\Question.cs" />
     <Compile Include="Model\Student.cs" />
     <Compile Include="Model\StudentGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\AnswerViewModel.cs" />
-    <Compile Include="ViewModel\ExamViewModel.cs" />
+    <Compile Include="ViewModel\ExamCoreViewModel.cs" />
     <Compile Include="ViewModel\QuestionViewModel.cs" />
     <Compile Include="ViewModel\StudentGroupViewModel.cs" />
   </ItemGroup>
@@ -153,6 +161,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201811271421239_addStudents.resx">
       <DependentUpon>201811271421239_addStudents.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812021916441_changename.resx">
+      <DependentUpon>201812021916441_changename.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812022055188_changename1.resx">
+      <DependentUpon>201812022055188_changename1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

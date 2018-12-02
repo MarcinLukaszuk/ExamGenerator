@@ -297,11 +297,11 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Exams\Create.cshtml" />
-    <Content Include="Views\Exams\Delete.cshtml" />
-    <Content Include="Views\Exams\Details.cshtml" />
-    <Content Include="Views\Exams\Edit.cshtml" />
-    <Content Include="Views\Exams\Index.cshtml" />
+    <Content Include="Views\ExamCores\Create.cshtml" />
+    <Content Include="Views\ExamCores\Delete.cshtml" />
+    <Content Include="Views\ExamCores\Details.cshtml" />
+    <Content Include="Views\ExamCores\Edit.cshtml" />
+    <Content Include="Views\ExamCores\Index.cshtml" />
     <Content Include="Views\Questions\Create.cshtml" />
     <Content Include="Views\Questions\Delete.cshtml" />
     <Content Include="Views\Questions\Details.cshtml" />

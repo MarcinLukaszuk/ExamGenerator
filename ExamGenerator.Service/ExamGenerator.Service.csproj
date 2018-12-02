@@ -75,7 +75,7 @@
   <ItemGroup>
     <Compile Include="Interfaces\IAnswerPositionService.cs" />
     <Compile Include="Interfaces\IAnswerService.cs" />
-    <Compile Include="Interfaces\IExamService.cs" />
+    <Compile Include="Interfaces\IExamCoreService.cs" />
     <Compile Include="Interfaces\IQuestionService.cs" />
     <Compile Include="Interfaces\IStudentGroupStudentService.cs" />
     <Compile Include="Interfaces\IStudentService.cs" />
@@ -85,7 +85,7 @@
     <Compile Include="Service.cs" />
     <Compile Include="Services\AnswerPositionService.cs" />
     <Compile Include="Services\AnswerService.cs" />
-    <Compile Include="Services\ExamService.cs" />
+    <Compile Include="Services\ExamCoreService.cs" />
     <Compile Include="Services\QuestionService.cs" />
     <Compile Include="Services\StudentGroupStudentService.cs" />
     <Compile Include="Services\StudentService.cs" />

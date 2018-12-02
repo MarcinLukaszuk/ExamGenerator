@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace ExamGenerator.Service.Interfaces
 {
-    public interface IExamService: IService<Exam>
+    public interface IExamCoreService: IService<ExamCore>
     {
-        void AddQuestionToExam(Exam exam, Question question);
+        void AddQuestionToExam(ExamCore exam, Question question);
         void AddQuestionToExam(int examID, Question question);
         void AddQuestionsToExam(int examID, List<Question> questions);
-        void AddQuestionsToExam(Exam exam, List<Question> questions);
-        List<Question> GetAllQuestionOfExam(Exam exam);
+        void AddQuestionsToExam(ExamCore exam, List<Question> questions);
+        List<Question> GetAllQuestionOfExam(ExamCore exam);
         List<Question> GetAllQuestionOfExam(int examID);
     }
 }

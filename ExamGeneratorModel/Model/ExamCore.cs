@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ExamGeneratorModel.Model
 {
-    public class Exam: Entity
+    public class ExamCore: Entity
     {
         [Key]
         public int Id { get; set; }

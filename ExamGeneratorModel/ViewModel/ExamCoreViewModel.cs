@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace ExamGeneratorModel.ViewModel
 {
-    public class ExamViewModel
+    public class ExamCoreViewModel
     {
-        public ExamViewModel()
+        public ExamCoreViewModel()
         {
             Questions = new List<QuestionViewModel>();
         }

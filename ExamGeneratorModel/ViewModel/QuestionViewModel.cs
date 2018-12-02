@@ -13,7 +13,7 @@ namespace ExamGeneratorModel.ViewModel
             Answers = new List<AnswerViewModel>();
         }
         public int Id { get; set; }
-        public int ExamID { get; set; }
+        public int ExamCoreID { get; set; }
         public string QuestionText { get; set; }
         public virtual List<AnswerViewModel> Answers { get; set; }
     }

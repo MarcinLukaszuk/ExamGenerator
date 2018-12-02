@@ -11,7 +11,7 @@ namespace ExamGeneratorModel
     public interface IDbContext : IDisposable
     {
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
-        DbSet<Exam> Exams { get; set; }
+        DbSet<ExamCore> Exams { get; set; }
         DbSet<Answer> Answer { get; set; }
         DbSet<Question> Questions { get; set; }
         DbSet<AnswerPosition> AnswersPositions { get; set; }
@@ -26,7 +26,7 @@ namespace ExamGeneratorModel
     {
         public ExamGeneratorDBContext() : base("Name=DefaultConnection")
         { }
-        public virtual DbSet<Exam> Exams { get; set; }
+        public virtual DbSet<ExamCore> Exams { get; set; }
         public virtual DbSet<Answer> Answer { get; set; }
         public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<AnswerPosition> AnswersPositions { get; set; }
