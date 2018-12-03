@@ -191,12 +191,22 @@ namespace ExamGenerator.Controllers
         [HttpPost]
         public ActionResult AssociateStudentsToGroup(HttpPostedFileBase FileUpload, string studentGroupID)
         {
-          
             return RedirectToAction("Edit", "StudentGroups", new { id = studentGroupID });
         }
         [HttpPost]
         public ActionResult DisassociateStudentsToGroup(string studentID, string studentGroupID)
         {
+            Student student = new Student();
+            StudentGroup studentGroup = new StudentGroup();
+
+            if (int.TryParse(studentID, out var studentIDINT))
+                student = _studentService.Find(studentIDINT);
+
+            if (int.TryParse(studentGroupID, out var studentGroupIDINT))
+                studentGroup = _studentGroupService.Find(studentGroupIDINT);
+
+            if (student != null && student.Id != 0 && studentGroup != null && studentGroup.Id != 0)
+                _studentGroupStudentService.DisassociateStudentToStudentGroup(student, studentGroup);
 
             return RedirectToAction("Edit", "StudentGroups", new { id = studentGroupID });
         }
