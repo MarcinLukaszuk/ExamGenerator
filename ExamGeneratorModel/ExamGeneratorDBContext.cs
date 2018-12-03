@@ -18,14 +18,14 @@ namespace ExamGeneratorModel
         DbSet<Student> Students { get; set; }
         DbSet<StudentGroup> StudentGroups { get; set; }
         DbSet<StudentGroupStudent> StudentGroupStudents { get; set; }
-        
+        DbSet<ExamCoreStudentGroup> ExamCoreStudentGroups { get; set; }
+
         Task<int> SaveChangesAsync();
         int SaveChanges();
     }
     public class ExamGeneratorDBContext : DbContext, IDbContext
     {
-        public ExamGeneratorDBContext() : base("Name=DefaultConnection")
-        { }
+        public ExamGeneratorDBContext() : base("Name=DefaultConnection") { }
         public virtual DbSet<ExamCore> Exams { get; set; }
         public virtual DbSet<Answer> Answer { get; set; }
         public virtual DbSet<Question> Questions { get; set; }
@@ -33,5 +33,6 @@ namespace ExamGeneratorModel
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<StudentGroup> StudentGroups { get; set; }
         public virtual DbSet<StudentGroupStudent> StudentGroupStudents { get; set; }
+        public virtual DbSet<ExamCoreStudentGroup> ExamCoreStudentGroups { get; set; }
     }
 }

@@ -28,7 +28,7 @@ namespace ExamGenerator.DocumentManager
             var tmp = new List<int>();
             foreach (var item in _bitmapList)
             {
-                var examID = BitmapAnalXD.GetExamID(item);
+                var examID = BitmapAnalyser.GetExamID(item);
 
                 if (!_exams.ContainsKey(examID))
                     _exams.Add(examID, new List<Bitmap>() { item });
@@ -45,13 +45,13 @@ namespace ExamGenerator.DocumentManager
             var bitmapList = _exams[examID];
             foreach (var bitmap in bitmapList)
             {
-                var pageNumber = BitmapAnalXD.GetExamPage(bitmap);
+                var pageNumber = BitmapAnalyser.GetExamPage(bitmap);
                 var pageAnswers = answerPositionsDTO.Where(x => x.PageNumber == pageNumber).OrderBy(x=>x.Y).ToList();
 
                 foreach (var answer in pageAnswers)
                 {
-                    var answerBitmap = BitmapAnalXD.GetAnswerBitmap(bitmap, answer);
-                    var answerBitmapp = BitmapAnalXD.CheckAnswerValue(answerBitmap);
+                    var answerBitmap = BitmapAnalyser.GetAnswerBitmap(bitmap, answer);
+                    var answerBitmapp = BitmapAnalyser.CheckAnswerValue(answerBitmap);
                     Console.WriteLine(answerBitmapp==answer.AnswerDTO.IfCorrect?"Dobrze":"Zle");
                 }
             }

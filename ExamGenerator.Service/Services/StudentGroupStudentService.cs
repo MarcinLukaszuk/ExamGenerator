@@ -17,7 +17,7 @@ namespace ExamGenerator.Service.Services
             _context = dbContext;
         }
 
-        public void AssociateStudentToStudentGroup(Student student, StudentGroup studentGroup)
+        public bool AssociateStudentToStudentGroup(Student student, StudentGroup studentGroup)
         {
             if (student != null && studentGroup != null)
             {
@@ -27,11 +27,14 @@ namespace ExamGenerator.Service.Services
                     StudentGroupStudent sgs = new StudentGroupStudent() { StudentID = student.Id, StudentGroupID = studentGroup.Id };
                     Insert(sgs);
                     _context.SaveChanges();
+                    return true;
                 }
+                return false;
             }
+            return false;
         }
 
-        public void DisassociateStudentToStudentGroup(Student student, StudentGroup studentGroup)
+        public void DisassociateStudentFromStudentGroup(Student student, StudentGroup studentGroup)
         {
             if (student != null && studentGroup != null)
             {

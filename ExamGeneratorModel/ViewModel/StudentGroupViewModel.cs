@@ -11,10 +11,12 @@ namespace ExamGeneratorModel.ViewModel
     {
         public StudentGroupViewModel()
         {
-            students = new List<Student>();
+            Students = new List<Student>();
+            ExamsCore = new List<ExamCore>();
         }
 
         public StudentGroup StudentGroup { get; set; }
-        public List<Student> students { get; set; }
+        public List<Student> Students { get; set; }
+        public List<ExamCore> ExamsCore { get; set; }
     }
 }

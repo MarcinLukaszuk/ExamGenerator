@@ -45,7 +45,8 @@ namespace ExamGenerator
             builder.RegisterType<StudentService>().As<IStudentService>();
             builder.RegisterType<StudentGroupService>().As<IStudentGroupService>();
             builder.RegisterType<StudentGroupStudentService>().As<IStudentGroupStudentService>();
-
+            builder.RegisterType<ExamCoreStudentGroupService>().As<IExamCoreStudentGroupService>();
+            
             var container = builder.Build();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
 

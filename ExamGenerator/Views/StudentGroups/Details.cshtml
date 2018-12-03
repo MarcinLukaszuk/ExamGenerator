@@ -4,48 +4,100 @@
     ViewBag.Title = "Details";
 }
 
-
 <div>
     <h2>StudentGroup:  <b>@Html.DisplayFor(model => model.StudentGroup.Name)</b></h2>
 </div>
-<table class="table">
-    @if (Model.students.Any())
-    {
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.students.First().Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.students.First().SurName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.students.First().Email)
-            </th>
-            <th></th>
-        </tr>
-    }
+<div class="col-md-12">
+    <div class="col-md-6">
+        <h4><b>Students</b></h4>
+        <table class="table">
+            @if (Model.Students.Any())
+            {
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Students.First().Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Students.First().SurName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Students.First().Email)
+                    </th>
+                    <th></th>
+                </tr>
+            }
 
-    @foreach (var item in Model.students)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SurName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-        </tr>
-    }
+            @foreach (var item in Model.Students)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SurName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                </tr>
+            }
 
-</table>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <h4><b>Exams</b></h4>
+        <table class="table">
+            @if (Model.ExamsCore.Any())
+            {
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ExamsCore.First().Name)
+                    </th>
+                    <th>   </th>
+                </tr>
+            }
+
+            @foreach (var item in Model.ExamsCore)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @using (Html.BeginForm("GenerateExam", "ExamCores", new { ExamCoreID = item.Id, studentGruopID = Model.StudentGroup.Id }))
+                        {
+                            <input value="Generate" class="btn btn-primary" data-toggle="popover" title="Question Number" data-content='<input type="number" name= "questionNumber"class="form-control min="1" max= "@item.Questions.Count"/>  <input value="Save" type="submit" class="btn btn-danger" />' />
 
 
+                        }
+                    </td>
 
+                </tr>
+            }
+        </table>
 
+    </div>
+</div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.StudentGroup.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script>
+
+    $(function () {
+        $('[data-toggle="popover"]').popover({
+            html: true,
+            title: function () {
+                return $("#popover-head").html();
+            },
+            content: function () {
+                return $("#popover-content").html();
+            }
+        })
+    })
+
+
+
+
+</script>

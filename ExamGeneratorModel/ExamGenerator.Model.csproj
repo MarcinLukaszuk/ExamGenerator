@@ -117,9 +117,14 @@
     <Compile Include="Migrations\201812022055188_changename1.Designer.cs">
       <DependentUpon>201812022055188_changename1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201812031743208_addExamCoreStudentGroup.cs" />
+    <Compile Include="Migrations\201812031743208_addExamCoreStudentGroup.Designer.cs">
+      <DependentUpon>201812031743208_addExamCoreStudentGroup.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Answer.cs" />
     <Compile Include="Model\AnswersPositions.cs" />
+    <Compile Include="Model\ExamCoreStudentGroup.cs" />
     <Compile Include="Model\StudentGroupStudent.cs" />
     <Compile Include="Model\Entity.cs" />
     <Compile Include="Model\ExamCore.cs" />
@@ -167,6 +172,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201812022055188_changename1.resx">
       <DependentUpon>201812022055188_changename1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812031743208_addExamCoreStudentGroup.resx">
+      <DependentUpon>201812031743208_addExamCoreStudentGroup.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

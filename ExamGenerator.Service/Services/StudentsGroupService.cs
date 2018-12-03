@@ -17,6 +17,28 @@ namespace ExamGenerator.Service.Services
             _context = dbContext;
         }
 
+        public List<ExamCore> GetExamsCoreByStudentGroup(int studentGroupID)
+        {
+            var associatedExamsCore = _context.ExamCoreStudentGroups.Where(x => x.StudentGroupID == studentGroupID).ToList();
+            List<ExamCore> examsCoreList = new List<ExamCore>();
+            foreach (var examCoreAssociated in associatedExamsCore)
+            {
+                examsCoreList.Add(_context.Exams.Find(examCoreAssociated.ExamCoreID));
+            }
+            return examsCoreList;
+        }
+
+        public List<ExamCore> GetExamsCoreNotInStudentGroup(int studentGroupID)
+        {
+            var associatedExamsCore = _context.ExamCoreStudentGroups.Where(x => x.StudentGroupID == studentGroupID).ToList();
+            List<ExamCore> examsCoreList = _context.Exams.ToList();
+            foreach (var examCoreAssociated in associatedExamsCore)
+            {
+                examsCoreList.Remove(_context.Exams.Find(examCoreAssociated.ExamCoreID));
+            }
+            return examsCoreList;
+        }
+
         public List<Student> GetStudentByStudentGroup(int studentGroupID)
         {
             var associatedStudents = _context.StudentGroupStudents.Where(x => x.StudentGroupID == studentGroupID).ToList();
@@ -24,6 +46,17 @@ namespace ExamGenerator.Service.Services
             foreach (var studentAssociated in associatedStudents)
             {
                 studentList.Add(_context.Students.Find(studentAssociated.StudentID));
+            }
+            return studentList;
+        }
+
+        public List<Student> GetStudentNotInStudentGroup(int studentGroupID)
+        {
+            var associatedStudents = _context.StudentGroupStudents.Where(x => x.StudentGroupID == studentGroupID).ToList();
+            List<Student> studentList = _context.Students.ToList();
+            foreach (var studentAssociated in associatedStudents)
+            {
+                studentList.Remove(_context.Students.Find(studentAssociated.StudentID));
             }
             return studentList;
         }

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace ExamGenerator.DocumentManager
 {
-    public static class BitmapAnalXD
+    public static class BitmapAnalyser
     {
         static readonly float standardDocumentHeight = 842;
 

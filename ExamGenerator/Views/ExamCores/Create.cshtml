@@ -1,11 +1,11 @@
-﻿@model ExamGeneratorModel.ViewModel.ExamViewModel
+﻿@model ExamGeneratorModel.ViewModel.ExamCoreViewModel
 @{int index = Model.Questions.Count;}
 @{
     ViewBag.Title = "Create";
 }
 <h2>Create</h2>
 
-@using (Html.BeginForm("Create", "Exams"))
+@using (Html.BeginForm("Create", "ExamCores"))
 {
     @Html.AntiForgeryToken()
 
@@ -57,7 +57,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" formaction=@Url.Action("Create","Exams",new {}) class="btn btn-default" />
+                <input type="submit" value="Create" formaction=@Url.Action("Create","ExamCores",new {}) class="btn btn-default" />
             </div>
         </div>
     </div>

@@ -165,8 +165,6 @@ namespace ExamGenerator.Controllers
             var answerPositions = creator.AnswerPositionDTO;
            // serviceAP.InsertRange(6, Mapper.Map<List<AnswerPosition>>(pozycje));
 
-
-
             return Json("aaaa", JsonRequestBehavior.AllowGet);
         }
         public FileResult GetPdfExam(int id)
@@ -182,9 +180,18 @@ namespace ExamGenerator.Controllers
             var answerPositions = creator.AnswerPositionDTO;
            _answerPositionService.InsertRange(6, Mapper.Map<List<AnswerPosition>>(answerPositions));
 
-
             string fullPath = Path.Combine(path, creator.Filename);
             return File(fullPath, "application/pdf", creator.Filename); 
+        }
+
+        [HttpPost, ActionName("GenerateExam")]
+        public ActionResult GenerateExamPost(int? ExamCoreID, int? studentGruopID, int? questionNumber)
+        {
+
+
+
+
+            return RedirectToAction("Details", "StudentGroups", new { id = (int)studentGruopID });
         }
 
     }

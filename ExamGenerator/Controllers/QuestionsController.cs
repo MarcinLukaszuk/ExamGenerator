@@ -59,7 +59,7 @@ namespace ExamGenerator.Controllers
         {
             ModelState.Clear();
             examViewModel.Questions.Add(new QuestionViewModel() { ExamCoreID= examViewModel .Id});
-            return View("~/Views/Exams/Create.cshtml", examViewModel);
+            return View("~/Views/ExamCores/Create.cshtml", examViewModel);
         }
 
         public ActionResult RemoveQuestionCreate([Bind(Include = "Id,Name,Questions")] ExamCoreViewModel examViewModel, int? questionID)
@@ -67,21 +67,21 @@ namespace ExamGenerator.Controllers
             ModelState.Clear();
             if (questionID != null)
                 examViewModel.Questions.RemoveAt((int)questionID);
-            return View("~/Views/Exams/Create.cshtml", examViewModel);
+            return View("~/Views/ExamCores/Create.cshtml", examViewModel);
         }
 
         public ActionResult AddQuestionEdit([Bind(Include = "Id,Name,Questions")] ExamCoreViewModel examViewModel)
         {
             ModelState.Clear();
             examViewModel.Questions.Add(new QuestionViewModel() { ExamCoreID = examViewModel.Id });
-            return View("~/Views/Exams/Edit.cshtml", examViewModel);
+            return View("~/Views/ExamCores/Edit.cshtml", examViewModel);
         }
         public ActionResult RemoveQuestionEdit([Bind(Include = "Id,Name,Questions")] ExamCoreViewModel examViewModel, int? questionID)
         {
             ModelState.Clear();
             if (questionID != null)
                 examViewModel.Questions.RemoveAt((int)questionID);
-            return View("~/Views/Exams/Edit.cshtml", examViewModel);
+            return View("~/Views/ExamCores/Edit.cshtml", examViewModel);
         }
 
         // POST: Questions/Create

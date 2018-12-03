@@ -9,8 +9,8 @@ namespace ExamGenerator.Service.Interfaces
 {
     public interface IStudentGroupStudentService : IService<StudentGroupStudent>
     {
-        void AssociateStudentToStudentGroup(Student student, StudentGroup studentGroup);
-        void DisassociateStudentToStudentGroup(Student student, StudentGroup studentGroup);
+        bool AssociateStudentToStudentGroup(Student student, StudentGroup studentGroup);
+        void DisassociateStudentFromStudentGroup(Student student, StudentGroup studentGroup);
 
     }
 }

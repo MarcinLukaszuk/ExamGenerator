@@ -8,83 +8,146 @@
 <div>
     <h2>StudentGroup:  <b>@Html.DisplayFor(model => model.StudentGroup.Name)</b></h2>
 </div>
+<div class="col-md-12">
+    @using (Html.BeginForm())
+    {
+        <input type="hidden" name="studentGroupID" value="@Model.StudentGroup.Id" />
+        @Html.AntiForgeryToken()
 
-@using (Html.BeginForm())
-{
-    <input type="hidden" name="studentGroupID" value="@Model.StudentGroup.Id" />
-    @Html.AntiForgeryToken()
+        <div class="form-horizontal">
 
-    <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => Model.StudentGroup.Id)
 
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => Model.StudentGroup.Id)
+            <div class="form-group">
+                @Html.LabelFor(model => Model.StudentGroup.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-5">
+                    @Html.EditorFor(model => Model.StudentGroup.Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => Model.StudentGroup.Name, "", new { @class = "text-danger" })
 
-        <div class="form-group">
-            @Html.LabelFor(model => Model.StudentGroup.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-5">
-                @Html.EditorFor(model => Model.StudentGroup.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => Model.StudentGroup.Name, "", new { @class = "text-danger" })
+                </div>
 
-            </div>
-
-            <div class="col-md-5">
-                <input type="submit" value="Save Group" class="btn btn-success" />
+                <div class="col-md-5">
+                    <input type="submit" value="Save Group" class="btn btn-success" />
+                </div>
             </div>
         </div>
-    </div>
+        <div class="col-md-6">
+            @Html.DropDownList("Associate.Student", (IEnumerable<SelectListItem>)ViewBag.StudentsList, "Associate Student", new { @class = "form-control", @onchange = "AssociateStudent(this.value)" })
 
-    <table class="table">
-        @if (Model.students.Any())
-        {
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.students.First().Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.students.First().SurName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.students.First().Email)
-                </th>
-                <th></th>
-            </tr>
-        }
+            <table class="table">
+                @if (Model.Students.Any())
+                {
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Students.First().Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Students.First().SurName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Students.First().Email)
+                        </th>
+                        <th></th>
+                    </tr>
+                }
 
-        @foreach (var student in Model.students)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => student.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => student.SurName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => student.Email)
-                </td>
-                <td>
-                    <input type="submit" value="Disassociate" formaction=@Url.Action("DisassociateStudentsToGroup", "StudentGroups", new { studentID = student.Id, studentGroupID = Model.StudentGroup.Id }) class="btn btn-danger" />
+                @foreach (var student in Model.Students)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => student.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => student.SurName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => student.Email)
+                        </td>
+                        <td>
+                            <input type="submit" value="Disassociate" formaction=@Url.Action("DisassociateStudentsToGroup", "StudentGroups", new { studentID = student.Id, studentGroupID = Model.StudentGroup.Id }) class="btn btn-danger" />
 
-                </td>
-            </tr>
+                        </td>
+                    </tr>
 
-        }
+                }
 
-    </table>
-}
- 
-@using (Html.BeginForm("AddStudentsToGroup", "StudentGroups", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    
-    <label class="btn btn-default btn-file">
-       Browse file <input type="file" name="FileUpload" style="display: none;" />
-    </label>
- 
-    <input type="submit" formaction=@Url.Action("AddStudentsToGroup", "StudentGroups", new { studentGroupID = Model.StudentGroup.Id })  class="btn btn-default" value="Upload" />
-}
+            </table>
+
+
+        </div>
+        <div class="col-md-6">
+            @Html.DropDownList("Associate.Exam", (IEnumerable<SelectListItem>)ViewBag.ExamsCoreList, "Associate Exam", new { @class = "form-control", @onchange = "AssociateExam(this.value)" })
+
+            <table class="table">
+                @if (Model.ExamsCore.Any())
+                {
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ExamsCore.First().Name)
+                        </th>
+                    </tr>
+                }
+
+                @foreach (var exam in Model.ExamsCore)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => exam.Name)
+                        </td>
+                        <td>
+                            <input type="submit" value="Disassociate" formaction=@Url.Action("DisassociateExamFromGroup", "StudentGroups", new { examCoreID = exam.Id, studentGroupID = Model.StudentGroup.Id }) class="btn btn-danger" />
+
+                        </td>
+                    </tr>
+                }
+            </table>
+
+        </div>
+    }
+</div>
+@*@using (Html.BeginForm("AddStudentsToGroup", "StudentGroups", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+
+        <label class="btn btn-default btn-file">
+            Browse file <input type="file" name="FileUpload" style="display: none;" />
+        </label>
+
+        <input type="submit" formaction=@Url.Action("AddStudentsToGroup", "StudentGroups", new { studentGroupID = Model.StudentGroup.Id }) class="btn btn-default" value="Upload" />
+    }*@
 
 
 
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+
+<script>
+    var studentGroupID= @Model.StudentGroup.Id;
+    function AssociateStudent(studentID)
+    {
+        if (!studentID) {
+            return;
+        }
+        var url = "/StudentGroups/AssociateStudentToGroup?studentID=" + studentID + "&studentGroupID=" + studentGroupID;
+        $.post(url, function (data) { 
+            if (data == "True") {
+                window.location.reload(false);
+            }
+        });
+    }
+
+    function AssociateExam(examID) {
+        if (!examID) {
+            return;
+        }
+        var url = "/StudentGroups/AssociateExamCoreToGroup?examCoreID=" + examID + "&studentGroupID=" + studentGroupID;
+        $.post(url, function (data) {
+            if (data == "True") {
+                window.location.reload(false);
+            }
+        });
+    }
+
+</script>
