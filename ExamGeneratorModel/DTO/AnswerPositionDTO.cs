@@ -10,6 +10,7 @@ namespace ExamGeneratorModel.DTO
     {
         public int Id { get; set; }
         public int AnswerID { get; set; }
+        public int GeneratedExamID { get; set; }
         public int PageNumber { get; set; }
         public float X { get; set; }
         public float Y { get; set; }

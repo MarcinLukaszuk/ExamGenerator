@@ -20,6 +20,7 @@ namespace ExamGenerator.DocumentManager.PDFCreator
         LinkedList<PdfPTable> tables;
         LinkedList<QuestionDTO> questions;
         List<AnswerPositionDTO> examAnswerPositions;
+        public int ExamID { get; set; }
         public string Filename
         {
             get
@@ -42,10 +43,11 @@ namespace ExamGenerator.DocumentManager.PDFCreator
             }
         }
 
-        public PDFDocument(ExamDTO exam,string path)
+        public PDFDocument(ExamDTO exam, string path)
         {
-            _filename = PDFHelpers.GetMD5(exam.Id.ToString()) + ".pdf";
-            _filepath = path+"\\";
+            ExamID = exam.Id;
+            _filename = PDFHelpers.GetMD5(ExamID.ToString()) + ".pdf";
+            _filepath = path + "\\";
             _document = new Document(PageSize.A4, 36, 36, 36, 36);
             _writer = PdfWriter.GetInstance(_document, new FileStream(_filepath + _filename, FileMode.Create));
             _writer.PageEvent = PDFHelpers.CreatePageEventHelper(exam);
@@ -74,7 +76,7 @@ namespace ExamGenerator.DocumentManager.PDFCreator
                 var currentAnswerPositions = new LinkedList<AnswerPositionDTO>();
                 var table = PDFHelpers.PDFTableCreator(question, questionCounter++);
                 _document.Add(table);
-                currentAnswerPositions = PDFHelpers.getAbsolutePositionOfAnswers(table, question, _document, _writer);
+                currentAnswerPositions = PDFHelpers.getAbsolutePositionOfAnswers(ExamID,table, question, _document, _writer);
 
                 examAnswerPositions.AddRange(currentAnswerPositions);
             }

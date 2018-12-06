@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExamGeneratorModel.DTO
 {
-    public class ExamDTO: EntityDTO
+    public class ExamDTO : EntityDTO
     {
         public ExamDTO()
         {
@@ -15,6 +15,8 @@ namespace ExamGeneratorModel.DTO
 
         public int Id { get; set; }
         public string Name { get; set; }
+        public string StudentFullName { get; set; }
+
         public List<QuestionDTO> QuestionsDTO { get; set; }
     }
 }

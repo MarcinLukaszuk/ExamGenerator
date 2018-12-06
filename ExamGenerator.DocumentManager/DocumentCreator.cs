@@ -13,6 +13,17 @@ namespace ExamGenerator.DocumentManager
     public class DocumentCreator
     {
         IPDFDocument doc;
+        private List<ExamDTO> examsToGenerate;  
+        private List<PDFDocument> pdfDocuments; 
+        private string pathToDirectory;
+
+        
+
+        public List<PDFDocument> PDFDocuments
+        {
+            get { return pdfDocuments; }
+            set { pdfDocuments = value; }
+        }
         public List<AnswerPositionDTO> AnswerPositionDTO
         {
             get
@@ -24,7 +35,7 @@ namespace ExamGenerator.DocumentManager
         {
             get
             {
-                return doc.Filename; 
+                return doc.Filename;
             }
         }
         public string Filepath
@@ -34,14 +45,38 @@ namespace ExamGenerator.DocumentManager
                 return doc.Filepath;
             }
         }
-        public DocumentCreator(ExamDTO exam,string path)
+        public DocumentCreator(ExamDTO exam, string path)
         {
-            doc = new PDFDocument(exam,path);
+            doc = new PDFDocument(exam, path);
             foreach (var item in exam.QuestionsDTO)
             {
                 doc.AddExercise(item);
             }
             doc.SaveDocument();
+        }
+        public DocumentCreator(string _pathToDirectory)
+        {
+            examsToGenerate = new List<ExamDTO>();
+            pdfDocuments = new List<PDFDocument>();
+            pathToDirectory = _pathToDirectory;
+        }
+
+        public void AddExamToGenerate(ExamDTO exam)
+        {
+            examsToGenerate.Add(exam);
+        }
+        public void Generate()
+        {
+            foreach (var examDTO in examsToGenerate)
+            {
+                var pdfDocument = new PDFDocument(examDTO, pathToDirectory);
+                foreach (var item in examDTO.QuestionsDTO)
+                {
+                    pdfDocument.AddExercise(item);
+                }
+                pdfDocuments.Add(pdfDocument);
+                pdfDocument.SaveDocument();
+            }
         }
     }
 }

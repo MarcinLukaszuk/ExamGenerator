@@ -25,7 +25,7 @@ namespace ExamGenerator.Service.Services
             {
                 examsCoreList.Add(_context.Exams.Find(examCoreAssociated.ExamCoreID));
             }
-            return examsCoreList;
+            return examsCoreList.OrderBy(x => x.Name).ToList();
         }
 
         public List<ExamCore> GetExamsCoreNotInStudentGroup(int studentGroupID)
@@ -36,10 +36,10 @@ namespace ExamGenerator.Service.Services
             {
                 examsCoreList.Remove(_context.Exams.Find(examCoreAssociated.ExamCoreID));
             }
-            return examsCoreList;
+            return examsCoreList.OrderBy(x => x.Name).ToList();
         }
 
-        public List<Student> GetStudentByStudentGroup(int studentGroupID)
+        public List<Student> GetStudentsByStudentGroup(int? studentGroupID)
         {
             var associatedStudents = _context.StudentGroupStudents.Where(x => x.StudentGroupID == studentGroupID).ToList();
             List<Student> studentList = new List<Student>();
@@ -47,10 +47,10 @@ namespace ExamGenerator.Service.Services
             {
                 studentList.Add(_context.Students.Find(studentAssociated.StudentID));
             }
-            return studentList;
+            return studentList.OrderBy(x => x.Email).ToList();
         }
 
-        public List<Student> GetStudentNotInStudentGroup(int studentGroupID)
+        public List<Student> GetStudentNotInStudentGroup(int? studentGroupID)
         {
             var associatedStudents = _context.StudentGroupStudents.Where(x => x.StudentGroupID == studentGroupID).ToList();
             List<Student> studentList = _context.Students.ToList();
@@ -58,7 +58,12 @@ namespace ExamGenerator.Service.Services
             {
                 studentList.Remove(_context.Students.Find(studentAssociated.StudentID));
             }
-            return studentList;
+            return studentList.OrderBy(x => x.Email).ToList();
+        }
+
+        public List<int> GetStudentsGroupStudentID(int? studentGroupID)
+        {
+            return _context.StudentGroupStudents.Where(x => x.StudentGroupID == studentGroupID).Select(x=>x.Id).ToList();
         }
     }
 }

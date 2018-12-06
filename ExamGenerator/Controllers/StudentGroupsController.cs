@@ -60,7 +60,7 @@ namespace ExamGenerator.Controllers
             StudentGroupViewModel viewModel = new StudentGroupViewModel()
             {
                 StudentGroup = studentGroup,
-                Students = _studentGroupService.GetStudentByStudentGroup(studentGroup.Id).ToList(),
+                Students = _studentGroupService.GetStudentsByStudentGroup(studentGroup.Id).ToList(),
                 ExamsCore = _studentGroupService.GetExamsCoreByStudentGroup(studentGroup.Id).ToList()
             };
             return View(viewModel);
@@ -104,7 +104,7 @@ namespace ExamGenerator.Controllers
             StudentGroupViewModel viewModel = new StudentGroupViewModel()
             {
                 StudentGroup = studentGroup,
-                Students = _studentGroupService.GetStudentByStudentGroup(studentGroup.Id).ToList(),
+                Students = _studentGroupService.GetStudentsByStudentGroup(studentGroup.Id).ToList(),
                 ExamsCore = _studentGroupService.GetExamsCoreByStudentGroup(studentGroup.Id).ToList()
             };
 

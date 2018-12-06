@@ -74,7 +74,7 @@ namespace ExamGenerator.DocumentManager.PDFCreator
             return image;
         }
 
-        public static LinkedList<AnswerPositionDTO> getAbsolutePositionOfAnswers(PdfPTable table, QuestionDTO question, Document document, PdfWriter writer)
+        public static LinkedList<AnswerPositionDTO> getAbsolutePositionOfAnswers(int ExamID, PdfPTable table, QuestionDTO question, Document document, PdfWriter writer)
         {
             var answerPositions = new LinkedList<AnswerPositionDTO>();
             var answersDTO = question.AnswersDTO;
@@ -95,11 +95,12 @@ namespace ExamGenerator.DocumentManager.PDFCreator
                     Height = row.GetMaxRowHeightsWithoutCalculating(),
                     Width = row.GetCells().ElementAt(0).Width,
                     PageNumber = writer.CurrentPageNumber,
-                    AnswerID = answersDTO.ElementAt(i).Id
+                    AnswerID = answersDTO.ElementAt(i).Id,
+                    GeneratedExamID = ExamID
                 });
 
                 lol = lol == BaseColor.YELLOW ? BaseColor.BLUE : BaseColor.YELLOW;
-               
+
                 end = answerPositions.First().Y;
                 ++i;
             }
@@ -159,7 +160,7 @@ namespace ExamGenerator.DocumentManager.PDFCreator
             };
 
 
-            PdfPCell centerCell = new PdfPCell(new Paragraph("Nazwa: "+_examName))
+            PdfPCell centerCell = new PdfPCell(new Paragraph("Nazwa: " + _examName))
             {
                 Border = Rectangle.NO_BORDER
             };

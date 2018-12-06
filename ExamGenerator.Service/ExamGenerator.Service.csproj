@@ -77,6 +77,7 @@
     <Compile Include="Interfaces\IAnswerService.cs" />
     <Compile Include="Interfaces\IExamCoreService.cs" />
     <Compile Include="Interfaces\IExamCoreStudentGroupService.cs" />
+    <Compile Include="Interfaces\IGeneratedExamService.cs" />
     <Compile Include="Interfaces\IQuestionService.cs" />
     <Compile Include="Interfaces\IStudentGroupStudentService.cs" />
     <Compile Include="Interfaces\IStudentService.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Services\AnswerService.cs" />
     <Compile Include="Services\ExamCoreService.cs" />
     <Compile Include="Services\ExamCoreStudentGroupService.cs" />
+    <Compile Include="Services\GeneratedExamService.cs" />
     <Compile Include="Services\QuestionService.cs" />
     <Compile Include="Services\StudentGroupStudentService.cs" />
     <Compile Include="Services\StudentService.cs" />

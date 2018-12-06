@@ -9,8 +9,9 @@ namespace ExamGenerator.Service.Interfaces
 {
     public interface IStudentGroupService : IService<StudentGroup>
     {
-        List<Student> GetStudentByStudentGroup(int studentGroupID);
-        List<Student> GetStudentNotInStudentGroup(int studentGroupID);
+        List<int> GetStudentsGroupStudentID(int? studentGroupID);
+        List<Student> GetStudentsByStudentGroup(int? studentGroupID);
+        List<Student> GetStudentNotInStudentGroup(int? studentGroupID);
 
         List<ExamCore> GetExamsCoreByStudentGroup(int studentGroupID);
         List<ExamCore> GetExamsCoreNotInStudentGroup(int studentGroupID);

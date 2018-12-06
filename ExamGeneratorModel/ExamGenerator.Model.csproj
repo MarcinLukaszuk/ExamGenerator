@@ -121,10 +121,28 @@
     <Compile Include="Migrations\201812031743208_addExamCoreStudentGroup.Designer.cs">
       <DependentUpon>201812031743208_addExamCoreStudentGroup.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201812061907175_addGeneratedExam.cs" />
+    <Compile Include="Migrations\201812061907175_addGeneratedExam.Designer.cs">
+      <DependentUpon>201812061907175_addGeneratedExam.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812061930558_addGeneratedExamQuestion.cs" />
+    <Compile Include="Migrations\201812061930558_addGeneratedExamQuestion.Designer.cs">
+      <DependentUpon>201812061930558_addGeneratedExamQuestion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812062203073_fullDatabase.cs" />
+    <Compile Include="Migrations\201812062203073_fullDatabase.Designer.cs">
+      <DependentUpon>201812062203073_fullDatabase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812062324123_addGeneratedExamToAP.cs" />
+    <Compile Include="Migrations\201812062324123_addGeneratedExamToAP.Designer.cs">
+      <DependentUpon>201812062324123_addGeneratedExamToAP.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Answer.cs" />
     <Compile Include="Model\AnswersPositions.cs" />
     <Compile Include="Model\ExamCoreStudentGroup.cs" />
+    <Compile Include="Model\GeneratedExam.cs" />
+    <Compile Include="Model\GeneratedExamQuestion.cs" />
     <Compile Include="Model\StudentGroupStudent.cs" />
     <Compile Include="Model\Entity.cs" />
     <Compile Include="Model\ExamCore.cs" />
@@ -175,6 +193,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201812031743208_addExamCoreStudentGroup.resx">
       <DependentUpon>201812031743208_addExamCoreStudentGroup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812061907175_addGeneratedExam.resx">
+      <DependentUpon>201812061907175_addGeneratedExam.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812061930558_addGeneratedExamQuestion.resx">
+      <DependentUpon>201812061930558_addGeneratedExamQuestion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812062203073_fullDatabase.resx">
+      <DependentUpon>201812062203073_fullDatabase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812062324123_addGeneratedExamToAP.resx">
+      <DependentUpon>201812062324123_addGeneratedExamToAP.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

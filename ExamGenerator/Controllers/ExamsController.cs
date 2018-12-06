@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -21,24 +22,35 @@ namespace ExamGenerator.Controllers
 {
     public class ExamCoresController : Controller
     {
-        private IExamCoreService _examService;
+        private IExamCoreService _examCoreService;
         private IAnswerService _answerService;
         private IQuestionService _questionService;
         private IAnswerPositionService _answerPositionService;
-
+        private IStudentGroupService _studentGroupService;
+        private IGeneratedExamService _generatedExamService;
         public ExamCoresController() { }
-        public ExamCoresController(IExamCoreService examService, IAnswerService answerService, IQuestionService questionService, IAnswerPositionService answerPositionService)
+        public ExamCoresController
+            (
+            IExamCoreService examCoreService,
+            IAnswerService answerService,
+            IQuestionService questionService,
+            IAnswerPositionService answerPositionService,
+            IStudentGroupService studentGroupService,
+            IGeneratedExamService generatedExamService
+            )
         {
-            _examService = examService;
+            _examCoreService = examCoreService;
             _answerService = answerService;
             _questionService = questionService;
             _answerPositionService = answerPositionService;
+            _studentGroupService = studentGroupService;
+            _generatedExamService = generatedExamService;
         }
 
         // GET: Exams
         public ActionResult Index()
         {
-            return View(_examService.GetAll().ToList());
+            return View(_examCoreService.GetAll().ToList());
         }
 
         // GET: Exams/Details/5
@@ -48,7 +60,7 @@ namespace ExamGenerator.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ExamCore exam = _examService.Find(id);
+            ExamCore exam = _examCoreService.Find(id);
             if (exam == null)
             {
                 return HttpNotFound();
@@ -80,7 +92,7 @@ namespace ExamGenerator.Controllers
             if (ModelState.IsValid)
             {
                 tmpExam = Mapper.Map<ExamCore>(examViewModel);
-                _examService.Insert(tmpExam);
+                _examCoreService.Insert(tmpExam);
                 //foreach (var question in examViewModel.Questions)
                 //{
                 //    tmpQuestion = Mapper.Map<Question>(question);
@@ -103,7 +115,7 @@ namespace ExamGenerator.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ExamCore exam = _examService.Find(id);
+            ExamCore exam = _examCoreService.Find(id);
             var examViewModel = Mapper.Map<ExamCoreViewModel>(exam);
             if (examViewModel == null)
             {
@@ -122,7 +134,7 @@ namespace ExamGenerator.Controllers
             ExamCore editedExam = Mapper.Map<ExamCore>(examViewModel);
             if (ModelState.IsValid)
             {
-                _examService.Update(editedExam);
+                _examCoreService.Update(editedExam);
                 return RedirectToAction("Index");
             }
             return View(examViewModel);
@@ -135,7 +147,7 @@ namespace ExamGenerator.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ExamCore exam = _examService.Find(id);
+            ExamCore exam = _examCoreService.Find(id);
             if (exam == null)
             {
                 return HttpNotFound();
@@ -148,28 +160,13 @@ namespace ExamGenerator.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            _examService.Delete(id);
+            _examCoreService.Delete(id);
             return RedirectToAction("Index");
         }
 
         public JsonResult GetProducts(int id)
-        { 
-            ExamCore exam = _examService.Find(id);
-            if (exam==null)
-            {
-                return null;
-            }
-            var path = HostingEnvironment.MapPath("~/GeneratedExams");
-            ExamDTO examDTO = Mapper.Map<ExamDTO>(exam);
-            DocumentCreator creator = new DocumentCreator(examDTO, path);
-            var answerPositions = creator.AnswerPositionDTO;
-           // serviceAP.InsertRange(6, Mapper.Map<List<AnswerPosition>>(pozycje));
-
-            return Json("aaaa", JsonRequestBehavior.AllowGet);
-        }
-        public FileResult GetPdfExam(int id)
         {
-            ExamCore exam = _examService.Find(id);
+            ExamCore exam = _examCoreService.Find(id);
             if (exam == null)
             {
                 return null;
@@ -178,21 +175,84 @@ namespace ExamGenerator.Controllers
             ExamDTO examDTO = Mapper.Map<ExamDTO>(exam);
             DocumentCreator creator = new DocumentCreator(examDTO, path);
             var answerPositions = creator.AnswerPositionDTO;
-           _answerPositionService.InsertRange(6, Mapper.Map<List<AnswerPosition>>(answerPositions));
+            // serviceAP.InsertRange(6, Mapper.Map<List<AnswerPosition>>(pozycje));
+
+            return Json("aaaa", JsonRequestBehavior.AllowGet);
+        }
+        public FileResult GetPdfExam(int id)
+        {
+            ExamCore exam = _examCoreService.Find(id);
+            if (exam == null)
+            {
+                return null;
+            }
+            var path = HostingEnvironment.MapPath("~/GeneratedExams");
+            ExamDTO examDTO = Mapper.Map<ExamDTO>(exam);
+            DocumentCreator creator = new DocumentCreator(examDTO, path);
+            var answerPositions = creator.AnswerPositionDTO;
+            _answerPositionService.InsertRange(6, Mapper.Map<List<AnswerPosition>>(answerPositions));
 
             string fullPath = Path.Combine(path, creator.Filename);
-            return File(fullPath, "application/pdf", creator.Filename); 
+            return File(fullPath, "application/pdf", creator.Filename);
         }
 
         [HttpPost, ActionName("GenerateExam")]
         public ActionResult GenerateExamPost(int? ExamCoreID, int? studentGruopID, int? questionNumber)
         {
+            if (ExamCoreID != null && studentGruopID != null && questionNumber != null)
+            {
+                var core = _examCoreService.Find(ExamCoreID);
+                var studentsGroupsStudentsIDList = _studentGroupService.GetStudentsGroupStudentID(studentGruopID);
+                var random = new Random();
+                var path = HostingEnvironment.MapPath("~/GeneratedExams");
 
+                DocumentCreator creator = new DocumentCreator(path);
+                foreach (var studentGroupStudentID in studentsGroupsStudentsIDList)
+                {
+                    var generatedExamDTO = GenerateExamForStudent(core, studentGroupStudentID, (int)questionNumber);
+                    creator.AddExamToGenerate(generatedExamDTO);
 
-
+                }
+                creator.Generate();
+                foreach (var pdfDocument in creator.PDFDocuments)
+                {
+                    _answerPositionService.InsertRange(pdfDocument.ExamID, Mapper.Map<List<AnswerPosition>>(pdfDocument.ExamAnswerPositions));
+                }
+            }
 
             return RedirectToAction("Details", "StudentGroups", new { id = (int)studentGruopID });
         }
 
+        private ExamDTO GenerateExamForStudent(ExamCore examCore, int studentGroupStudentID, int questionNumber)
+        {
+            var generatedExam = new GeneratedExam()
+            {
+                ExamCoreID = examCore.Id,
+                StudentGroupStudentID = studentGroupStudentID
+            };
+            _generatedExamService.Insert(generatedExam);
+            _generatedExamService
+                .AssociateQuestionsToGeneratedExam(generatedExam, examCore.Questions.OrderBy(a => Guid.NewGuid())
+                .Take(questionNumber)
+                .ToList());
+            return getExamDTO(generatedExam.Id);
+        }
+        private ExamDTO getExamDTO(int generatedExamID)
+        {
+
+            var generatedExam = _generatedExamService.Find(generatedExamID);
+            var examCore = _examCoreService.Find(generatedExam?.ExamCoreID);
+            var student = _generatedExamService.GetStudentByGeneratedExamID(generatedExam?.StudentGroupStudentID);
+
+            var questions = _generatedExamService.GetQuestionsByGeneratedExamID(generatedExamID);
+            ExamDTO examDTO = new ExamDTO()
+            {
+                Id = generatedExam.Id,
+                Name = examCore.Name,
+                StudentFullName = student.SurName + " " + student.Name,
+                QuestionsDTO = Mapper.Map<List<QuestionDTO>>(questions)
+            };
+            return examDTO;
+        }
     }
 }

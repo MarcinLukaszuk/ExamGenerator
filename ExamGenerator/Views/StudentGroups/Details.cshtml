@@ -66,7 +66,13 @@
                     <td>
                         @using (Html.BeginForm("GenerateExam", "ExamCores", new { ExamCoreID = item.Id, studentGruopID = Model.StudentGroup.Id }))
                         {
-                            <input value="Generate" class="btn btn-primary" data-toggle="popover" title="Question Number" data-content='<input type="number" name= "questionNumber"class="form-control min="1" max= "@item.Questions.Count"/>  <input value="Save" type="submit" class="btn btn-danger" />' />
+                            <input 
+                                   value="Generate"
+                                   class="btn btn-primary" 
+                                   data-toggle="popover" 
+                                   title="Question Number" 
+                                   data-content='<input type="number" name= "questionNumber"class="form-control min="1" max= "@item.Questions.Count" value="@item.Questions.Count"/>  <input value="Save" type="submit" class="btn btn-danger" />' 
+                                   />
 
 
                         }
