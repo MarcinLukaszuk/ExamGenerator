@@ -6,12 +6,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using AutoMapper;
 using ExamGenerator.DocumentManager;
 using ExamGenerator.DocumentManager.PDFCreator;
+using ExamGenerator.DocumentManager.UnZipArchive;
 using ExamGenerator.Service.Interfaces;
 using ExamGeneratorModel;
 using ExamGeneratorModel.DTO;
@@ -164,21 +166,7 @@ namespace ExamGenerator.Controllers
             return RedirectToAction("Index");
         }
 
-        public JsonResult GetProducts(int id)
-        {
-            ExamCore exam = _examCoreService.Find(id);
-            if (exam == null)
-            {
-                return null;
-            }
-            var path = HostingEnvironment.MapPath("~/GeneratedExams");
-            ExamDTO examDTO = Mapper.Map<ExamDTO>(exam);
-            DocumentCreator creator = new DocumentCreator(examDTO, path);
-            var answerPositions = creator.AnswerPositionDTO;
-            // serviceAP.InsertRange(6, Mapper.Map<List<AnswerPosition>>(pozycje));
 
-            return Json("aaaa", JsonRequestBehavior.AllowGet);
-        }
         public FileResult GetPdfExam(int id)
         {
             ExamCore exam = _examCoreService.Find(id);
@@ -214,12 +202,14 @@ namespace ExamGenerator.Controllers
 
                 }
                 creator.Generate();
+
+                ArchiveUnZiper.PackFileToArchive(path + "//" + PDFHelpers.GetMD5(creator.PDFDocuments.FirstOrDefault()?.Filename) + ".zip", creator.PDFDocuments.Select(x => x.Filepath + x.Filename).ToList());
+
                 foreach (var pdfDocument in creator.PDFDocuments)
                 {
                     _answerPositionService.InsertRange(pdfDocument.ExamID, Mapper.Map<List<AnswerPosition>>(pdfDocument.ExamAnswerPositions));
                 }
             }
-
             return RedirectToAction("Details", "StudentGroups", new { id = (int)studentGruopID });
         }
 
@@ -239,7 +229,6 @@ namespace ExamGenerator.Controllers
         }
         private ExamDTO getExamDTO(int generatedExamID)
         {
-
             var generatedExam = _generatedExamService.Find(generatedExamID);
             var examCore = _examCoreService.Find(generatedExam?.ExamCoreID);
             var student = _generatedExamService.GetStudentByGeneratedExamID(generatedExam?.StudentGroupStudentID);
@@ -254,5 +243,34 @@ namespace ExamGenerator.Controllers
             };
             return examDTO;
         }
+
+        [HttpPost]
+        public ActionResult CheckUploadExams(HttpPostedFileBase FileUpload)
+        {
+            string path = HostingEnvironment.MapPath("~/UserBitmaps");
+            string fullPath = path + "//" + FileUpload.FileName + PDFHelpers.GetMD5(new Random().Next().ToString()); ;
+            FileUpload.SaveAs(fullPath);
+
+            var bitmaps = ArchiveUnZiper.GetBitmapsFromZipArchive(fullPath);
+            var validator = new DocumentValidator(bitmaps);
+            var examIDs = validator.GetExamIDs();
+
+            foreach (var item in examIDs)
+            {
+                var egzaminAP = _answerPositionService.GetAllAnswersPositionsByExamID(item);
+                var examResults = validator.CheckExam(item, Mapper.Map<List<AnswerPositionDTO>>(egzaminAP));
+
+
+            }
+
+
+
+
+            return RedirectToAction("Details", "StudentGroups", new { id = 0 });
+        }
+
+
+
+
     }
 }

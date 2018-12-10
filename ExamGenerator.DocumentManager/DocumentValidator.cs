@@ -40,21 +40,25 @@ namespace ExamGenerator.DocumentManager
             return tmp.Distinct().ToList();
         }
 
-        public void CheckExam(int examID, List<AnswerPositionDTO> answerPositionsDTO)
+        public LinkedList<ResultDTO> CheckExam(int examID, List<AnswerPositionDTO> answerPositionsDTO)
         {
+            LinkedList<ResultDTO> results = new LinkedList<ResultDTO>();
+            int i = 1;
             var bitmapList = _exams[examID];
             foreach (var bitmap in bitmapList)
             {
                 var pageNumber = BitmapAnalyser.GetExamPage(bitmap);
-                var pageAnswers = answerPositionsDTO.Where(x => x.PageNumber == pageNumber).OrderBy(x=>x.Y).ToList();
-
+                var pageAnswers = answerPositionsDTO.Where(x => x.PageNumber == pageNumber).OrderBy(x => x.Y).ToList();
+                results.AddLast(new ResultDTO() { QuestionNumber = i++ });
                 foreach (var answer in pageAnswers)
                 {
                     var answerBitmap = BitmapAnalyser.GetAnswerBitmap(bitmap, answer);
-                    var answerBitmapp = BitmapAnalyser.CheckAnswerValue(answerBitmap);
-                    Console.WriteLine(answerBitmapp==answer.AnswerDTO.IfCorrect?"Dobrze":"Zle");
+                    var answerValue = BitmapAnalyser.CheckValue(answerBitmap);
+                    if (answerValue == answer.AnswerDTO.IfCorrect)
+                        results.Last().Points++;
                 }
             }
+            return results;
         }
     }
 }

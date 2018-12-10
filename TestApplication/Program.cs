@@ -26,11 +26,16 @@ namespace TestApplication
             ExamCoreService serviceE = new ExamCoreService(cont, serviceA, serviceQ);
             AnswerPositionService serviceAP = new AnswerPositionService(cont);
 
-            var bitmaps = ArchiveUnZiper.GetBitmapsFromZipArchive("skanTestu.zip");
+            var bitmaps = ArchiveUnZiper.GetBitmapsFromZipArchive("sprawdziany.zip");
             var validator = new DocumentValidator(bitmaps);
             var examIDs = validator.GetExamIDs();
-            var egzaminAP = serviceAP.GetAllAnswersPositionsByExamID(examIDs.FirstOrDefault());
-            validator.CheckExam(examIDs.First(), Mapper.Map<List<AnswerPositionDTO>>(egzaminAP));
+
+            foreach (var item in examIDs)
+            {
+                var egzaminAP = serviceAP.GetAllAnswersPositionsByExamID(item);
+                validator.CheckExam(item, Mapper.Map<List<AnswerPositionDTO>>(egzaminAP));
+                Console.WriteLine();
+            }
             Console.Read();
         }
     }

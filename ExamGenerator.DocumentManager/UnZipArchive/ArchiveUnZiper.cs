@@ -11,6 +11,27 @@ namespace ExamGenerator.DocumentManager.UnZipArchive
 {
     public static class ArchiveUnZiper
     {
+
+        public static void PackFileToArchive(string archivePath, List<string> examsPaths)
+        {
+            if (File.Exists(archivePath)) File.Delete(archivePath);
+            
+            using (ZipArchive newFile = ZipFile.Open(archivePath, ZipArchiveMode.Create))
+            {
+                foreach (string file in examsPaths)
+                {
+                    newFile.CreateEntryFromFile(file, System.IO.Path.GetFileName(file));
+                }
+            }
+
+            foreach (string file in examsPaths)
+            {
+                File.Delete(file);
+            }
+        }
+
+
+
         public static List<Bitmap> GetBitmapsFromZipArchive(string zipArchivePath)
         {
             List<Bitmap> bitmaps = new List<Bitmap>();

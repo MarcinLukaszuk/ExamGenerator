@@ -410,6 +410,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="GeneratedExams\" />
     <Folder Include="TemporaryFiles\" />
+    <Folder Include="UserBitmaps\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

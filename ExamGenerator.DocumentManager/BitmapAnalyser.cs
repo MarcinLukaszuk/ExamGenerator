@@ -18,7 +18,7 @@ namespace ExamGenerator.DocumentManager
         static readonly float standardDocumentHeight = 842;
 
 
-        public static bool? CheckAnswerValue(Bitmap bitmap)
+        public static bool? CheckValue(Bitmap bitmap)
         {
             using (var btm = extractOnlyCheckbox(bitmap))
             {

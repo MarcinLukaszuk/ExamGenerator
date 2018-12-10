@@ -46,7 +46,7 @@ namespace ExamGenerator.DocumentManager.PDFCreator
         public PDFDocument(ExamDTO exam, string path)
         {
             ExamID = exam.Id;
-            _filename = PDFHelpers.GetMD5(ExamID.ToString()) + ".pdf";
+            _filename =exam.StudentFullName+ PDFHelpers.GetMD5(ExamID.ToString()) + ".pdf";
             _filepath = path + "\\";
             _document = new Document(PageSize.A4, 36, 36, 36, 36);
             _writer = PdfWriter.GetInstance(_document, new FileStream(_filepath + _filename, FileMode.Create));

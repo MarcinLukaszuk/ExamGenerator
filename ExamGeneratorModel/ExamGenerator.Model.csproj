@@ -80,6 +80,7 @@
     <Compile Include="DTO\QuestionDTO.cs" />
     <Compile Include="DTO\ExamDTO.cs" />
     <Compile Include="DTO\AnswerDTO.cs" />
+    <Compile Include="DTO\ResultDTO.cs" />
     <Compile Include="ExamGeneratorDBContext.cs" />
     <Compile Include="Migrations\201809172016541_Init.cs" />
     <Compile Include="Migrations\201809172016541_Init.Designer.cs">

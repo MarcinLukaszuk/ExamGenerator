@@ -127,10 +127,14 @@ namespace ExamGenerator.DocumentManager.PDFCreator
     {
         int _testID;
         string _examName;
+        string _fullStudentName;
+        static int _fontsize = 12;
+        static Font _polishFont = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.CP1257, _fontsize, Font.NORMAL);
         public PDFHeader(ExamDTO examDTO)
         {
             _testID = examDTO.Id;
             _examName = examDTO.Name;
+            _fullStudentName = examDTO.StudentFullName;
         }
         public override void OnStartPage(PdfWriter writer, Document document)
         {
@@ -160,7 +164,7 @@ namespace ExamGenerator.DocumentManager.PDFCreator
             };
 
 
-            PdfPCell centerCell = new PdfPCell(new Paragraph("Nazwa: " + _examName))
+            PdfPCell centerCell = new PdfPCell(new Paragraph("Exam Name: " + _examName+"\nStudent Name: "+ _fullStudentName, _polishFont))
             {
                 Border = Rectangle.NO_BORDER
             };
