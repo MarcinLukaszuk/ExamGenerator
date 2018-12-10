@@ -21,7 +21,8 @@ namespace ExamGeneratorModel
         DbSet<ExamCoreStudentGroup> ExamCoreStudentGroups { get; set; }
         DbSet<GeneratedExam> GeneratedExams { get; set; }
         DbSet<GeneratedExamQuestion> GeneratedExamQuestions { get; set; }
-        
+        DbSet<Result> Results { get; set; }
+
         Task<int> SaveChangesAsync();
         int SaveChanges();
     }
@@ -38,5 +39,6 @@ namespace ExamGeneratorModel
         public virtual DbSet<ExamCoreStudentGroup> ExamCoreStudentGroups { get; set; }
         public virtual DbSet<GeneratedExam> GeneratedExams { get; set; }
         public DbSet<GeneratedExamQuestion> GeneratedExamQuestions { get; set; }
+        public DbSet<Result> Results { get; set; }
     }
 }

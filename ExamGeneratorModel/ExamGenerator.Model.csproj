@@ -138,12 +138,17 @@
     <Compile Include="Migrations\201812062324123_addGeneratedExamToAP.Designer.cs">
       <DependentUpon>201812062324123_addGeneratedExamToAP.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201812102220129_addResults.cs" />
+    <Compile Include="Migrations\201812102220129_addResults.Designer.cs">
+      <DependentUpon>201812102220129_addResults.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Answer.cs" />
     <Compile Include="Model\AnswersPositions.cs" />
     <Compile Include="Model\ExamCoreStudentGroup.cs" />
     <Compile Include="Model\GeneratedExam.cs" />
     <Compile Include="Model\GeneratedExamQuestion.cs" />
+    <Compile Include="Model\Result.cs" />
     <Compile Include="Model\StudentGroupStudent.cs" />
     <Compile Include="Model\Entity.cs" />
     <Compile Include="Model\ExamCore.cs" />
@@ -206,6 +211,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201812062324123_addGeneratedExamToAP.resx">
       <DependentUpon>201812062324123_addGeneratedExamToAP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812102220129_addResults.resx">
+      <DependentUpon>201812102220129_addResults.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

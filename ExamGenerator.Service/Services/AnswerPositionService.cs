@@ -21,7 +21,6 @@ namespace ExamGenerator.Service.Services
 
         public List<AnswerPosition> GetAllAnswersPositionsByExamID(int examID)
         {
-
             return _context.AnswersPositions.Where(x => x.GeneratedExamID == examID).ToList();
         }
 
