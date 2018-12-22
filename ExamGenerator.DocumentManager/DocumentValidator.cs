@@ -43,6 +43,7 @@ namespace ExamGenerator.DocumentManager
         public LinkedList<ResultDTO> CheckExam(int examID, List<AnswerPositionDTO> answerPositionsDTO)
         {
             LinkedList<ResultDTO> results = new LinkedList<ResultDTO>();
+            Dictionary<int, int> results2 = new Dictionary<int, int>();
             int i = 1;
             var bitmapList = _exams[examID];
             foreach (var bitmap in bitmapList)
@@ -54,8 +55,15 @@ namespace ExamGenerator.DocumentManager
                 {
                     var answerBitmap = BitmapAnalyser.GetAnswerBitmap(bitmap, answer);
                     var answerValue = BitmapAnalyser.CheckValue(answerBitmap);
-                    if (answerValue == answer.AnswerDTO.IfCorrect)
-                        results.Last().Points++;
+                    if (results2.ContainsKey(answer.AnswerDTO.QuestionID) == false)
+                    {
+                        results2.Add(answer.AnswerDTO.QuestionID, 1);
+                    }
+                    //check if value on paper is correct
+                    if (!(answerValue == answer.AnswerDTO.IfCorrect))
+                        results2[answer.AnswerDTO.QuestionID] = 0;
+
+
                 }
             }
             return results;

@@ -45,16 +45,19 @@
         </table>
     </div>
     <div class="col-md-6">
+
         <h4><b>Exams</b></h4>
         <table class="table">
             @if (Model.ExamsCore.Any())
             {
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ExamsCore.First().Name)
-                    </th>
-                    <th>   </th>
-                </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ExamsCore.First().Name)
+                </th>
+                <th>Generate</th>
+                <th>Is generated</th>
+                <th>Download </th>
+            </tr>
             }
 
             @foreach (var item in Model.ExamsCore)
@@ -66,22 +69,35 @@
                     <td>
                         @using (Html.BeginForm("GenerateExam", "ExamCores", new { ExamCoreID = item.Id, studentGruopID = Model.StudentGroup.Id }))
                         {
-                            <input 
-                                   value="Generate"
-                                   class="btn btn-primary" 
-                                   data-toggle="popover" 
-                                   title="Question Number" 
-                                   data-content='<input type="number" name= "questionNumber"class="form-control min="1" max= "@item.Questions.Count" value="@item.Questions.Count"/>  <input value="Save" type="submit" class="btn btn-danger" />' 
-                                   />
+                        <input value="Generate"
+                               class="btn btn-primary"
+                               data-toggle="popover"
+                               title="Question Number"
+                               data-content='<input type="number" name= "questionNumber" class="form-control" min="1" max= "@item.Questions.Count" value="@item.Questions.Count"/>  <input value="Save" type="submit" class="btn btn-danger" />' />
 
 
                         }
                     </td>
+                    <td>
+                        <span class="glyphicon glyphicon-ok" style="color:blue"></span>
+                        <span class="glyphicon glyphicon-remove" style="color:red"></span>
+                    </td>
+                    <td>
+                        Pobierz
+                    </td>
+
+
 
                 </tr>
             }
         </table>
 
+        @using (Html.BeginForm("CheckUploadExams", "ExamCores", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <input type="file" name="FileUpload" />
+            <input type="submit" name="Submit" id="Submit" value="Upload" />
+        }
+     
     </div>
 </div>
 <p>

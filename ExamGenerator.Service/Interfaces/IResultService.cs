@@ -9,5 +9,6 @@ namespace ExamGenerator.Service.Interfaces
 {
     public interface IResultService : IService<Result>
     {
+        List<Result> GetResultsByStudentGroupAndExam(int? studentGroupID,int? examCoreID);
     }
 }
