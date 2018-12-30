@@ -30,6 +30,7 @@ namespace ExamGenerator.Controllers
         private IAnswerPositionService _answerPositionService;
         private IStudentGroupService _studentGroupService;
         private IGeneratedExamService _generatedExamService;
+        private IExamCoreStudentGroupService _examCoreStudentGroupService;
         public ExamCoresController() { }
         public ExamCoresController
             (
@@ -38,7 +39,8 @@ namespace ExamGenerator.Controllers
             IQuestionService questionService,
             IAnswerPositionService answerPositionService,
             IStudentGroupService studentGroupService,
-            IGeneratedExamService generatedExamService
+            IGeneratedExamService generatedExamService,
+            IExamCoreStudentGroupService examCoreStudentGroupService
             )
         {
             _examCoreService = examCoreService;
@@ -47,6 +49,7 @@ namespace ExamGenerator.Controllers
             _answerPositionService = answerPositionService;
             _studentGroupService = studentGroupService;
             _generatedExamService = generatedExamService;
+            _examCoreStudentGroupService = examCoreStudentGroupService;
         }
 
         // GET: Exams
@@ -71,21 +74,47 @@ namespace ExamGenerator.Controllers
             return View(examVM);
         }
 
+        public ActionResult Validate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Validate(HttpPostedFileBase FileUpload)
+        {
+            string path = HostingEnvironment.MapPath("~/UserBitmaps");
+            string fullPath = path + "//" + FileUpload.FileName + PDFHelpers.GetMD5(new Random().Next().ToString()); ;
+            FileUpload.SaveAs(fullPath);
+
+            var bitmaps = ArchiveUnZiper.GetBitmapsFromZipArchive(fullPath);
+            var validator = new DocumentValidator(bitmaps);
+            var examIDs = validator.GetExamIDs();
+
+            foreach (var item in examIDs)
+            {
+                var egzaminAP = _answerPositionService.GetAllAnswersPositionsByExamID(item);
+                var examResults = validator.CheckExam(item, Mapper.Map<List<AnswerPositionDTO>>(egzaminAP));
+
+
+            }
+            return View();
+        }
+
+
+
         // GET: Exams/Create
         public ActionResult Create()
         {
             var tmp = new ExamCoreViewModel();
             return View(tmp);
         }
-
-
-
+        
         // POST: Exams/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Questions")] ExamCoreViewModel examViewModel)
+        public ActionResult Create([Bind(Include = "Id,Name,Questions")] ExamCoreViewModel examViewModel, HttpPostedFileBase FileUpload)
         {
             ExamCore tmpExam;
             Question tmpQuestion;
@@ -95,16 +124,20 @@ namespace ExamGenerator.Controllers
             {
                 tmpExam = Mapper.Map<ExamCore>(examViewModel);
                 _examCoreService.Insert(tmpExam);
-                //foreach (var question in examViewModel.Questions)
-                //{
-                //    tmpQuestion = Mapper.Map<Question>(question);
-                //    _examService.AddQuestionToExam(tmpExam, tmpQuestion);
-                //    foreach (var answer in question.Answers)
-                //    {
-                //        tmpAnswer = Mapper.Map<Answer>(answer); ;
-                //        _questionService.AddAnswerToQuestion(tmpQuestion, tmpAnswer);
-                //    }
-                //}
+
+                if (FileUpload != null)
+                {
+                    foreach (var que in readQuestionsFile(FileUpload))
+                    {
+                        var questionn                            = Mapper.Map<Question>(que);
+                        _examCoreService.AddQuestionToExam(tmpExam, questionn);
+
+
+
+
+                    }
+                 
+                }
                 return RedirectToAction("Index");
             }
 
@@ -209,6 +242,7 @@ namespace ExamGenerator.Controllers
                 {
                     _answerPositionService.InsertRange(pdfDocument.ExamID, Mapper.Map<List<AnswerPosition>>(pdfDocument.ExamAnswerPositions));
                 }
+                _examCoreStudentGroupService.SetExamArchivePath((int)ExamCoreID, (int)studentGruopID, PDFHelpers.GetMD5(creator.PDFDocuments.FirstOrDefault()?.Filename) + ".zip");
             }
             return RedirectToAction("Details", "StudentGroups", new { id = (int)studentGruopID });
         }
@@ -262,15 +296,33 @@ namespace ExamGenerator.Controllers
 
 
             }
-
-
-
-
             return RedirectToAction("Details", "StudentGroups", new { id = 0 });
         }
+        private List<QuestionDTO> readQuestionsFile(HttpPostedFileBase FileUpload)
+        {
+            LinkedList<QuestionDTO> questions = new LinkedList<QuestionDTO>();
+            using (StreamReader reader = new StreamReader(FileUpload.InputStream, Encoding.Default, true))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    var lineArray = line.Split(';');
+                    //question
+                    if (lineArray[0] != "")
+                    {
+                        questions.AddLast(new QuestionDTO() { QuestionText = lineArray[0] });
+                    }
+                    //answer
+                    if (lineArray[0] == "")
+                    {
+                        var lastQuestion = questions.Last();
 
+                        lastQuestion.AnswersDTO.Add(new AnswerDTO() { TextAnswer = lineArray[1], IfCorrect = lineArray[2] == "1" });
+                    }
+                }
+            }
 
-
-
+            return questions.ToList();
+        }
     }
 }

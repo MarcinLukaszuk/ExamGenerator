@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExamGeneratorModel.DTO
 {
-  public  class ResultDTO
+    public class ResultDTO
     {
         public int QuestionNumber { get; set; }
         public int Points { get; set; }

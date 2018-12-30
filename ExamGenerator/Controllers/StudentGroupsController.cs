@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using ExamGenerator.Service.Interfaces;
 using ExamGeneratorModel;
@@ -57,11 +58,20 @@ namespace ExamGenerator.Controllers
             {
                 return HttpNotFound();
             }
+            var examsCoreVM = _studentGroupService.GetExamsCoreByStudentGroup(studentGroup.Id).ToList().Select(x => new ExamCoreStudentGroupViewModel() { ExamCore = x }).ToList();
+
+            foreach (var item in examsCoreVM)
+            {
+                item.IsGenerated = _examCoreStudentGroupService.CheckIfExamCoreIsGenerated(item.ExamCore.Id, studentGroup.Id);
+                item.IsValidated=_examCoreStudentGroupService.CheckIfExamCoreIsValidated(item.ExamCore.Id, studentGroup.Id); 
+                item.ZIPArchiveName = _examCoreStudentGroupService.GetGenerategExamArchivePath(item.ExamCore.Id, studentGroup.Id);
+            }
+
             StudentGroupViewModel viewModel = new StudentGroupViewModel()
             {
                 StudentGroup = studentGroup,
                 Students = _studentGroupService.GetStudentsByStudentGroup(studentGroup.Id).ToList(),
-                ExamsCore = _studentGroupService.GetExamsCoreByStudentGroup(studentGroup.Id).ToList()
+                ExamsCore = examsCoreVM
             };
             return View(viewModel);
         }
@@ -105,7 +115,7 @@ namespace ExamGenerator.Controllers
             {
                 StudentGroup = studentGroup,
                 Students = _studentGroupService.GetStudentsByStudentGroup(studentGroup.Id).ToList(),
-                ExamsCore = _studentGroupService.GetExamsCoreByStudentGroup(studentGroup.Id).ToList()
+                ExamsCore = _studentGroupService.GetExamsCoreByStudentGroup(studentGroup.Id).Select(x => new ExamCoreStudentGroupViewModel() { ExamCore = x }).ToList()
             };
 
             ViewBag.StudentsList = new SelectList(_studentGroupService.GetStudentNotInStudentGroup(studentGroup.Id).Select(p =>
@@ -261,6 +271,7 @@ namespace ExamGenerator.Controllers
 
             return RedirectToAction("Edit", "StudentGroups", new { id = studentGroupID });
         }
+
         [HttpPost]
         public bool AssociateExamCoreToGroup(int? examCoreID, int? studentGroupID)
         {
@@ -278,6 +289,7 @@ namespace ExamGenerator.Controllers
             }
             return returnValue;
         }
+
         [HttpPost]
         public ActionResult DisassociateExamFromGroup(int? examCoreID, int? studentGroupID)
         {
@@ -290,5 +302,10 @@ namespace ExamGenerator.Controllers
             return RedirectToAction("Edit", "StudentGroups", new { id = studentGroupID });
         }
 
+        public FileResult GetExamsArchive(string filename)
+        {
+            var path = HostingEnvironment.MapPath("~/GeneratedExams");
+            return File(path+"//"+ filename, "application/zip", filename);
+        }
     }
 }

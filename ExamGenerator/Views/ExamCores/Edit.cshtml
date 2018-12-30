@@ -10,62 +10,91 @@
 @using (Html.BeginForm("Edit", "ExamCores"))
 {
     @Html.AntiForgeryToken()
-    
-<div class="form-horizontal">
-    <h4>Exam</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.Id)
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-7">
-            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-        </div>
-        <div class="col-md-3">
+    <div class="form-horizontal">
+        <h4>Exam</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
 
-            <input type="submit" value="Add Question" formaction=@Url.Action("AddQuestionEdit", "Questions", new { }) class="btn btn-primary" />
-        </div>
-    </div>
-    @for (int i = 0; i < Model.Questions.Count(); i++)
-    {
-        @Html.HiddenFor(model => model.Questions[i].Id)
-        @Html.HiddenFor(model => model.Questions[i].ExamCoreID)
         <div class="form-group">
-            @Html.LabelFor(model => model.Questions[i].QuestionText, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-7">
-                @Html.EditorFor(model => model.Questions[i].QuestionText, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Questions[i].QuestionText, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
             <div class="col-md-3">
-                <input type="submit" value="Add Answer" formaction=@Url.Action("AddAnswerEdit","Answers",new { questionID =i}) class="btn btn-success" />
-                <input type="submit" value="Remove Question" formaction=@Url.Action("RemoveQuestionEdit","Questions",new { questionID =i }) class="btn btn-danger" />
+
+                <input type="submit" value="Add Question" formaction=@Url.Action("AddQuestionEdit", "Questions", new { }) class="btn btn-primary" />
             </div>
         </div>
-
-        for (int j = 0; j < Model.Questions[i].Answers.Count(); j++)
+        @for (int i = 0; i < Model.Questions.Count(); i++)
         {
-            @Html.HiddenFor(model => model.Questions[i].Answers[j].Id)
-            @Html.HiddenFor(model => model.Questions[i].Answers[j].QuestionID)
-            <div class="form-group">
-                @Html.LabelFor(model => Model.Questions[i].Answers[j].TextAnswer, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-7">
-                    @Html.EditorFor(model => Model.Questions[i].Answers[j].TextAnswer, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => Model.Questions[i].Answers[j].TextAnswer, "", new { @class = "text-danger" })
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#collapse_@i">Question @(i+1): @Html.DisplayFor(model => Model.Questions[i].QuestionText)</a>
+                    </h4>
                 </div>
-                <div class="col-md-3">
-                    <input type="submit" value="Remove Answer" formaction=@Url.Action("RemoveAnswerEdit","Answers",new {questionID =i , answerID  = j}) class="btn btn-danger" />
+                <div id="collapse_@i" class="panel-collapse collapse">
+                    @Html.HiddenFor(model => model.Questions[i].Id)
+                    @Html.HiddenFor(model => model.Questions[i].ExamCoreID)
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Questions[i].QuestionText, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-7">
+                            @Html.EditorFor(model => model.Questions[i].QuestionText, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Questions[i].QuestionText, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-3">
+                            <input type="submit" value="Add Answer" formaction=@Url.Action("AddAnswerEdit","Answers",new { questionID =i}) class="btn btn-success" />
+                            <input type="submit" value="Remove Question" formaction=@Url.Action("RemoveQuestionEdit","Questions",new { questionID =i }) class="btn btn-danger" />
+                        </div>
+                    </div>
+
+                    @for (int j = 0; j < Model.Questions[i].Answers.Count(); j++)
+                    {
+                        @Html.HiddenFor(model => model.Questions[i].Answers[j].Id)
+                        @Html.HiddenFor(model => model.Questions[i].Answers[j].QuestionID)
+                        <div class="form-group">
+                            @Html.LabelFor(model => Model.Questions[i].Answers[j].TextAnswer, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => Model.Questions[i].Answers[j].TextAnswer, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => Model.Questions[i].Answers[j].TextAnswer, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.CheckBoxFor(model => Model.Questions[i].Answers[j].IfCorrect, new { @class = "hidden", id = "Question" + i + "Answer" + j, Style = "vertical-align:3px}" })
+
+                                @if (Model.Questions[i].Answers[j].IfCorrect)
+                                {
+                                    <button type="button" onclick="setAnswer(@i,@j,this)" class="btn btn-success">Correct</button>
+                                }
+                                else
+                                {
+                                    <button type="button" onclick="setAnswer(@i,@j,this)" class="btn btn-danger">Not Correct</button>
+                                }
+                            </div>
+                            <div class="col-md-3">
+                                <input type="submit" value="Remove Answer" formaction=@Url.Action("RemoveAnswerEdit","Answers",new {questionID =i , answerID  = j}) class="btn btn-danger" />
+                            </div>
+                        </div>
+                    }
+
+
+
+
                 </div>
             </div>
+
+
+
+           
         }
-    }
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Save" class="btn btn-default" />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
         </div>
     </div>
-</div>
 }
 
 <div>
@@ -75,3 +104,4 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+<script src="~/Script/exam.js"></script>

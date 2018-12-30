@@ -5,7 +5,7 @@
 }
 <h2>Create</h2>
 
-@using (Html.BeginForm("Create", "ExamCores"))
+@using (Html.BeginForm("Create", "ExamCores", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
@@ -21,11 +21,11 @@
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
             <div class="col-md-3">
-               
-                        <input type="submit" value="Add Question" formaction= @Url.Action("AddQuestionCreate", "Questions", new { }) class="btn btn-primary" />
-                    </div>
-        </div>
 
+                <input type="submit" value="Add Question" formaction=@Url.Action("AddQuestionCreate", "Questions", new { }) class="btn btn-primary" />
+            </div>
+        </div>
+        <input type="file" name="FileUpload" />
         @for (int i = 0; i < Model.Questions.Count(); i++)
         {
             <div class="form-group">
@@ -44,10 +44,16 @@
             {
                 <div class="form-group">
                     @Html.LabelFor(model => Model.Questions[i].Answers[j].TextAnswer, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-7">
+                    <div class="col-md-4">
                         @Html.EditorFor(model => Model.Questions[i].Answers[j].TextAnswer, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => Model.Questions[i].Answers[j].TextAnswer, "", new { @class = "text-danger" })
                     </div>
+
+                    <div class="col-md-3">
+                        @Html.CheckBoxFor(model => Model.Questions[i].Answers[j].IfCorrect, new {@class="hidden", id = "Question"+i+"Answer"+j, Style = "vertical-align:3px}" })
+                       <button    type="button" onclick="setAnswer(@i,@j,this)"  class="btn btn-danger">Not Correct</button>
+                    </div>
+                    
                     <div class="col-md-3">
                         <input type="submit" value="Remove Answer" formaction=@Url.Action("RemoveAnswerCreate","Answers",new {questionID =i , answerID  = j}) class="btn btn-danger" />
                     </div>
@@ -71,5 +77,4 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
-
 <script src="~/Script/exam.js"></script>

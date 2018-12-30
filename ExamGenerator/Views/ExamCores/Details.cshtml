@@ -4,48 +4,49 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>
+    Exam: <b>
+        @Html.DisplayFor(model => model.Name)
+
+    </b>
+</h2>
 
 <div>
-    <h4>Exam</h4>
-     
-    <button onclick="pdfDownload()">Download PDF</button>
-    <hr />
-
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-
-
+    <div class="panel-group">
         @for (int i = 0; i < Model.Questions.Count(); i++)
         {
 
-            <dt>
-                @Html.DisplayNameFor(model => Model.Questions[i].QuestionText)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => Model.Questions[i].QuestionText)
-            </dd>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#collapse_@i">@Html.DisplayFor(model => Model.Questions[i].QuestionText)</a>
+                    </h4>
+                </div>
+                <div id="collapse_@i" class="panel-collapse collapse">
 
+                    @for (int j = 0; j < Model.Questions[i].Answers.Count(); j++)
+                    {
+                        if (Model.Questions[i].Answers[j].IfCorrect == true)
+                        {
+                            <div class="panel-body" style="background-color: #28a745;">
+                                @Html.DisplayFor(model => Model.Questions[i].Answers[j].TextAnswer)
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="panel-body" style="background-color: red;">
+                                @Html.DisplayFor(model => Model.Questions[i].Answers[j].TextAnswer)
+                            </div>
+                        }
 
-            for (int j = 0; j < Model.Questions[i].Answers.Count(); j++)
-            {
-                <dt>
-                    @Html.DisplayNameFor(model => Model.Questions[i].Answers[j].TextAnswer)
-                </dt>
-                <dd>
-                    @Html.DisplayFor(model => Model.Questions[i].Answers[j].TextAnswer)
-                </dd>
-            }
+                    }
+
+                </div>
+            </div>
         }
-
-    </dl>
+    </div>
 </div>
+
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")

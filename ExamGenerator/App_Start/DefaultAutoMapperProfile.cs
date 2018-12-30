@@ -26,7 +26,11 @@ namespace ExamGenerator
             CreateMap<Question, QuestionDTO>()
              .ForMember(destination => destination.AnswersDTO,
             opts => opts.MapFrom(source => source.Answers));
-            CreateMap<QuestionDTO, Question>();
+            CreateMap<QuestionDTO, Question>()
+                .ForMember(destination => destination.Answers,
+            opts => opts.MapFrom(source => source.AnswersDTO)); 
+
+
             CreateMap<QuestionViewModel, Question>()
                .ForMember(destination => destination.Answers, opts => opts.MapFrom(source => source.Answers));
             CreateMap<Question, QuestionViewModel>()

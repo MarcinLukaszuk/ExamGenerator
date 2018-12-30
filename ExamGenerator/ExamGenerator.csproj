@@ -225,6 +225,10 @@
     <Compile Include="Migrations\201811181424476_init.Designer.cs">
       <DependentUpon>201811181424476_init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201812221548595_addValidatedFlag.cs" />
+    <Compile Include="Migrations\201812221548595_addValidatedFlag.Designer.cs">
+      <DependentUpon>201812221548595_addValidatedFlag.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -407,6 +411,7 @@
     <Content Include="Views\Results\Details.cshtml" />
     <Content Include="Views\Results\Edit.cshtml" />
     <Content Include="Views\Results\Index.cshtml" />
+    <Content Include="Views\ExamCores\Validate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -444,6 +449,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201811181424476_init.resx">
       <DependentUpon>201811181424476_init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812221548595_addValidatedFlag.resx">
+      <DependentUpon>201812221548595_addValidatedFlag.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

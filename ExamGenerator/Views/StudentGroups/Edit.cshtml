@@ -84,7 +84,7 @@
                 {
                     <tr>
                         <th>
-                            @Html.DisplayNameFor(model => model.ExamsCore.First().Name)
+                            @Html.DisplayNameFor(model => model.ExamsCore.First().ExamCore.Name)
                         </th>
                     </tr>
                 }
@@ -93,10 +93,10 @@
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => exam.Name)
+                            @Html.DisplayFor(modelItem => exam.ExamCore.Name)
                         </td>
                         <td>
-                            <input type="submit" value="Disassociate" formaction=@Url.Action("DisassociateExamFromGroup", "StudentGroups", new { examCoreID = exam.Id, studentGroupID = Model.StudentGroup.Id }) class="btn btn-danger" />
+                            <input type="submit" value="Disassociate" formaction=@Url.Action("DisassociateExamFromGroup", "StudentGroups", new { examCoreID = exam.ExamCore.Id, studentGroupID = Model.StudentGroup.Id }) class="btn btn-danger" />
 
                         </td>
                     </tr>

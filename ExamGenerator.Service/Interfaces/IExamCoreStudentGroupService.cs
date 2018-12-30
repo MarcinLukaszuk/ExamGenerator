@@ -11,6 +11,9 @@ namespace ExamGenerator.Service.Interfaces
     {
         bool AssociateExamToStudentGroup(ExamCore examCore, StudentGroup studentGroup);
         void DisassociateExamFromStudentGroup(ExamCore examCore, StudentGroup studentGroup);
-
+        bool CheckIfExamCoreIsGenerated(int examCoreID, int studentGroupID);
+        bool CheckIfExamCoreIsValidated(int examCoreID, int studentGroupID);
+        string GetGenerategExamArchivePath(int examCoreID, int studentGroupID);
+        void SetExamArchivePath(int examCoreID, int studentGroupID,string path);
     }
 }

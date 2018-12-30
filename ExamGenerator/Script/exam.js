@@ -26,10 +26,7 @@ function removeAnswer(button) {
    var children= parentButton.children;
     for (var i = 0; i < children.length; i++) {
         var element = children[i];
-        
-
     }
- 
 }
 
 function createAnswerDivID(questionID, answerID) {
@@ -39,4 +36,22 @@ function createAnswerDivID(questionID, answerID) {
 
 function pdfDownload(result) { 
     window.location =  getUrl ;
+}
+
+function setAnswer(questionID, answerID,button) {
+   
+    var element = document.getElementById("Question" + questionID + "Answer" + answerID);
+    if (element.checked === true) {
+        element.checked = false;
+        button.innerHTML = "Not Correct";
+        button.className = "btn btn-danger";
+    } else {
+        element.checked = true;
+        button.innerHTML = "Correct";
+        button.className = "btn btn-success";
+    }
+
+
+   
+   
 }

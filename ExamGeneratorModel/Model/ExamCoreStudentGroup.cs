@@ -17,11 +17,11 @@ namespace ExamGeneratorModel.Model
         public int StudentGroupID { get; set; }
         [ForeignKey("ExamCore")]
         public int ExamCoreID { get; set; }
+        public bool? IsGenerated { get; set; }
+        public bool? IsValidated { get; set; }
+        public string ZIPArchiveName { get; set; }
 
         public virtual StudentGroup StudentGroup { get; set; }
         public virtual ExamCore ExamCore { get; set; }
     }
-
-
-
 }

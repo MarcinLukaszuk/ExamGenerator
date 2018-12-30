@@ -40,33 +40,32 @@ namespace ExamGenerator.DocumentManager
             return tmp.Distinct().ToList();
         }
 
-        public LinkedList<ResultDTO> CheckExam(int examID, List<AnswerPositionDTO> answerPositionsDTO)
+        public ResultDTO CheckExam(int examID, List<AnswerPositionDTO> answerPositionsDTO)
         {
-            LinkedList<ResultDTO> results = new LinkedList<ResultDTO>();
             Dictionary<int, int> results2 = new Dictionary<int, int>();
-            int i = 1;
+            int questions = 0;
             var bitmapList = _exams[examID];
             foreach (var bitmap in bitmapList)
             {
                 var pageNumber = BitmapAnalyser.GetExamPage(bitmap);
                 var pageAnswers = answerPositionsDTO.Where(x => x.PageNumber == pageNumber).OrderBy(x => x.Y).ToList();
-                results.AddLast(new ResultDTO() { QuestionNumber = i++ });
+         
                 foreach (var answer in pageAnswers)
                 {
                     var answerBitmap = BitmapAnalyser.GetAnswerBitmap(bitmap, answer);
                     var answerValue = BitmapAnalyser.CheckValue(answerBitmap);
                     if (results2.ContainsKey(answer.AnswerDTO.QuestionID) == false)
                     {
+                        questions++;
                         results2.Add(answer.AnswerDTO.QuestionID, 1);
                     }
                     //check if value on paper is correct
                     if (!(answerValue == answer.AnswerDTO.IfCorrect))
                         results2[answer.AnswerDTO.QuestionID] = 0;
-
-
                 }
             }
-            return results;
+
+            return new ResultDTO() { Points= results2.Select(x => x.Value).Sum() , QuestionNumber= questions };
         }
     }
 }

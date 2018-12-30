@@ -10,7 +10,7 @@ namespace ExamGeneratorModel.Model
         public int Id { get; set; }
         [ForeignKey("ExamCore")]
         public int ExamCoreID { get; set; } 
-        [StringLength(500)] 
+        
         public string QuestionText { get; set; }
 
         public virtual ExamCore ExamCore { get; set; }

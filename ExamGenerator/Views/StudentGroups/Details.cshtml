@@ -52,43 +52,62 @@
             {
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.ExamsCore.First().Name)
+                    @Html.DisplayNameFor(model => model.ExamsCore.First().ExamCore.Name)
                 </th>
-                <th>Generate</th>
                 <th>Is generated</th>
-                <th>Download </th>
+                <th>Results</th>
+                <th>Download Exams </th>
+                <th>Generate Exams</th>
             </tr>
             }
 
             @foreach (var item in Model.ExamsCore)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @using (Html.BeginForm("GenerateExam", "ExamCores", new { ExamCoreID = item.Id, studentGruopID = Model.StudentGroup.Id }))
-                        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExamCore.Name)
+                </td>
+                <td>
+                    @if (item.IsGenerated == true)
+                    {
+                        <span class="glyphicon glyphicon-ok" style="color:blue"></span>
+                    }
+                    else
+                    {
+                        <span class="glyphicon glyphicon-remove" style="color:red"></span>
+                    }
+                </td>
+                <td>
+                    @if (item.IsValidated == true)
+                    {
+                        <span class="glyphicon glyphicon-ok" style="color:blue"></span>
+                    }
+                    else
+                    {
+                        <span class="glyphicon glyphicon-remove" style="color:red"></span>
+                    }
+                </td>
+                <td>
+                    @if (item.IsGenerated == true)
+                    {
+                        <button class="btn btn-success" onclick="zipDownload('@Url.Action("GetExamsArchive", "StudentGroups", new {filename= item.ZIPArchiveName })')">Download</button>
+                    }
+                    else
+                    {
+                      <p>lol</p> 
+                    }
+                </td>
+                <td>
+                    @using (Html.BeginForm("GenerateExam", "ExamCores", new { ExamCoreID = item.ExamCore.Id, studentGruopID = Model.StudentGroup.Id }))
+                    {
                         <input value="Generate"
                                class="btn btn-primary"
                                data-toggle="popover"
                                title="Question Number"
-                               data-content='<input type="number" name= "questionNumber" class="form-control" min="1" max= "@item.Questions.Count" value="@item.Questions.Count"/>  <input value="Save" type="submit" class="btn btn-danger" />' />
-
-
-                        }
-                    </td>
-                    <td>
-                        <span class="glyphicon glyphicon-ok" style="color:blue"></span>
-                        <span class="glyphicon glyphicon-remove" style="color:red"></span>
-                    </td>
-                    <td>
-                        Pobierz
-                    </td>
-
-
-
-                </tr>
+                               data-content='<input type="number" name= "questionNumber" class="form-control" min="1" max= "@item.ExamCore.Questions.Count" value="@item.ExamCore.Questions.Count"/>  <input value="Save" type="submit" class="btn btn-danger" />' />
+                    }
+                </td>
+            </tr>
             }
         </table>
 
@@ -118,8 +137,9 @@
             }
         })
     })
-
-
-
+    function zipDownload(url) {
+       
+        window.location = url;
+    }
 
 </script>

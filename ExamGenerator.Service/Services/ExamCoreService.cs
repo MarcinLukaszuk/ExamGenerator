@@ -84,10 +84,10 @@ namespace ExamGenerator.Service.Services
             foreach (var questionToAdd in questionsToAdd)
             {
                 AddQuestionToExam(editedExam, questionToAdd);
-                foreach (var answerToAdd in questionToAdd.Answers)
-                {
-                    _questionService.AddAnswerToQuestion(questionToAdd, answerToAdd);
-                }
+                //foreach (var answerToAdd in questionToAdd.Answers)
+                //{
+                //   _questionService.AddAnswerToQuestion(questionToAdd, answerToAdd);
+                //}
             }
 
             foreach (var questionToEdit in questionsToEdit)
@@ -146,15 +146,6 @@ namespace ExamGenerator.Service.Services
         }
         private IEnumerable<Question> getQuestionsToEdit(ExamCore exam)
         {
-            foreach (var item in Find(exam.Id).Questions)
-            {
-                var tmp = exam.Questions.FirstOrDefault(x => x.Id == item.Id);
-                if (tmp != null)
-                {
-                    yield return item;
-                }
-            }
-
             foreach (var item in exam.Questions)
             {
                 var tmp = Find(exam.Id).Questions.FirstOrDefault(x => x.Id == item.Id);

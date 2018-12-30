@@ -44,5 +44,44 @@ namespace ExamGenerator.Service.Services
                 }
             }
         }
+
+        public bool CheckIfExamCoreIsGenerated(int examCoreID, int studentGroupID)
+        {
+            var existingAssociate = _context.ExamCoreStudentGroups.Where(x => x.StudentGroupID == studentGroupID && x.ExamCoreID == examCoreID).FirstOrDefault();
+            if (existingAssociate?.IsGenerated == true)
+                return true;
+            return false;
+        }
+
+        public bool CheckIfExamCoreIsValidated(int examCoreID, int studentGroupID)
+        {
+            var existingAssociate = _context.ExamCoreStudentGroups.Where(x => x.StudentGroupID == studentGroupID && x.ExamCoreID == examCoreID).FirstOrDefault();
+
+            if (existingAssociate?.IsValidated == true)
+                return true;
+            return false;
+        }
+
+
+        public string GetGenerategExamArchivePath(int examCoreID, int studentGroupID)
+        {
+            var existingAssociate = _context.ExamCoreStudentGroups.Where(x => x.StudentGroupID == studentGroupID && x.ExamCoreID == examCoreID).FirstOrDefault();
+            if (existingAssociate?.ZIPArchiveName != "")
+            {
+                return existingAssociate.ZIPArchiveName;
+            }
+            return string.Empty;
+        }
+
+        public void SetExamArchivePath(int examCoreID, int studentGroupID, string path)
+        {
+            var existingAssociate = _context.ExamCoreStudentGroups.Where(x => x.StudentGroupID == studentGroupID && x.ExamCoreID == examCoreID).FirstOrDefault();
+            if (existingAssociate != null)
+            {
+                existingAssociate.ZIPArchiveName = path;
+                existingAssociate.IsGenerated = true;
+                _context.SaveChanges();
+            }
+        }
     }
 }
