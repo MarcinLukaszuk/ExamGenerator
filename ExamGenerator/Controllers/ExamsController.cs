@@ -31,6 +31,7 @@ namespace ExamGenerator.Controllers
         private IStudentGroupService _studentGroupService;
         private IGeneratedExamService _generatedExamService;
         private IExamCoreStudentGroupService _examCoreStudentGroupService;
+        private IResultService _resultService;
         public ExamCoresController() { }
         public ExamCoresController
             (
@@ -40,7 +41,8 @@ namespace ExamGenerator.Controllers
             IAnswerPositionService answerPositionService,
             IStudentGroupService studentGroupService,
             IGeneratedExamService generatedExamService,
-            IExamCoreStudentGroupService examCoreStudentGroupService
+            IExamCoreStudentGroupService examCoreStudentGroupService,
+            IResultService resultService
             )
         {
             _examCoreService = examCoreService;
@@ -50,6 +52,7 @@ namespace ExamGenerator.Controllers
             _studentGroupService = studentGroupService;
             _generatedExamService = generatedExamService;
             _examCoreStudentGroupService = examCoreStudentGroupService;
+            _resultService = resultService;
         }
 
         // GET: Exams
@@ -90,12 +93,23 @@ namespace ExamGenerator.Controllers
             var validator = new DocumentValidator(bitmaps);
             var examIDs = validator.GetExamIDs();
 
-            foreach (var item in examIDs)
+            foreach (var examID in examIDs)
             {
-                var egzaminAP = _answerPositionService.GetAllAnswersPositionsByExamID(item);
-                var examResults = validator.CheckExam(item, Mapper.Map<List<AnswerPositionDTO>>(egzaminAP));
-
-
+                var egzaminAP = _answerPositionService.GetAllAnswersPositionsByExamID(examID);
+                var studentID = _resultService.GetStudentIDByExamID(examID);
+                var examResults = validator.CheckExam(examID, Mapper.Map<List<AnswerPositionDTO>>(egzaminAP));
+                examResults.GeneratedExamID = examID;
+                if (studentID != null)
+                    examResults.StudentID = (int)studentID;
+                _resultService.DeletePreviousResults(examID);
+                _resultService.Insert(Mapper.Map<Result>(examResults));
+            }
+            if (examIDs.Count > 0)
+            {
+                _resultService.SetIsValidatetFlagByExamID(examIDs.FirstOrDefault());
+                var examCoreID = _resultService.GetExamCoreIDByExamID(examIDs.FirstOrDefault());
+                var studentGroupID = _resultService.GetStudentGroupIDByExamID(examIDs.FirstOrDefault());
+               return RedirectToAction("Index/", "Results", new { examCoreID = examCoreID.ToString(), studentGroupID = studentGroupID.ToString() } );
             }
             return View();
         }
@@ -108,7 +122,7 @@ namespace ExamGenerator.Controllers
             var tmp = new ExamCoreViewModel();
             return View(tmp);
         }
-        
+
         // POST: Exams/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
@@ -129,14 +143,11 @@ namespace ExamGenerator.Controllers
                 {
                     foreach (var que in readQuestionsFile(FileUpload))
                     {
-                        var questionn                            = Mapper.Map<Question>(que);
+                        var questionn = Mapper.Map<Question>(que);
                         _examCoreService.AddQuestionToExam(tmpExam, questionn);
 
-
-
-
                     }
-                 
+
                 }
                 return RedirectToAction("Index");
             }

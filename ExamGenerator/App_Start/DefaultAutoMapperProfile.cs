@@ -28,7 +28,7 @@ namespace ExamGenerator
             opts => opts.MapFrom(source => source.Answers));
             CreateMap<QuestionDTO, Question>()
                 .ForMember(destination => destination.Answers,
-            opts => opts.MapFrom(source => source.AnswersDTO)); 
+            opts => opts.MapFrom(source => source.AnswersDTO));
 
 
             CreateMap<QuestionViewModel, Question>()
@@ -49,6 +49,8 @@ namespace ExamGenerator
                  .ForMember(destination => destination.AnswerDTO, opts => opts.MapFrom(source => source.Answer)); ;
             CreateMap<AnswerPositionDTO, AnswerPosition>();
 
+            CreateMap<Result, ResultDTO>();
+            CreateMap<ResultDTO, Result>();
         }
     }
 }

@@ -15,6 +15,7 @@ namespace ExamGeneratorModel.Model
         public int GeneratedExamID { get; set; }      
         public int StudentID { get; set; }
         public int Points { get; set; }
+        public int MaxPoints { get; set; }
 
         [ForeignKey("StudentID")]
         public virtual Student Student { get; set; }

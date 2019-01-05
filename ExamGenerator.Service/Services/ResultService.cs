@@ -18,7 +18,6 @@ namespace ExamGenerator.Service.Services
             _context = dbContext;
             _studentGroupService = studentGroupService;
         }
-
         public List<Result> GetResultsByStudentGroupAndExam(int? studentGroupID, int? examCoreID)
         {
             var studentsID = _studentGroupService.GetStudentsByStudentGroup(studentGroupID);
@@ -35,6 +34,52 @@ namespace ExamGenerator.Service.Services
                 if (result != null) results.Add(result);
             }
             return results;
+        }
+
+        public int? GetStudentIDByExamID(int? examID)
+        {
+            if (examID != null)
+            {
+                var generatedExam = _context.GeneratedExams.Find(examID);
+                var studentGroupStudents = _context.StudentGroupStudents.Find(generatedExam.StudentGroupStudentID);
+                if (studentGroupStudents != null)
+                {
+                    return studentGroupStudents.StudentID;
+                }
+            }
+            return null;
+        }
+
+
+        public void DeletePreviousResults(int? examID)
+        {
+            var deletedResults = _context.Results.Where(x => x.GeneratedExamID == examID).ToList();
+            _context.Results.RemoveRange(deletedResults);
+            _context.SaveChanges();
+        }
+
+        public void SetIsValidatetFlagByExamID(int? examID)
+        {
+            var generatedExam = _context.GeneratedExams.Find(examID);
+            var studentGroupStudent = _context.StudentGroupStudents.Find(generatedExam.StudentGroupStudentID);
+            var examCoreStudentsgroup = _context.ExamCoreStudentGroups
+                .Where(x => x.ExamCoreID == generatedExam.ExamCoreID && x.StudentGroupID == studentGroupStudent.StudentGroupID)
+                .FirstOrDefault();
+
+            examCoreStudentsgroup.IsValidated = true;
+            _context.SaveChanges();
+        }
+
+        public int? GetExamCoreIDByExamID(int? examID)
+        {
+         return _context.GeneratedExams.Find(examID)?.ExamCoreID;
+        }
+
+        public int? GetStudentGroupIDByExamID(int? examID)
+        {
+            var generatedExam = _context.GeneratedExams.Find(examID);
+            var studentGroupStudent = _context.StudentGroupStudents.Find(generatedExam.StudentGroupStudentID);
+            return studentGroupStudent.StudentGroupID;
         }
     }
 }

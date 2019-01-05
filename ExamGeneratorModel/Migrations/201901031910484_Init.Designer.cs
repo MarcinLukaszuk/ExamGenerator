@@ -7,13 +7,13 @@ namespace ExamGeneratorModel.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class fullDatabase : IMigrationMetadata
+    public sealed partial class Init : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(fullDatabase));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Init));
         
         string IMigrationMetadata.Id
         {
-            get { return "201812062203073_fullDatabase"; }
+            get { return "201901031910484_Init"; }
         }
         
         string IMigrationMetadata.Source

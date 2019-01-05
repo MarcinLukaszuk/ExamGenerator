@@ -7,13 +7,13 @@ namespace ExamGeneratorModel.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class AddAnswerPositions1 : IMigrationMetadata
+    public sealed partial class Init2 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddAnswerPositions1));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Init2));
         
         string IMigrationMetadata.Id
         {
-            get { return "201810281036502_AddAnswerPositions1"; }
+            get { return "201901031942006_Init2"; }
         }
         
         string IMigrationMetadata.Source

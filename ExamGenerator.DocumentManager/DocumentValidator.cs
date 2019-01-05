@@ -65,7 +65,7 @@ namespace ExamGenerator.DocumentManager
                 }
             }
 
-            return new ResultDTO() { Points= results2.Select(x => x.Value).Sum() , QuestionNumber= questions };
+            return new ResultDTO() { Points= results2.Select(x => x.Value).Sum() , MaxPoints= questions };
         }
     }
 }

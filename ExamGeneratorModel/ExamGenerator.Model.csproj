@@ -82,73 +82,13 @@
     <Compile Include="DTO\AnswerDTO.cs" />
     <Compile Include="DTO\ResultDTO.cs" />
     <Compile Include="ExamGeneratorDBContext.cs" />
-    <Compile Include="Migrations\201809172016541_Init.cs" />
-    <Compile Include="Migrations\201809172016541_Init.Designer.cs">
-      <DependentUpon>201809172016541_Init.cs</DependentUpon>
+    <Compile Include="Migrations\201901031910484_Init.cs" />
+    <Compile Include="Migrations\201901031910484_Init.Designer.cs">
+      <DependentUpon>201901031910484_Init.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201809172021449_Init2.cs" />
-    <Compile Include="Migrations\201809172021449_Init2.Designer.cs">
-      <DependentUpon>201809172021449_Init2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201809172056469_Init3.cs" />
-    <Compile Include="Migrations\201809172056469_Init3.Designer.cs">
-      <DependentUpon>201809172056469_Init3.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201809172100445_Init31.cs" />
-    <Compile Include="Migrations\201809172100445_Init31.Designer.cs">
-      <DependentUpon>201809172100445_Init31.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201810280933403_AddAnswerPositions.cs" />
-    <Compile Include="Migrations\201810280933403_AddAnswerPositions.Designer.cs">
-      <DependentUpon>201810280933403_AddAnswerPositions.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201810281036502_AddAnswerPositions1.cs" />
-    <Compile Include="Migrations\201810281036502_AddAnswerPositions1.Designer.cs">
-      <DependentUpon>201810281036502_AddAnswerPositions1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201811271421239_addStudents.cs" />
-    <Compile Include="Migrations\201811271421239_addStudents.Designer.cs">
-      <DependentUpon>201811271421239_addStudents.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812021916441_changename.cs" />
-    <Compile Include="Migrations\201812021916441_changename.Designer.cs">
-      <DependentUpon>201812021916441_changename.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812022055188_changename1.cs" />
-    <Compile Include="Migrations\201812022055188_changename1.Designer.cs">
-      <DependentUpon>201812022055188_changename1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812031743208_addExamCoreStudentGroup.cs" />
-    <Compile Include="Migrations\201812031743208_addExamCoreStudentGroup.Designer.cs">
-      <DependentUpon>201812031743208_addExamCoreStudentGroup.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812061907175_addGeneratedExam.cs" />
-    <Compile Include="Migrations\201812061907175_addGeneratedExam.Designer.cs">
-      <DependentUpon>201812061907175_addGeneratedExam.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812061930558_addGeneratedExamQuestion.cs" />
-    <Compile Include="Migrations\201812061930558_addGeneratedExamQuestion.Designer.cs">
-      <DependentUpon>201812061930558_addGeneratedExamQuestion.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812062203073_fullDatabase.cs" />
-    <Compile Include="Migrations\201812062203073_fullDatabase.Designer.cs">
-      <DependentUpon>201812062203073_fullDatabase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812062324123_addGeneratedExamToAP.cs" />
-    <Compile Include="Migrations\201812062324123_addGeneratedExamToAP.Designer.cs">
-      <DependentUpon>201812062324123_addGeneratedExamToAP.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812102220129_addResults.cs" />
-    <Compile Include="Migrations\201812102220129_addResults.Designer.cs">
-      <DependentUpon>201812102220129_addResults.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812221549153_addValidatedFlag.cs" />
-    <Compile Include="Migrations\201812221549153_addValidatedFlag.Designer.cs">
-      <DependentUpon>201812221549153_addValidatedFlag.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812291757409_changeMAxString.cs" />
-    <Compile Include="Migrations\201812291757409_changeMAxString.Designer.cs">
-      <DependentUpon>201812291757409_changeMAxString.cs</DependentUpon>
+    <Compile Include="Migrations\201901031942006_Init2.cs" />
+    <Compile Include="Migrations\201901031942006_Init2.Designer.cs">
+      <DependentUpon>201901031942006_Init2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Answer.cs" />
@@ -179,56 +119,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201809172016541_Init.resx">
-      <DependentUpon>201809172016541_Init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201901031910484_Init.resx">
+      <DependentUpon>201901031910484_Init.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201809172021449_Init2.resx">
-      <DependentUpon>201809172021449_Init2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201809172056469_Init3.resx">
-      <DependentUpon>201809172056469_Init3.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201809172100445_Init31.resx">
-      <DependentUpon>201809172100445_Init31.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810280933403_AddAnswerPositions.resx">
-      <DependentUpon>201810280933403_AddAnswerPositions.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810281036502_AddAnswerPositions1.resx">
-      <DependentUpon>201810281036502_AddAnswerPositions1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201811271421239_addStudents.resx">
-      <DependentUpon>201811271421239_addStudents.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812021916441_changename.resx">
-      <DependentUpon>201812021916441_changename.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812022055188_changename1.resx">
-      <DependentUpon>201812022055188_changename1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812031743208_addExamCoreStudentGroup.resx">
-      <DependentUpon>201812031743208_addExamCoreStudentGroup.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812061907175_addGeneratedExam.resx">
-      <DependentUpon>201812061907175_addGeneratedExam.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812061930558_addGeneratedExamQuestion.resx">
-      <DependentUpon>201812061930558_addGeneratedExamQuestion.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812062203073_fullDatabase.resx">
-      <DependentUpon>201812062203073_fullDatabase.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812062324123_addGeneratedExamToAP.resx">
-      <DependentUpon>201812062324123_addGeneratedExamToAP.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812102220129_addResults.resx">
-      <DependentUpon>201812102220129_addResults.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812221549153_addValidatedFlag.resx">
-      <DependentUpon>201812221549153_addValidatedFlag.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812291757409_changeMAxString.resx">
-      <DependentUpon>201812291757409_changeMAxString.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201901031942006_Init2.resx">
+      <DependentUpon>201901031942006_Init2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

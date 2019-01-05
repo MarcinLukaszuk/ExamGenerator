@@ -8,7 +8,9 @@ namespace ExamGeneratorModel.DTO
 {
     public class ResultDTO
     {
-        public int QuestionNumber { get; set; }
+        public int GeneratedExamID { get; set; }
+        public int StudentID { get; set; }
+        public int MaxPoints { get; set; }
         public int Points { get; set; }
     }
 }
