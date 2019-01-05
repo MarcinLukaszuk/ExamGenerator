@@ -90,6 +90,10 @@
     <Compile Include="Migrations\201901031942006_Init2.Designer.cs">
       <DependentUpon>201901031942006_Init2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901051321443_addOwner.cs" />
+    <Compile Include="Migrations\201901051321443_addOwner.Designer.cs">
+      <DependentUpon>201901051321443_addOwner.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Answer.cs" />
     <Compile Include="Model\AnswersPositions.cs" />
@@ -124,6 +128,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901031942006_Init2.resx">
       <DependentUpon>201901031942006_Init2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901051321443_addOwner.resx">
+      <DependentUpon>201901051321443_addOwner.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

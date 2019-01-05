@@ -13,9 +13,11 @@ using ExamGenerator.Service.Interfaces;
 using ExamGeneratorModel;
 using ExamGeneratorModel.Model;
 using ExamGeneratorModel.ViewModel;
+using Microsoft.AspNet.Identity;
 
 namespace ExamGenerator.Controllers
 {
+    [Authorize]
     public class StudentGroupsController : Controller
     {
 
@@ -43,7 +45,8 @@ namespace ExamGenerator.Controllers
         // GET: StudentGroups
         public ActionResult Index()
         {
-            return View(_studentGroupService.GetAll().ToList());
+            var userID = User.Identity.GetUserId();
+            return View(_studentGroupService.GetAll().Where(x => x.Owner == userID).ToList());
         }
 
         // GET: StudentGroups/Details/5
@@ -63,7 +66,7 @@ namespace ExamGenerator.Controllers
             foreach (var item in examsCoreVM)
             {
                 item.IsGenerated = _examCoreStudentGroupService.CheckIfExamCoreIsGenerated(item.ExamCore.Id, studentGroup.Id);
-                item.IsValidated=_examCoreStudentGroupService.CheckIfExamCoreIsValidated(item.ExamCore.Id, studentGroup.Id); 
+                item.IsValidated = _examCoreStudentGroupService.CheckIfExamCoreIsValidated(item.ExamCore.Id, studentGroup.Id);
                 item.ZIPArchiveName = _examCoreStudentGroupService.GetGenerategExamArchivePath(item.ExamCore.Id, studentGroup.Id);
             }
 
@@ -91,6 +94,7 @@ namespace ExamGenerator.Controllers
         {
             if (ModelState.IsValid)
             {
+                studentGroup.Owner = User.Identity.GetUserId();
                 _studentGroupService.Insert(studentGroup);
 
                 return RedirectToAction("Index");
@@ -305,7 +309,7 @@ namespace ExamGenerator.Controllers
         public FileResult GetExamsArchive(string filename)
         {
             var path = HostingEnvironment.MapPath("~/GeneratedExams");
-            return File(path+"//"+ filename, "application/zip", filename);
+            return File(path + "//" + filename, "application/zip", filename);
         }
     }
 }

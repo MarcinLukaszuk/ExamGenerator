@@ -19,9 +19,11 @@ using ExamGeneratorModel;
 using ExamGeneratorModel.DTO;
 using ExamGeneratorModel.Model;
 using ExamGeneratorModel.ViewModel;
+using Microsoft.AspNet.Identity;
 
 namespace ExamGenerator.Controllers
 {
+    [Authorize]
     public class ExamCoresController : Controller
     {
         private IExamCoreService _examCoreService;
@@ -58,7 +60,8 @@ namespace ExamGenerator.Controllers
         // GET: Exams
         public ActionResult Index()
         {
-            return View(_examCoreService.GetAll().ToList());
+            var userID = User.Identity.GetUserId();
+            return View(_examCoreService.GetAll().Where(x => x.Owner == userID).ToList());
         }
 
         // GET: Exams/Details/5
@@ -109,7 +112,7 @@ namespace ExamGenerator.Controllers
                 _resultService.SetIsValidatetFlagByExamID(examIDs.FirstOrDefault());
                 var examCoreID = _resultService.GetExamCoreIDByExamID(examIDs.FirstOrDefault());
                 var studentGroupID = _resultService.GetStudentGroupIDByExamID(examIDs.FirstOrDefault());
-               return RedirectToAction("Index/", "Results", new { examCoreID = examCoreID.ToString(), studentGroupID = studentGroupID.ToString() } );
+                return RedirectToAction("Index/", "Results", new { examCoreID = examCoreID.ToString(), studentGroupID = studentGroupID.ToString() });
             }
             return View();
         }
@@ -137,6 +140,8 @@ namespace ExamGenerator.Controllers
             if (ModelState.IsValid)
             {
                 tmpExam = Mapper.Map<ExamCore>(examViewModel);
+                tmpExam.Owner= User.Identity.GetUserId();
+
                 _examCoreService.Insert(tmpExam);
 
                 if (FileUpload != null)
@@ -145,9 +150,7 @@ namespace ExamGenerator.Controllers
                     {
                         var questionn = Mapper.Map<Question>(que);
                         _examCoreService.AddQuestionToExam(tmpExam, questionn);
-
                     }
-
                 }
                 return RedirectToAction("Index");
             }

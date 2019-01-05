@@ -15,6 +15,7 @@ using ExamGeneratorModel.Model;
 
 namespace ExamGenerator.Controllers
 {
+    [Authorize]
     public class StudentsController : Controller
     {
         private IStudentService _studentService;
