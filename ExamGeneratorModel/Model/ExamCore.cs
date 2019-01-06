@@ -11,5 +11,6 @@ namespace ExamGeneratorModel.Model
         public string Name { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
         public string Owner { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

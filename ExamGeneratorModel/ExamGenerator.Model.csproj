@@ -94,6 +94,10 @@
     <Compile Include="Migrations\201901051321443_addOwner.Designer.cs">
       <DependentUpon>201901051321443_addOwner.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901061007128_addIsDelasted.cs" />
+    <Compile Include="Migrations\201901061007128_addIsDelasted.Designer.cs">
+      <DependentUpon>201901061007128_addIsDelasted.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Answer.cs" />
     <Compile Include="Model\AnswersPositions.cs" />
@@ -131,6 +135,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901051321443_addOwner.resx">
       <DependentUpon>201901051321443_addOwner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901061007128_addIsDelasted.resx">
+      <DependentUpon>201901061007128_addIsDelasted.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

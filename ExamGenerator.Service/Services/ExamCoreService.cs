@@ -23,7 +23,10 @@ namespace ExamGenerator.Service.Services
             _answerService = answerService;
             _questionService = questionService;
         }
-
+        public new List<ExamCore> GetAll()
+        {
+            return _context.Exams.Where(x => x.IsDeleted == false).ToList();
+        }
         public void AddQuestionsToExam(int examID, List<Question> questions)
         {
             foreach (var question in questions)
@@ -92,7 +95,7 @@ namespace ExamGenerator.Service.Services
 
             foreach (var questionToEdit in questionsToEdit)
             {
-              
+
 
                 var answersToRemove = getAnswersToRemove(questionToEdit).ToList();
                 var answersToEdit = getAnswersToEdit(questionToEdit).ToList();
@@ -113,7 +116,12 @@ namespace ExamGenerator.Service.Services
             _context.Exams.AddOrUpdate(editedExam);
             _context.SaveChanges();
         }
-
+        public new void Insert(ExamCore examCore)
+        {
+            examCore.IsDeleted = false;
+            _context.Exams.Add(examCore);
+            _context.SaveChanges();
+        }
         public new void Delete(int id)
         {
             this.Delete(Find(id));
@@ -125,11 +133,7 @@ namespace ExamGenerator.Service.Services
             {
                 return;
             }
-
-            var questionsToRemove = _context.Questions.Where(x => x.ExamCoreID == returnedExam.Id).ToList();
-            var examToRemove = _context.Exams.Where(x => x.Id == returnedExam.Id).FirstOrDefault();
-            _context.Questions.RemoveRange(questionsToRemove);
-            _context.Exams.Remove(examToRemove);
+            returnedExam.IsDeleted = true;
             _context.SaveChanges();
         }
 
@@ -192,13 +196,11 @@ namespace ExamGenerator.Service.Services
                     yield return item;
                 }
             }
-
         }
 
         private IEnumerable<Answer> getAnswersToAdd(Question question)
         {
             return question.Answers.Where(x => x.Id == 0).ToList();
         }
-
     }
 }

@@ -17,6 +17,32 @@ namespace ExamGenerator.Service.Services
             _context = dbContext;
         }
 
+        public new List<StudentGroup> GetAll()
+        {
+            return _context.StudentGroups.Where(x => x.IsDeleted == false).ToList();
+        }
+
+        public new void Insert(StudentGroup studentGroup)
+        {
+            studentGroup.IsDeleted = false;
+            _context.StudentGroups.Add(studentGroup);
+            _context.SaveChanges();
+        }
+        public new void Delete(int id)
+        {
+            var element = Find(id);
+            if (element == null)
+            {
+                return;
+            }
+            this.Delete(element);
+        }
+
+        public new void Delete(StudentGroup studentGroup)
+        {
+            studentGroup.IsDeleted = true;
+            _context.SaveChanges();
+        }
         public List<ExamCore> GetExamsCoreByStudentGroup(int studentGroupID)
         {
             var associatedExamsCore = _context.ExamCoreStudentGroups.Where(x => x.StudentGroupID == studentGroupID).ToList();
@@ -63,7 +89,7 @@ namespace ExamGenerator.Service.Services
 
         public List<int> GetStudentsGroupStudentID(int? studentGroupID)
         {
-            return _context.StudentGroupStudents.Where(x => x.StudentGroupID == studentGroupID).Select(x=>x.Id).ToList();
+            return _context.StudentGroupStudents.Where(x => x.StudentGroupID == studentGroupID).Select(x => x.Id).ToList();
         }
     }
 }
