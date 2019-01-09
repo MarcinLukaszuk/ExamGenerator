@@ -16,6 +16,7 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.Owner)
 
         <div class="form-group">
             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -33,7 +34,7 @@
             <div class="panel panel-success">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" href="#collapse_@i">Question @(i+1): @Html.DisplayFor(model => Model.Questions[i].QuestionText)</a>
+                        <a data-toggle="collapse" href="#collapse_@i">Question @(i + 1): @Html.DisplayFor(model => Model.Questions[i].QuestionText)</a>
                     </h4>
                 </div>
                 <div id="collapse_@i" class="panel-collapse collapse">
@@ -87,7 +88,7 @@
 
 
 
-           
+
         }
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

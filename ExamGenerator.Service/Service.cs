@@ -15,7 +15,7 @@ namespace ExamGenerator.Service
     public abstract class Service<TEntity> : IService<TEntity> where TEntity : Entity
     { 
         private readonly IDbContext _context;
-        private readonly DbSet<TEntity> _dbSet;
+        private readonly IDbSet<TEntity> _dbSet;
     
         public Service(IDbContext dbContext)
         { 

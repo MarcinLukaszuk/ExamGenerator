@@ -25,6 +25,7 @@ namespace ExamGeneratorModel
 
         Task<int> SaveChangesAsync();
         int SaveChanges();
+
     }
     public class ExamGeneratorDBContext : DbContext, IDbContext
     {

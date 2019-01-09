@@ -74,7 +74,7 @@ namespace ExamGenerator.Service.Services
             {
                 return null;
             }
-            return returnedExam.Questions.ToList();
+            return _context.Questions.Where(x => x.ExamCoreID == exam.Id).ToList();
         }
 
         public new void Update(ExamCore editedExam)
@@ -87,16 +87,10 @@ namespace ExamGenerator.Service.Services
             foreach (var questionToAdd in questionsToAdd)
             {
                 AddQuestionToExam(editedExam, questionToAdd);
-                //foreach (var answerToAdd in questionToAdd.Answers)
-                //{
-                //   _questionService.AddAnswerToQuestion(questionToAdd, answerToAdd);
-                //}
             }
 
             foreach (var questionToEdit in questionsToEdit)
             {
-
-
                 var answersToRemove = getAnswersToRemove(questionToEdit).ToList();
                 var answersToEdit = getAnswersToEdit(questionToEdit).ToList();
                 var answersToAdd = getAnswersToAdd(questionToEdit).ToList();
@@ -139,30 +133,40 @@ namespace ExamGenerator.Service.Services
 
         private IEnumerable<Question> getQuestionsToRemove(ExamCore exam)
         {
-            foreach (var item in Find(exam.Id).Questions)
+            if (Find(exam.Id).Questions != null)
             {
-                var tmp = exam.Questions.FirstOrDefault(x => x.Id == item.Id);
-                if (tmp == null)
+                foreach (var item in Find(exam.Id).Questions)
                 {
-                    yield return item;
+                    var tmp = exam.Questions.FirstOrDefault(x => x.Id == item.Id);
+                    if (tmp == null)
+                    {
+                        yield return item;
+                    }
                 }
             }
         }
         private IEnumerable<Question> getQuestionsToEdit(ExamCore exam)
         {
-            foreach (var item in exam.Questions)
+            if (exam.Questions != null)
             {
-                var tmp = Find(exam.Id).Questions.FirstOrDefault(x => x.Id == item.Id);
-                if (tmp != null)
+                foreach (var item in exam.Questions)
                 {
-                    yield return item;
+                    var tmp = Find(exam.Id).Questions.FirstOrDefault(x => x.Id == item.Id);
+                    if (tmp != null)
+                    {
+                        yield return item;
+                    }
                 }
             }
         }
 
         private IEnumerable<Question> getQuestionsToAdd(ExamCore exam)
         {
-            return exam.Questions.Where(x => x.Id == 0).ToList();
+            if (exam.Questions != null)
+            {
+                exam.Questions?.Where(x => x.Id == 0).ToList();
+            }
+            return new List<Question>();
         }
 
         private IEnumerable<Answer> getAnswersToRemove(Question question)

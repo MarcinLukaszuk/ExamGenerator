@@ -178,7 +178,7 @@ namespace ExamGenerator.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Questions")] ExamCoreViewModel examViewModel)
+        public ActionResult Edit([Bind(Include = "Id,Name,Questions,Owner")] ExamCoreViewModel examViewModel)
         {
             ExamCore editedExam = Mapper.Map<ExamCore>(examViewModel);
             if (ModelState.IsValid)

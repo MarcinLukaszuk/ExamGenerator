@@ -19,5 +19,6 @@ namespace ExamGeneratorModel.ViewModel
         [ DisplayName("Exam Name"), DataType(DataType.MultilineText)]  
         public string Name { get; set; }
         public virtual List<QuestionViewModel> Questions { get; set; }
+        public string Owner { get; set; }
     }
 }
