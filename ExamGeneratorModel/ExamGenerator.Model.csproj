@@ -113,6 +113,7 @@
     <Compile Include="Model\StudentGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\AnswerViewModel.cs" />
+    <Compile Include="ViewModel\AsyncEditedDataViewModel.cs" />
     <Compile Include="ViewModel\ExamCoreStudentGroupViewModel.cs" />
     <Compile Include="ViewModel\ExamCoreViewModel.cs" />
     <Compile Include="ViewModel\QuestionViewModel.cs" />

@@ -3,24 +3,67 @@
 @{
     ViewBag.Title = "Details";
 }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    .fa {
+        margin-left: 8px;
+        margin-right: 2px;
+    }
+</style>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 
-<h2>
-    Exam: <b>
-        @Html.DisplayFor(model => model.Name)
 
-    </b>
-</h2>
 
-<div>
-    <div class="panel-group">
+<div class="container body-content">
+    <div class="row">
+        <h2 class="col-md-10">
+            Exam: <b>@Html.DisplayFor(model => model.Name)</b>
+        </h2>
+        <h2 class="col-md-2">
+            <input id="addNewQuestion" type="button" class="btn btn-default" onclick="addNewQuestion()" value="Add Question" />
+            <input type="button" class="btn btn-default" data-toggle="collapse" data-target="#collapseFile" aria-controls="collapseFile" value="Add Questions From File" />
+        </h2>
+    </div>
+
+    <div class="collapse row" id="collapseFile">
+        <div class="col-md-9"></div>
+        <div class="col-md-3">
+            <div class="input-group">
+                <input type="text" class="form-control" readonly>
+                <label class="input-group-btn">
+                    <span class="btn btn-primary">
+                        Browse&hellip; <input type="file" id="fileInput" style="display: none;" accept=".csv">
+                    </span>
+                </label>
+            </div>
+            <input type="button" class="btn btn-primary" onclick="sendFileWithQuestions(@Model.Id)" value="Upload">
+        </div>
+    </div>
+
+    <div class="panel-group" tag="@Model.Questions.Count">
         @for (int i = 0; i < Model.Questions.Count(); i++)
         {
-
             <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" href="#collapse_@i">@Html.DisplayFor(model => Model.Questions[i].QuestionText)</a>
+                <div class="panel-heading" style="overflow:auto">
+                    <h4 class="panel-title col-md-9">
+                        <a data-toggle="collapse" id="questionLabel_@i" href="#collapse_@i">@Html.DisplayFor(model => Model.Questions[i].QuestionText)</a>
                     </h4>
+                    <div class="btn-group" role="group" aria-label="saveGroup @i">
+                        <input id="editBtn-@i" type="button" class="btn btn-default" onclick="setEditable(@i)" value="Edit" />
+                    </div>
+
+                    <div class="btn-group" role="group" aria-label="editGroup @i">
+                        <input id="cancelBtn-@i" type="button" class="btn btn-default" onclick="cancelEditFields(@i)" value="Cancel" style="display: none;" />
+
+                        <button id="saveBtn-@i" class="btn btn-default" onclick="saveEditFields(@Model.Questions[i].Id,@i)" style="display: none;">
+                            Save<i id="spinner-@i" class="fa fa-spinner fa-spin" style="display: none;"></i>
+                        </button>
+
+                    </div>
+                    <div class="btn-group" role="group" aria-label="addAnsGroup @i">
+                        <input id="addAnswerBtn-@i" type="button" class="btn btn-default" onclick="addNewAnswerToQuestion(@i)" value="Add Answer" style="display: none;" />
+                    </div>
+
                 </div>
                 <div id="collapse_@i" class="panel-collapse collapse">
 
@@ -28,19 +71,17 @@
                     {
                         if (Model.Questions[i].Answers[j].IfCorrect == true)
                         {
-                            <div class="panel-body" style="background-color: #28a745;">
-                                @Html.DisplayFor(model => Model.Questions[i].Answers[j].TextAnswer)
+                            <div class="panel-body" id="question_@i-answer_@j" style="background-color: #28a745;">
+                                @Html.DisplayFor(model => Model.Questions[i].Answers[j].TextAnswer, new { })
                             </div>
                         }
                         else
                         {
-                            <div class="panel-body" style="background-color: red;">
+                            <div class="panel-body" id="question_@i-answer_@j" style="background-color: red;">
                                 @Html.DisplayFor(model => Model.Questions[i].Answers[j].TextAnswer)
                             </div>
                         }
-
                     }
-
                 </div>
             </div>
         }
@@ -52,7 +93,13 @@
     @Html.ActionLink("Back to List", "Index")
 </p>
 <script>
-   var getUrl = '@Url.Action("GetPdfExam", "Exams", new { id = Model.Id })';
 
+    var getUrl = '@Url.Action("GetPdfExam", "Exams", new { id = Model.Id })';
+
+    var jquerryAsynUpdateHref = "@Url.Action("SaveAsyncQuestion")"
+    var jquerryFileUploadHref = "@Url.Action("AddQuestionsFromFileAsync")"
+    var currentExamIDInDatabase = "@Model.Id";
 </script>
 <script src="~/Script/exam.js"></script>
+<script src="~/Script/examCore_details.js"></script>
+<script src="~/Script/examCore_details_addNewQuestion.js"></script>

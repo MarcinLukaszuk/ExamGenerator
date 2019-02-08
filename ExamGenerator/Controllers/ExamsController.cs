@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
@@ -131,30 +132,16 @@ namespace ExamGenerator.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Questions")] ExamCoreViewModel examViewModel, HttpPostedFileBase FileUpload)
+        public ActionResult Create([Bind(Include = "Id,Name,Questions")] ExamCoreViewModel examViewModel)
         {
             ExamCore tmpExam;
-            Question tmpQuestion;
-            Answer tmpAnswer;
 
             if (ModelState.IsValid)
             {
                 tmpExam = Mapper.Map<ExamCore>(examViewModel);
-                tmpExam.Owner= User.Identity.GetUserId();
-
                 _examCoreService.Insert(tmpExam);
-
-                if (FileUpload != null)
-                {
-                    foreach (var que in readQuestionsFile(FileUpload))
-                    {
-                        var questionn = Mapper.Map<Question>(que);
-                        _examCoreService.AddQuestionToExam(tmpExam, questionn);
-                    }
-                }
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", new { id = tmpExam.Id });
             }
-
             return View(examViewModel);
         }
         // GET: Exams/Edit/5
@@ -293,6 +280,146 @@ namespace ExamGenerator.Controllers
         }
 
         [HttpPost]
+        public ActionResult SaveAsyncQuestion(string examID, string questionID, AsyncEditedDataViewModel questionData, List<AsyncEditedDataViewModel> answersData)
+        {
+            if (int.TryParse(questionID, out int questionIntID))
+            {
+                var editedQuestion = _questionService.GetByID(questionIntID);
+                if (questionData != null && questionData.oldValue != null && questionData.newValue != null)
+                {
+                    editedQuestion.QuestionText = questionData.newValue;
+                }
+                var editedAnswers = new List<Answer>();
+                var addedAnswers = new List<Answer>();
+                if (answersData != null && answersData.Any())
+                {
+                    foreach (var answerData in answersData)
+                    {
+                        var editedAnswer = editedQuestion.Answers.Where(x => x.TextAnswer == answerData.oldValue).FirstOrDefault();
+
+                        if (editedAnswer != null)
+                        {
+                            editedAnswer.TextAnswer = answerData.newValue;
+                            editedAnswer.IfCorrect = answerData.secondNewValue == "true" ? true : false;
+                            editedAnswers.Add(editedAnswer);
+                        }
+                        else
+                        {
+                            var addedAnswer = new Answer()
+                            {
+                                IfCorrect = answerData.secondNewValue == "true" ? true : false,
+                                TextAnswer = answerData.newValue
+                            };
+                            _questionService.AddAnswerToQuestion(questionIntID, addedAnswer);
+                            addedAnswers.Add(addedAnswer);
+                        }
+                    }
+
+                    var allAnswers = _questionService.GetByID(questionIntID).Answers.ToList();
+                    var deletedAnswers = allAnswers.Except(editedAnswers).ToList();
+                    deletedAnswers = deletedAnswers.Except(addedAnswers).ToList();
+
+                    foreach (var deletedAnswerr in deletedAnswers)
+                    {
+                        _answerService.Delete(deletedAnswerr.Id);
+                    }
+                    _questionService.Update(editedQuestion);
+                }
+
+                var returnedAnswers = editedAnswers.ToList();
+                if (addedAnswers.Any())
+                {
+                    returnedAnswers = returnedAnswers.Concat(addedAnswers.ToList()).ToList();
+                }
+                return Json(
+                    new
+                    {
+                        success = true,
+                        responseText = "Questions have been successfuly updated!",
+                        data = returnedAnswers.Select(x => new
+                        {
+                            TextAnswer = x.TextAnswer,
+                            IfCorrect = x.IfCorrect
+                        }).ToList()
+                    }, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                if (int.TryParse(examID, out int examIntID))
+                {
+                    var editedQuestion = new Question();
+                    if (questionData != null && questionData.newValue != null)
+                    {
+                        editedQuestion.QuestionText = questionData.newValue;
+                        _examCoreService.AddQuestionToExam(examIntID, editedQuestion);
+                    }
+                    if (answersData != null && answersData.Any())
+                    {
+                        foreach (var answerData in answersData)
+                        {
+                            var addedAnswer = new Answer()
+                            {
+                                IfCorrect = answerData.secondNewValue == "true" ? true : false,
+                                TextAnswer = answerData.newValue
+                            };
+                            _questionService.AddAnswerToQuestion(editedQuestion.Id, addedAnswer);
+                        }
+                    }
+                    return Json(
+                        new
+                        {
+                            success = true,
+                            responseText = "Questions have been successfuly updated!",
+                            data = _questionService.GetByID(editedQuestion.Id).Answers.Select(x => new
+                            {
+                                TextAnswer = x.TextAnswer,
+                                IfCorrect = x.IfCorrect
+                            }).ToList(),
+                            newQuestionID = editedQuestion.Id
+                        }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            return Json(new { success = false, responseText = "Error during updating questions." }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddQuestionsFromFileAsync(string examID, HttpPostedFileBase FileUpload)
+        {
+            try
+            {
+                if (int.TryParse(examID, out int examIntID) && FileUpload != null)
+                {
+                    var result = await addQuestionsToExamFromFile(examIntID, FileUpload);
+                    if (result == 0)
+                    {
+                        return Json(
+                            new
+                            {
+                                success = true,
+                                responseText = "Questions have been successfuly updated!"
+                            }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, responseText = "Error during updating questions." }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { success = false, responseText = "Error during updating questions." }, JsonRequestBehavior.AllowGet);
+        }
+
+        private async Task<int> addQuestionsToExamFromFile(int examID, HttpPostedFileBase FileUpload)
+        {
+            foreach (var que in readQuestionsFile(FileUpload))
+            {
+                var questionn = Mapper.Map<Question>(que);
+                _examCoreService.AddQuestionToExam(examID, questionn);
+            }
+            return 0;
+        }
+
+        [HttpPost]
         public ActionResult CheckUploadExams(HttpPostedFileBase FileUpload)
         {
             string path = HostingEnvironment.MapPath("~/UserBitmaps");
@@ -338,5 +465,8 @@ namespace ExamGenerator.Controllers
 
             return questions.ToList();
         }
+
+
+
     }
 }

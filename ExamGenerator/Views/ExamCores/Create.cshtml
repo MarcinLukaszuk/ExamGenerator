@@ -20,46 +20,8 @@
                 @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
-            <div class="col-md-3">
-
-                <input type="submit" value="Add Question" formaction=@Url.Action("AddQuestionCreate", "Questions", new { }) class="btn btn-primary" />
-            </div>
+         
         </div>
-        <input type="file" name="FileUpload" />
-        @for (int i = 0; i < Model.Questions.Count(); i++)
-        {
-            <div class="form-group">
-                @Html.LabelFor(model => model.Questions[i].QuestionText, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-7">
-                    @Html.EditorFor(model => model.Questions[i].QuestionText, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Questions[i].QuestionText, "", new { @class = "text-danger" })
-                </div>
-                <div class="col-md-3">
-                    <input type="submit" value="Add Answer" formaction=@Url.Action("AddAnswerCreate","Answers",new { questionID =i}) class="btn btn-success" />
-                    <input type="submit" value="Remove Question" formaction=@Url.Action("RemoveQuestionCreate","Questions",new { questionID =i }) class="btn btn-danger" />
-                </div>
-            </div>
-
-            for (int j = 0; j < Model.Questions[i].Answers.Count(); j++)
-            {
-                <div class="form-group">
-                    @Html.LabelFor(model => Model.Questions[i].Answers[j].TextAnswer, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-4">
-                        @Html.EditorFor(model => Model.Questions[i].Answers[j].TextAnswer, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => Model.Questions[i].Answers[j].TextAnswer, "", new { @class = "text-danger" })
-                    </div>
-
-                    <div class="col-md-3">
-                        @Html.CheckBoxFor(model => Model.Questions[i].Answers[j].IfCorrect, new {@class="hidden", id = "Question"+i+"Answer"+j, Style = "vertical-align:3px}" })
-                       <button    type="button" onclick="setAnswer(@i,@j,this)"  class="btn btn-danger">Not Correct</button>
-                    </div>
-                    
-                    <div class="col-md-3">
-                        <input type="submit" value="Remove Answer" formaction=@Url.Action("RemoveAnswerCreate","Answers",new {questionID =i , answerID  = j}) class="btn btn-danger" />
-                    </div>
-                </div>
-            }
-        }
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

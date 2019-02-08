@@ -342,6 +342,8 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\script-bootstrap-select.js" />
     <Content Include="Script\exam.js" />
+    <Content Include="Script\examCore_details_addNewQuestion.js" />
+    <Content Include="Script\examCore_details.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
