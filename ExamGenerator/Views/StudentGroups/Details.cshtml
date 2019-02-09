@@ -3,133 +3,148 @@
 @{
     ViewBag.Title = "Details";
 }
+ 
+<div class="container">
+    <h2>Students Group:  <b>@Html.DisplayFor(model => model.StudentGroup.Name)</b></h2>
+  
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title col-md-10">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Students</a>
+                </h4>
+                @Html.ActionLink("Edit", "EditStudents", new { id = Model.StudentGroup.Id }, new { @class = "btn btn-default " })
 
-<div>
-    <h2>StudentGroup:  <b>@Html.DisplayFor(model => model.StudentGroup.Name)</b></h2>
-</div>
-<div class="col-md-12">
-    <div class="col-md-6">
-        <h4><b>Students</b></h4>
-        <table class="table">
-            @if (Model.Students.Any())
-            {
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Students.First().Name)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Students.First().SurName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Students.First().Email)
-                    </th>
-                    <th></th>
-                </tr>
-            }
+            </div>
+            <div id="collapse1" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <table class="table">
+                        @if (Model.Students.Any())
+                        {
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Students.First().Name)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Students.First().SurName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Students.First().Email)
+                                </th>
+                                <th></th>
+                            </tr>
+                        }
 
-            @foreach (var item in Model.Students)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.SurName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Email)
-                    </td>
-                </tr>
-            }
+                        @foreach (var item in Model.Students)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SurName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Email)
+                                </td>
+                            </tr>
+                        }
 
-        </table>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title col-md-10">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Exams</a>
+                </h4>
+
+                @Html.ActionLink("Edit", "EditStudents", new { id = Model.StudentGroup.Id }, new { @class = "btn btn-default " })
+
+            </div>
+            <div id="collapse2" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <table class="table">
+                        @if (Model.ExamsCore.Any())
+                        {
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ExamsCore.First().ExamCore.Name)
+                                </th>
+                                <th>Generate Exams</th>
+                                <th>Is generated</th>
+                                <th>Results</th>
+                                <th>Download Exams </th>
+                                <th>See Results</th>
+                            </tr>
+                        }
+
+                        @foreach (var item in Model.ExamsCore)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ExamCore.Name)
+                                </td>
+                                <td>
+                                    @using (Html.BeginForm("GenerateExam", "ExamCores", new { ExamCoreID = item.ExamCore.Id, studentGruopID = Model.StudentGroup.Id }))
+                                    {
+                                        <input value="Generate"
+                                               class="btn btn-primary"
+                                               data-toggle="popover"
+                                               title="Question Number"
+                                               data-content='<input type="number" name= "questionNumber" class="form-control" min="1" max= "@item.ExamCore.Questions.Count" value="@item.ExamCore.Questions.Count"/>  <input value="Save" type="submit" class="btn btn-danger" />' />
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.IsGenerated == true)
+                                    {
+                                        <span class="glyphicon glyphicon-ok" style="color:blue"></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="glyphicon glyphicon-remove" style="color:red"></span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.IsValidated == true)
+                                    {
+                                        <span class="glyphicon glyphicon-ok" style="color:blue"></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="glyphicon glyphicon-remove" style="color:red"></span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.IsGenerated == true)
+                                    {
+                                        <button class="btn btn-success" onclick="zipDownload('@Url.Action("GetExamsArchive", "StudentGroups", new {filename= item.ZIPArchiveName })')">Download</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-secondary disabled">Download</button>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.IsValidated == true)
+                                    {
+                                        @Html.ActionLink("Results", "Index", "Results", new { studentgroupid = Model.StudentGroup.Id, examcoreid = item.ExamCore.Id }, new { @class = "btn btn-success" })
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-secondary disabled">Results</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-6">
-
-        <h4><b>Exams</b></h4>
-        <table class="table">
-            @if (Model.ExamsCore.Any())
-            {
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ExamsCore.First().ExamCore.Name)
-                    </th>
-                    <th>Generate Exams</th>
-                    <th>Is generated</th>
-                    <th>Results</th>
-                    <th>Download Exams </th>
-                    <th>See Results</th>
-                </tr>
-            }
-
-            @foreach (var item in Model.ExamsCore)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ExamCore.Name)
-                    </td>
-                    <td>
-                        @using (Html.BeginForm("GenerateExam", "ExamCores", new { ExamCoreID = item.ExamCore.Id, studentGruopID = Model.StudentGroup.Id }))
-                        {
-                            <input value="Generate"
-                                   class="btn btn-primary"
-                                   data-toggle="popover"
-                                   title="Question Number"
-                                   data-content='<input type="number" name= "questionNumber" class="form-control" min="1" max= "@item.ExamCore.Questions.Count" value="@item.ExamCore.Questions.Count"/>  <input value="Save" type="submit" class="btn btn-danger" />' />
-                        }
-                    </td>
-                    <td>
-                        @if (item.IsGenerated == true)
-                        {
-                            <span class="glyphicon glyphicon-ok" style="color:blue"></span>
-                        }
-                        else
-                        {
-                            <span class="glyphicon glyphicon-remove" style="color:red"></span>
-                        }
-                    </td>
-                    <td>
-                        @if (item.IsValidated == true)
-                        {
-                            <span class="glyphicon glyphicon-ok" style="color:blue"></span>
-                        }
-                        else
-                        {
-                            <span class="glyphicon glyphicon-remove" style="color:red"></span>
-                        }
-                    </td>
-                    <td>
-                        @if (item.IsGenerated == true)
-                        {
-                            <button class="btn btn-success" onclick="zipDownload('@Url.Action("GetExamsArchive", "StudentGroups", new {filename= item.ZIPArchiveName })')">Download</button>
-                        }
-                        else
-                        {
-                            <button class="btn btn-secondary disabled">Download</button>
-                        }
-                    </td>
-                    <td>
-                        @if (item.IsValidated == true)
-                        {
-                            @Html.ActionLink("Results", "Index", "Results", new { studentgroupid = Model.StudentGroup.Id, examcoreid = item.ExamCore.Id }, new { @class = "btn btn-success" })
-                        }
-                        else
-                        {
-                            <button class="btn btn-secondary disabled">Results</button>
-                        }
-                    </td>
-                </tr>
-            }
-        </table>
-
-        @*@using (Html.BeginForm("CheckUploadExams", "ExamCores", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-                <input type="file" name="FileUpload" />
-                <input type="submit" name="Submit" id="Submit" value="Upload" />
-            }*@
-
-    </div>
 </div>
+
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.StudentGroup.Id }) |
     @Html.ActionLink("Back to List", "Index")

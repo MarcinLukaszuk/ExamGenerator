@@ -103,3 +103,11 @@
 <script src="~/Script/exam.js"></script>
 <script src="~/Script/examCore_details.js"></script>
 <script src="~/Script/examCore_details_addNewQuestion.js"></script>
+<script>
+    $(function () {
+        var panelGroup = $(".panel-group");
+        if (panelGroup.attr("tag") == "0") {
+            addNewQuestion();
+        }
+    });
+</script>

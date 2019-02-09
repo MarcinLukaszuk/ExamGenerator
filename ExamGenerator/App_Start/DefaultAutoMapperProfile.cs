@@ -51,6 +51,10 @@ namespace ExamGenerator
 
             CreateMap<Result, ResultDTO>();
             CreateMap<ResultDTO, Result>();
+
+
+            CreateMap<Student, EditStudentViewModel>();
+            CreateMap<EditStudentViewModel, Student>();
         }
     }
 }
