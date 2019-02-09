@@ -22,7 +22,6 @@ namespace ExamGenerator
             CreateMap<ExamCore, ExamCoreViewModel>()
                                .ForMember(destination => destination.Questions, opts => opts.MapFrom(source => source.Questions));
 
-
             CreateMap<Question, QuestionDTO>()
              .ForMember(destination => destination.AnswersDTO,
             opts => opts.MapFrom(source => source.Answers));
@@ -30,20 +29,15 @@ namespace ExamGenerator
                 .ForMember(destination => destination.Answers,
             opts => opts.MapFrom(source => source.AnswersDTO));
 
-
             CreateMap<QuestionViewModel, Question>()
                .ForMember(destination => destination.Answers, opts => opts.MapFrom(source => source.Answers));
             CreateMap<Question, QuestionViewModel>()
                 .ForMember(destination => destination.Answers, opts => opts.MapFrom(source => source.Answers));
 
-
-
             CreateMap<Answer, AnswerDTO>();
             CreateMap<AnswerDTO, Answer>();
             CreateMap<AnswerViewModel, Answer>();
             CreateMap<Answer, AnswerViewModel>();
-
-
 
             CreateMap<AnswerPosition, AnswerPositionDTO>()
                  .ForMember(destination => destination.AnswerDTO, opts => opts.MapFrom(source => source.Answer)); ;
@@ -52,9 +46,11 @@ namespace ExamGenerator
             CreateMap<Result, ResultDTO>();
             CreateMap<ResultDTO, Result>();
 
-
             CreateMap<Student, EditStudentViewModel>();
             CreateMap<EditStudentViewModel, Student>();
+
+            CreateMap<ExamCore, EditExamViewModel>();
+            CreateMap<EditExamViewModel, ExamCore>();
         }
     }
 }

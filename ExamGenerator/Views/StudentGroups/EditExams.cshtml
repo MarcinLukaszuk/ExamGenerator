@@ -1,0 +1,111 @@
+﻿@model ExamGeneratorModel.ViewModel.StudentGroupEditExamsViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+<style>
+    .btn span.glyphicon {
+        opacity: 0;
+    }
+
+    .btn.active {
+        opacity: 1;
+    }
+
+        .btn.active span.glyphicon {
+            opacity: 1;
+        }
+</style>
+<div class="container">
+    <h2>Students Group:  <b>@Html.DisplayFor(model => model.StudentGroup.Name)</b></h2>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+
+        @Html.HiddenFor(model => model.StudentGroup.Id);
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        Students
+                    </h4>
+                   
+                    @Html.ActionLink("Cancel", "Details", new { id = Model.StudentGroup.Id }, new { @class = "btn btn-default" })
+
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+                        <table class="table">
+                            @if (Model.Exams.Any())
+                            {
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Exams.First().IsAssociatedToStudentGroup)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Exams.First().Name)
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            }
+
+
+                            @for (int i = 0; i < Model.Exams.Count; i++)
+                            {
+                                @Html.HiddenFor(model => Model.Exams[i].Id)
+                                @Html.HiddenFor(model => Model.Exams[i].Name)
+                                <tr>
+                                    <td>
+                                        <div class="btn-group" data-toggle="buttons" onclick="changeColor(this)">
+                                            @if (Model.Exams[i].IsAssociatedToStudentGroup)
+                                            {
+                                                <label class="btn btn-success active">
+                                                    @Html.CheckBoxFor(modelItem => Model.Exams[i].IsAssociatedToStudentGroup)
+                                                    <span class="glyphicon glyphicon-ok"></span>
+                                                </label>
+                                            }
+                                            else
+                                            {
+                                                <label class="btn btn-default">
+                                                    @Html.EditorFor(modelItem => Model.Exams[i].IsAssociatedToStudentGroup)
+                                                    <span class="glyphicon glyphicon-ok"></span>
+                                                </label>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Model.Exams[i].Name)
+                                    </td>                                
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.StudentGroup.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script>
+    function changeColor(button) {
+        var buttonJQ = $(button);
+        var label = buttonJQ.children();
+        var classString = label.attr("class");
+        if (classString.includes("default")) {
+            classString = classString.replace("default", "success");
+        } else {
+            classString = classString.replace("success", "default");
+        }
+        label.attr("class", classString);
+    }
+
+
+</script>

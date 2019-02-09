@@ -118,10 +118,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\AnswerViewModel.cs" />
     <Compile Include="ViewModel\AsyncEditedDataViewModel.cs" />
+    <Compile Include="ViewModel\EditExamViewModel.cs" />
     <Compile Include="ViewModel\EditStudentViewModel.cs" />
     <Compile Include="ViewModel\ExamCoreStudentGroupViewModel.cs" />
     <Compile Include="ViewModel\ExamCoreViewModel.cs" />
     <Compile Include="ViewModel\QuestionViewModel.cs" />
+    <Compile Include="ViewModel\StudentGroupEditExamsViewModel.cs" />
     <Compile Include="ViewModel\StudentGroupEditStudentsViewModel.cs" />
     <Compile Include="ViewModel\StudentGroupViewModel.cs" />
   </ItemGroup>

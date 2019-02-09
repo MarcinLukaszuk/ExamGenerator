@@ -236,6 +236,69 @@ namespace ExamGenerator.Controllers
             return RedirectToAction("Details", new { id = studentGroupID });
         }
 
+
+        public ActionResult EditExams(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var userID = User.Identity.GetUserId();
+            StudentGroup studentGroup = _studentGroupService.Find(id);
+            if (studentGroup == null)
+            {
+                return HttpNotFound();
+            }
+
+            var checkedExams = _studentGroupService.GetExamsCoreByStudentGroup(studentGroup.Id).Where(x => x.Owner == userID).ToList();
+            var unCheckedExams = _studentGroupService.GetExamsCoreNotInStudentGroup(studentGroup.Id).Where(x => x.Owner == userID).ToList();
+
+            var checkedExamsViewModel = AutoMapper.Mapper.Map<List<EditExamViewModel>>(checkedExams);
+            var unCheckedExamsViewModel = AutoMapper.Mapper.Map<List<EditExamViewModel>>(unCheckedExams);
+            checkedExamsViewModel.ForEach(x => x.IsAssociatedToStudentGroup = true);
+            unCheckedExamsViewModel.ForEach(x => x.IsAssociatedToStudentGroup = false);
+
+            var editExamsViewModel = checkedExamsViewModel.Concat(unCheckedExamsViewModel).OrderBy(x => x.Name).ToList();
+
+            StudentGroupEditExamsViewModel viewModel = new StudentGroupEditExamsViewModel()
+            {
+                StudentGroup = studentGroup,
+                Exams = editExamsViewModel
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditExams([Bind(Include = "StudentGroup,Exams")] StudentGroupEditExamsViewModel viewModel)
+        {
+            if (viewModel == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var studentGroupID = viewModel.StudentGroup?.Id;
+
+            if (studentGroupID != null)
+            {
+                var studentGroup = _studentGroupService.GetByID((int)studentGroupID);
+                foreach (var examViewModel in viewModel.Exams)
+                {
+                    var exam = _examCoreService.GetByID(examViewModel.Id);
+
+                    if (examViewModel.IsAssociatedToStudentGroup == true)
+                    {
+                        _examCoreStudentGroupService.AssociateExamToStudentGroup(exam, studentGroup);
+                    }
+                    else if (examViewModel.IsAssociatedToStudentGroup == false)
+                    {
+                        _examCoreStudentGroupService.DisassociateExamFromStudentGroup(exam, studentGroup);
+                    }
+                }
+            }
+
+            return RedirectToAction("Details", new { id = studentGroupID });
+        }
         // GET: StudentGroups/Delete/5
         public ActionResult Delete(int? id)
         {

@@ -411,6 +411,7 @@
     <Content Include="Views\Results\Edit.cshtml" />
     <Content Include="Views\Results\Index.cshtml" />
     <Content Include="Views\ExamCores\Validate.cshtml" />
+    <Content Include="Views\StudentGroups\EditExams.cshtml" />
     <Content Include="Views\StudentGroups\EditStudents.cshtml" />
   </ItemGroup>
   <ItemGroup>
