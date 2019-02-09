@@ -4,16 +4,37 @@
     ViewBag.Title = "Index";
 }
 
+
 <h2>Index</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-@using (Html.BeginForm("CreateStudentsFromFile", "Students", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    <input type="file" name="FileUpload" />
-    <input type="submit" name="Submit" id="Submit" value="Upload" />
-}
+<div class="container">
+    <div class="col-md-10"></div>
+    <div class="col-md-2">
+        <input type="button" class="btn btn-default" data-toggle="collapse" data-target="#collapseFile" aria-controls="collapseFile" value="Add Students From File" />
+    </div>
+
+    <div class="collapse row" id="collapseFile">
+        <div class="col-md-9"></div>
+        <div class="col-md-3">
+            @using (Html.BeginForm("CreateStudentsFromFile", "Students", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="input-group">
+                    <input type="text" class="form-control" readonly>
+                    <label class="input-group-btn">
+                        <span class="btn btn-primary">
+                            Browse&hellip; <input type="file" name="FileUpload" id="fileInput" style="display: none;" accept=".csv">
+                        </span>
+                    </label>
+                </div>
+                <input type="submit" class="btn btn-primary" name="Submit" id="Submit" value="Upload" />
+            }
+        </div>
+    </div>
+</div>
+
 <table class="table">
     <tr>
         <th>
@@ -49,3 +70,6 @@
     }
 
 </table>
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="~/Script/students-index.js"></script>

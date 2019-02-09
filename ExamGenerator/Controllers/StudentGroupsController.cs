@@ -110,6 +110,7 @@ namespace ExamGenerator.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            var userID = User.Identity.GetUserId();
             StudentGroup studentGroup = _studentGroupService.Find(id);
             if (studentGroup == null)
             {
@@ -122,7 +123,7 @@ namespace ExamGenerator.Controllers
                 ExamsCore = _studentGroupService.GetExamsCoreByStudentGroup(studentGroup.Id).Select(x => new ExamCoreStudentGroupViewModel() { ExamCore = x }).ToList()
             };
 
-            ViewBag.StudentsList = new SelectList(_studentGroupService.GetStudentNotInStudentGroup(studentGroup.Id).Select(p =>
+            ViewBag.StudentsList = new SelectList(_studentGroupService.GetStudentNotInStudentGroup(studentGroup.Id).Where(x=>x.Owner== userID).Select(p =>
                                   new SelectListItem
                                   {
                                       Value = p.Id.ToString(),
@@ -130,7 +131,7 @@ namespace ExamGenerator.Controllers
                                   }),
                                   "Value",
                                   "Text");
-            ViewBag.ExamsCoreList = new SelectList(_studentGroupService.GetExamsCoreNotInStudentGroup(studentGroup.Id).Select(p =>
+            ViewBag.ExamsCoreList = new SelectList(_studentGroupService.GetExamsCoreNotInStudentGroup(studentGroup.Id).Where(x => x.Owner == userID).Select(p =>
                            new SelectListItem
                            {
                                Value = p.Id.ToString(),

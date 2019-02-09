@@ -12,6 +12,7 @@ using System.Web.Mvc;
 using ExamGenerator.Service.Interfaces;
 using ExamGeneratorModel;
 using ExamGeneratorModel.Model;
+using Microsoft.AspNet.Identity;
 
 namespace ExamGenerator.Controllers
 {
@@ -28,7 +29,8 @@ namespace ExamGenerator.Controllers
         // GET: Students
         public ActionResult Index()
         {
-            return View(_studentService.GetAll().ToList());
+            var userID = User.Identity.GetUserId();
+            return View(_studentService.GetAll().Where(x=>x.Owner== userID).ToList());
         }
 
         // GET: Students/Details/5
@@ -61,6 +63,7 @@ namespace ExamGenerator.Controllers
         {
             if (ModelState.IsValid)
             {
+                student.Owner = User.Identity.GetUserId();
                 _studentService.Insert(student);
                 return RedirectToAction("Index");
             }
@@ -74,6 +77,7 @@ namespace ExamGenerator.Controllers
             using (StreamReader reader = new StreamReader(FileUpload.InputStream, Encoding.Default, true))
             {
                 var line = reader.ReadLine();
+                var userID = User.Identity.GetUserId();
                 if (line != "Name;Surname;Email")
                 {
                     reader.Close();
@@ -86,12 +90,10 @@ namespace ExamGenerator.Controllers
                     {
                         Name = array[0],
                         SurName = array[1],
-                        Email = array[2]
+                        Email = array[2],
+                        Owner = userID
                     };
-
                     _studentService.Insert(tmpStudent);
-
-
                 }
                 reader.Close();
             }

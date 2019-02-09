@@ -139,6 +139,7 @@ namespace ExamGenerator.Controllers
             if (ModelState.IsValid)
             {
                 tmpExam = Mapper.Map<ExamCore>(examViewModel);
+                tmpExam.Owner = User.Identity.GetUserId();
                 _examCoreService.Insert(tmpExam);
                 return RedirectToAction("Details", new { id = tmpExam.Id });
             }
