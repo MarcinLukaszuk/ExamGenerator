@@ -64,8 +64,19 @@ function createEditGroup(number) {
     saveButton.attr("onclick", "saveEditFields(null," + number + ")");
     saveButton.attr("style", "display: none;");
     saveButton.html("Save");
+
+    var spinner = $("<i></i>");
+    spinner.attr("id", "spinner-" + number);
+    spinner.attr("class", "fa fa-spinner fa-spin");
+    spinner.attr("style", "display: none;");
+
+
+    saveButton.append(spinner);
     group.append(cancelButton);
     group.append(saveButton);
+
+
+
 
     return group;
 }
