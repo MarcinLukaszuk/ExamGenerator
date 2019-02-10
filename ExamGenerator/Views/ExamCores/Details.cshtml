@@ -45,25 +45,27 @@
         {
             <div class="panel panel-primary">
                 <div class="panel-heading" style="overflow:auto">
-                    <h4 class="panel-title col-md-9">
+                    <h4 class="panel-title col-md-7">
                         <a data-toggle="collapse" id="questionLabel_@i" href="#collapse_@i">@Html.DisplayFor(model => Model.Questions[i].QuestionText)</a>
                     </h4>
+
+                    <div class="btn-group col-md-2" role="group" aria-label="removeQuestion @i">
+                        <input id="removeQuestionBtn-@i" type="button" tag="false" class="btn btn-default" onclick="setRemoveQuestionButtonValue(this)" value="Remove Question" style="display: none;" />
+                    </div>
+                     
                     <div class="btn-group" role="group" aria-label="saveGroup @i">
                         <input id="editBtn-@i" type="button" class="btn btn-default" onclick="setEditable(@i)" value="Edit" />
                     </div>
 
                     <div class="btn-group" role="group" aria-label="editGroup @i">
                         <input id="cancelBtn-@i" type="button" class="btn btn-default" onclick="cancelEditFields(@i)" value="Cancel" style="display: none;" />
-
                         <button id="saveBtn-@i" class="btn btn-default" onclick="saveEditFields(@Model.Questions[i].Id,@i)" style="display: none;">
                             Save<i id="spinner-@i" class="fa fa-spinner fa-spin" style="display: none;"></i>
                         </button>
-
                     </div>
                     <div class="btn-group" role="group" aria-label="addAnsGroup @i">
                         <input id="addAnswerBtn-@i" type="button" class="btn btn-default" onclick="addNewAnswerToQuestion(@i)" value="Add Answer" style="display: none;" />
                     </div>
-
                 </div>
                 <div id="collapse_@i" class="panel-collapse collapse">
 
@@ -102,6 +104,7 @@
 <script src="~/Script/exam.js"></script>
 <script src="~/Script/examCore_details.js"></script>
 <script src="~/Script/examCore_details_addNewQuestion.js"></script>
+<script src="~/Script/examCore_details_removeQuestion.js"></script>
 <script>
     $(function () {
         var panelGroup = $(".panel-group");

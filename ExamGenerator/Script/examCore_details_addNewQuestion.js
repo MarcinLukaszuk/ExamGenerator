@@ -15,6 +15,7 @@
     panelHeading.attr("style", "overflow:auto");
 
     panelHeading.append(createHeaderGroup(numer));
+    panelHeading.append(createDeleteGroup(numer));    
     panelHeading.append(createSaveGroup(numer));
     panelHeading.append(createEditGroup(numer));
     panelHeading.append(createAnsGroup(numer));
@@ -97,7 +98,7 @@ function createAnsGroup(number) {
 
 function createHeaderGroup(number) {
     var group = $("<h4></h4>");
-    group.attr("class", "panel-title col-md-9");
+    group.attr("class", "panel-title col-md-7");
 
     var aElement = $("<a></a>");
     aElement.attr("data-toggle", "collapse");
@@ -105,5 +106,22 @@ function createHeaderGroup(number) {
     aElement.attr("href", "#collapse_" + number);
     aElement.attr("aria-expanded", "false");
     group.append(aElement);
+    return group;
+}
+
+function createDeleteGroup(number) {
+    var group = $("<div></div>");
+    group.attr("class", "btn-group col-md-2");
+    group.attr("role", "group");
+    group.attr("aria-label", "removeQuestion " + number);
+
+    var button = $("<input></input>");
+    button.attr("type", "button");
+    button.attr("class", "btn btn-default");
+    button.attr("id", "removeQuestionBtn-" + number);
+    button.attr("onclick", "setRemoveQuestionButtonValue(this)");
+    button.attr("value", "Remove Question");
+
+    group.append(button);
     return group;
 }

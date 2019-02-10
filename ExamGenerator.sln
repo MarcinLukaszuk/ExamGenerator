@@ -7,13 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamGenerator", "ExamGenera
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamGenerator.Model", "ExamGeneratorModel\ExamGenerator.Model.csproj", "{DA0108DD-D61B-43C6-9B01-78943A65DB71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApplication", "TestApplication\TestApplication.csproj", "{A0B3FFD8-2733-43D3-9449-03DBC5A86107}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamGenerator.Service", "ExamGenerator.Service\ExamGenerator.Service.csproj", "{34BFF91D-7BE7-427F-8477-52EFF995B25B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamGenerator.DocumentManager", "ExamGenerator.DocumentManager\ExamGenerator.DocumentManager.csproj", "{7E4CBE6A-21DC-499A-AE41-716BA3317C79}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamGenerator.UnitTests", "ExamGenerator.UnitTests\ExamGenerator.UnitTests.csproj", "{D1AABBD6-D221-4D81-8452-F35BE37D8A0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExamGenerator.UnitTests", "ExamGenerator.UnitTests\ExamGenerator.UnitTests.csproj", "{D1AABBD6-D221-4D81-8452-F35BE37D8A0B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +27,6 @@ Global
 		{DA0108DD-D61B-43C6-9B01-78943A65DB71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA0108DD-D61B-43C6-9B01-78943A65DB71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA0108DD-D61B-43C6-9B01-78943A65DB71}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A0B3FFD8-2733-43D3-9449-03DBC5A86107}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A0B3FFD8-2733-43D3-9449-03DBC5A86107}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A0B3FFD8-2733-43D3-9449-03DBC5A86107}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A0B3FFD8-2733-43D3-9449-03DBC5A86107}.Release|Any CPU.Build.0 = Release|Any CPU
 		{34BFF91D-7BE7-427F-8477-52EFF995B25B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{34BFF91D-7BE7-427F-8477-52EFF995B25B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34BFF91D-7BE7-427F-8477-52EFF995B25B}.Release|Any CPU.ActiveCfg = Release|Any CPU

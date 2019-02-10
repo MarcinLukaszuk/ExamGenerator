@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
@@ -30,7 +31,7 @@ namespace ExamGenerator.Controllers
         public ActionResult Index()
         {
             var userID = User.Identity.GetUserId();
-            return View(_studentService.GetAll().Where(x=>x.Owner== userID).ToList());
+            return View(_studentService.GetAll().Where(x => x.Owner == userID).ToList());
         }
 
         // GET: Students/Details/5
@@ -72,34 +73,39 @@ namespace ExamGenerator.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateStudentsFromFile(HttpPostedFileBase FileUpload)
+        public async Task<ActionResult> CreateStudentsFromFile(HttpPostedFileBase FileUpload)
         {
             using (StreamReader reader = new StreamReader(FileUpload.InputStream, Encoding.Default, true))
             {
-                var line = reader.ReadLine();
                 var userID = User.Identity.GetUserId();
-                if (line != "Name;Surname;Email")
-                {
-                    reader.Close();
-                    return RedirectToAction("Index");
-                }
-                while ((line = reader.ReadLine()) != null)
-                {
-                    var array = line.Split(';');
-                    var tmpStudent = new Student()
-                    {
-                        Name = array[0],
-                        SurName = array[1],
-                        Email = array[2],
-                        Owner = userID
-                    };
-                    _studentService.Insert(tmpStudent);
-                }
-                reader.Close();
+                await addStudentsFromFile(reader, userID);
             }
             return RedirectToAction("Index");
         }
 
+        private async Task<int> addStudentsFromFile(StreamReader reader, string userID)
+        {
+            var line = reader.ReadLine();
+            if (line != "Name;Surname;Email")
+            {
+                reader.Close();
+                return 0;
+            }
+            while ((line = reader.ReadLine()) != null)
+            {
+                var array = line.Split(';');
+                var tmpStudent = new Student()
+                {
+                    Name = array[0],
+                    SurName = array[1],
+                    Email = array[2],
+                    Owner = userID
+                };
+                _studentService.Insert(tmpStudent);
+            }
+
+            return 0;
+        }
         // GET: Students/Edit/5
         public ActionResult Edit(int? id)
         {
