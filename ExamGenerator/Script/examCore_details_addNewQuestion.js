@@ -74,10 +74,6 @@ function createEditGroup(number) {
     saveButton.append(spinner);
     group.append(cancelButton);
     group.append(saveButton);
-
-
-
-
     return group;
 }
 

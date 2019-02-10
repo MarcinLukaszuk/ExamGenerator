@@ -97,7 +97,7 @@ namespace ExamGenerator.Controllers
                 studentGroup.Owner = User.Identity.GetUserId();
                 _studentGroupService.Insert(studentGroup);
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", new { id = studentGroup.Id });
             }
 
             return View(studentGroup);

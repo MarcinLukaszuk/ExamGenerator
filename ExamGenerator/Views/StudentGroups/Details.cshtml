@@ -11,59 +11,13 @@
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h4 class="panel-title col-md-10">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Students</a>
-                </h4>
-                @Html.ActionLink("Edit", "EditStudents", new { id = Model.StudentGroup.Id }, new { @class = "btn btn-default " })
-
-            </div>
-            <div id="collapse1" class="panel-collapse collapse in">
-                <div class="panel-body">
-                    <table class="table">
-                        @if (Model.Students.Any())
-                        {
-                            <tr>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Students.First().Name)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Students.First().SurName)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Students.First().Email)
-                                </th>
-                                <th></th>
-                            </tr>
-                        }
-
-                        @foreach (var item in Model.Students)
-                        {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.SurName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Email)
-                                </td>
-                            </tr>
-                        }
-
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h4 class="panel-title col-md-10">
                     <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Exams</a>
                 </h4>
 
                 @Html.ActionLink("Edit", "EditExams", new { id = Model.StudentGroup.Id }, new { @class = "btn btn-default " })
 
             </div>
-            <div id="collapse2" class="panel-collapse collapse">
+            <div id="collapse2" class="panel-collapse collapse in">
                 <div class="panel-body">
                     <table class="table">
                         @if (Model.ExamsCore.Any())
@@ -142,11 +96,57 @@
                 </div>
             </div>
         </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title col-md-10">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Students</a>
+                </h4>
+                @Html.ActionLink("Edit", "EditStudents", new { id = Model.StudentGroup.Id }, new { @class = "btn btn-default " })
+
+            </div>
+            <div id="collapse1" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <table class="table">
+                        @if (Model.Students.Any())
+                        {
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Students.First().Name)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Students.First().SurName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Students.First().Email)
+                                </th>
+                                <th></th>
+                            </tr>
+                        }
+
+                        @foreach (var item in Model.Students)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SurName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Email)
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.StudentGroup.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
 <script src="~/Scripts/jquery-3.3.1.js"></script>
