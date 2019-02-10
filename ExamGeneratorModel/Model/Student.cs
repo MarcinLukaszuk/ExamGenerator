@@ -12,6 +12,7 @@ namespace ExamGeneratorModel.Model
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
+        [Display(Name = "Surname")]
         public string SurName { get; set; }
         public string Email { get; set; }
         public bool IsDeleted { get; set; }

@@ -209,7 +209,9 @@ namespace ExamGenerator.Controllers
             {
                 return null;
             }
-            var path = HostingEnvironment.MapPath("~/GeneratedExams");
+            var path = Request.MapPath("~/GeneratedExams");
+
+
             ExamDTO examDTO = Mapper.Map<ExamDTO>(exam);
             DocumentCreator creator = new DocumentCreator(examDTO, path);
             var answerPositions = creator.AnswerPositionDTO;
@@ -227,8 +229,12 @@ namespace ExamGenerator.Controllers
                 var core = _examCoreService.Find(ExamCoreID);
                 var studentsGroupsStudentsIDList = _studentGroupService.GetStudentsGroupStudentID(studentGruopID);
                 var random = new Random();
-                var path = HostingEnvironment.MapPath("~/GeneratedExams");
-
+                var path = Request.MapPath("~/GeneratedExams");
+               
+                if (!Directory.Exists(Request.MapPath("~/GeneratedExams")))
+                {
+                    Directory.CreateDirectory(path);
+                }
                 DocumentCreator creator = new DocumentCreator(path);
                 foreach (var studentGroupStudentID in studentsGroupsStudentsIDList)
                 {
@@ -423,8 +429,13 @@ namespace ExamGenerator.Controllers
         [HttpPost]
         public ActionResult CheckUploadExams(HttpPostedFileBase FileUpload)
         {
-            string path = HostingEnvironment.MapPath("~/UserBitmaps");
-            string fullPath = path + "//" + FileUpload.FileName + PDFHelpers.GetMD5(new Random().Next().ToString()); ;
+            string path = Request.MapPath("~/UserBitmaps");
+            string fullPath = path + "//" + FileUpload.FileName + PDFHelpers.GetMD5(new Random().Next().ToString()); 
+            
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
             FileUpload.SaveAs(fullPath);
 
             var bitmaps = ArchiveUnZiper.GetBitmapsFromZipArchive(fullPath);
