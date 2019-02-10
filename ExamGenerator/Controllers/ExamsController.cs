@@ -230,7 +230,7 @@ namespace ExamGenerator.Controllers
                 var studentsGroupsStudentsIDList = _studentGroupService.GetStudentsGroupStudentID(studentGruopID);
                 var random = new Random();
                 var path = Request.MapPath("~/GeneratedExams");
-               
+
                 if (!Directory.Exists(Request.MapPath("~/GeneratedExams")))
                 {
                     Directory.CreateDirectory(path);
@@ -296,6 +296,19 @@ namespace ExamGenerator.Controllers
                 {
                     editedQuestion.QuestionText = questionData.newValue;
                 }
+
+                if (questionData != null && questionData.secondNewValue != null && questionData.secondNewValue == "true")
+                {
+                    _questionService.Delete(editedQuestion);
+                    return Json(
+                   new
+                   {
+                       success = true,
+                       responseText = "Question has been successfuly deleted!",
+                       deleted = true
+                   }, JsonRequestBehavior.AllowGet);
+
+                }
                 var editedAnswers = new List<Answer>();
                 var addedAnswers = new List<Answer>();
                 if (answersData != null && answersData.Any())
@@ -347,7 +360,8 @@ namespace ExamGenerator.Controllers
                         {
                             TextAnswer = x.TextAnswer,
                             IfCorrect = x.IfCorrect
-                        }).ToList()
+                        }).ToList(),
+                        newQuestionID = editedQuestion.Id
                     }, JsonRequestBehavior.AllowGet);
 
             }
@@ -430,8 +444,8 @@ namespace ExamGenerator.Controllers
         public ActionResult CheckUploadExams(HttpPostedFileBase FileUpload)
         {
             string path = Request.MapPath("~/UserBitmaps");
-            string fullPath = path + "//" + FileUpload.FileName + PDFHelpers.GetMD5(new Random().Next().ToString()); 
-            
+            string fullPath = path + "//" + FileUpload.FileName + PDFHelpers.GetMD5(new Random().Next().ToString());
+
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);

@@ -71,11 +71,12 @@ function setEditable(questionID) {
     var saveBtn = $("#saveBtn-" + questionID);
     var cancelBtn = $("#cancelBtn-" + questionID);
     var addAnswerBtn = $("#addAnswerBtn-" + questionID);
-
+    var removeQuestionBtn = $("#removeQuestionBtn-" + questionID);
     editBtn.hide();
     saveBtn.show();
     addAnswerBtn.show();
     cancelBtn.show();
+    removeQuestionBtn.show();
     for (var i = 0; i < answersNumber; i++) {
         setEditFieldToAnswer(questionID, i);
     }
@@ -86,6 +87,7 @@ function cancelEditFields(questionID) {
     $("#saveBtn-" + questionID).hide();
     $("#cancelBtn-" + questionID).hide();
     $("#addAnswerBtn-" + questionID).hide();
+    $("#removeQuestionBtn-" + questionID).hide();
     closeEditFieldToQuestion(questionID);
     closeEditFieldToAnswers(questionID);
     showHideCollapsePanel(questionID, false);
@@ -114,7 +116,7 @@ async function saveAsyncChanges(questionID, questionData, answersData) {
 }
 
 async function saveEditFields(questionIDinDatabase, questionID) {
-   
+
     var questionValue = GetQuestionNewValue(questionID);
     var answersValues = GetAnswersNewValue(questionID);
 
@@ -128,14 +130,24 @@ async function saveEditFields(questionIDinDatabase, questionID) {
             return;
         }
     }
+    if (questionIDinDatabase == null && questionValue.secondNewValue == "true") {
+        $("#saveBtn-" + questionID).parent().parent().parent().remove();
+        return;
+    }
+
     $("#spinner-" + questionID).show();
     var callback = await saveAsyncChanges(questionIDinDatabase, questionValue, answersValues);
     if (callback.success) {
+        if (callback.deleted == true) {
+            $("#saveBtn-" + questionID).parent().parent().parent().remove();
+            alert(callback.responseText);
+            return;
+        }
         $("#saveBtn-" + questionID).attr("onclick", "saveEditFields(" + callback.newQuestionID + "," + questionID + ")");
         cancelEditFields(questionID);
         setQuestionNewValue(questionID, questionValue.newValue);
         fillCallbackData(questionID, callback);
-        setTimeout(function () { showHideCollapsePanel(questionID, true); }, 500);       
+        setTimeout(function () { showHideCollapsePanel(questionID, true); }, 500);
     }
     $("#spinner-" + questionID).hide();
 }
@@ -159,8 +171,6 @@ function fillCallbackData(panelID, callback) {
         panelBody[0].innerHTML = callback.data[i].TextAnswer;
         collapsePanel.append(panelBody);
     }
-
-
 }
 
 
@@ -198,7 +208,9 @@ function setAnswersNewColors(QuestionID) {
 function GetQuestionNewValue(questionID) {
     var questionNewValue = $("#questionEdit_" + questionID).val();
     var questionOldValue = $("#questionLabel_" + questionID)[0].innerText;
-    return { newValue: questionNewValue, oldValue: questionOldValue };
+    var questionDeleteValue = $("#removeQuestionBtn-" + questionID).attr("tag");
+
+    return { newValue: questionNewValue, oldValue: questionOldValue, secondNewValue: questionDeleteValue };
 }
 
 function GetAnswersNewValue(QuestionID) {
@@ -259,6 +271,9 @@ function setEditFieldToQuestion(questionID) {
 function closeEditFieldToQuestion(questionID) {
     $("#questionLabel_" + questionID).show();
     $("#questionEdit_" + questionID).remove();
+    if ($("#removeQuestionBtn-" + questionID).attr("tag") == "true") {
+        setRemoveQuestionButtonValue($("#removeQuestionBtn-" + questionID));
+    }
     return;
 }
 
@@ -288,8 +303,11 @@ function closeEditFieldToAnswers(QuestionID) {
     var answerPanelBody = $("#editPanel" + answerStringID);
     var answerDisplayPanelBody = $("#" + answerStringID);
 
-    while (answerPanelBody != null && answerPanelBody.length > 0) {
+    while (answerPanelBody != null && answerPanelBody.length > 0 || answerID < 20) {
         if (answerDisplayPanelBody.attr("tag") == "remove") {
+            answerDisplayPanelBody.remove();
+        }
+        if (answerDisplayPanelBody.html() == "") {
             answerDisplayPanelBody.remove();
         }
         answerDisplayPanelBody.show();
@@ -298,7 +316,6 @@ function closeEditFieldToAnswers(QuestionID) {
         answerStringID = "question_" + QuestionID + "-answer_" + answerID;
         answerPanelBody = $("#editPanel" + answerStringID);
         answerDisplayPanelBody = $("#" + answerStringID);
-
     }
     return;
 }
