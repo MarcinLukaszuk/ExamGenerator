@@ -26,16 +26,13 @@ namespace ExamGenerator.Controllers
 
 
         // GET: Results
-        public ActionResult Index(int? studentgroupid, int? examcoreid)
+        public ActionResult Index(int? examCoreStudentGroupID)
         {
             List<Result> results = new List<Result>();
-            if (studentgroupid == null || examcoreid == null)
+            if (examCoreStudentGroupID == null)
                 results = _resultService.GetAll().ToList();
             else
-                results = _resultService.GetResultsByStudentGroupAndExam(studentgroupid, examcoreid);
-
-
-
+                results = _resultService.GetResultsByStudentGroupAndExam2(examCoreStudentGroupID);
 
             return View(results);
         }
@@ -139,7 +136,7 @@ namespace ExamGenerator.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            
+
             base.Dispose(disposing);
         }
     }

@@ -41,7 +41,7 @@
                                     @Html.DisplayFor(modelItem => item.ExamCore.Name)
                                 </td>
                                 <td>
-                                    @using (Html.BeginForm("GenerateExam", "ExamCores", new { ExamCoreID = item.ExamCore.Id, studentGruopID = Model.StudentGroup.Id }))
+                                    @using (Html.BeginForm("GenerateExam2", "ExamCores", new { ExamCoreStudentGroupID = item.Id}))
                                     {
                                         <input value="Generate"
                                                class="btn btn-primary"
@@ -83,7 +83,7 @@
                                 <td>
                                     @if (item.IsValidated == true)
                                     {
-                                        @Html.ActionLink("Results", "Index", "Results", new { studentgroupid = Model.StudentGroup.Id, examcoreid = item.ExamCore.Id }, new { @class = "btn btn-success" })
+                                        @Html.ActionLink("Results", "Index", "Results", new { examCoreStudentGroupID = item.Id}, new { @class = "btn btn-success" })
                                     }
                                     else
                                     {

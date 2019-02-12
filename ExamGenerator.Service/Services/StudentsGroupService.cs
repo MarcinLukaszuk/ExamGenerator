@@ -51,7 +51,7 @@ namespace ExamGenerator.Service.Services
             {
                 examsCoreList.Add(_context.Exams.Find(examCoreAssociated.ExamCoreID));
             }
-            return examsCoreList.OrderBy(x => x.Name).ToList();
+            return examsCoreList.OrderBy(x => x.Name).Distinct().ToList();
         }
 
         public List<ExamCore> GetExamsCoreNotInStudentGroup(int studentGroupID)

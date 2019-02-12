@@ -102,6 +102,14 @@
     <Compile Include="Migrations\201902081921148_migracjaOwner.Designer.cs">
       <DependentUpon>201902081921148_migracjaOwner.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201902112127579_addVersion.cs" />
+    <Compile Include="Migrations\201902112127579_addVersion.Designer.cs">
+      <DependentUpon>201902112127579_addVersion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902120925346_addGeneratedKey.cs" />
+    <Compile Include="Migrations\201902120925346_addGeneratedKey.Designer.cs">
+      <DependentUpon>201902120925346_addGeneratedKey.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Answer.cs" />
     <Compile Include="Model\AnswersPositions.cs" />
@@ -150,6 +158,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201902081921148_migracjaOwner.resx">
       <DependentUpon>201902081921148_migracjaOwner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902112127579_addVersion.resx">
+      <DependentUpon>201902112127579_addVersion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902120925346_addGeneratedKey.resx">
+      <DependentUpon>201902120925346_addGeneratedKey.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
