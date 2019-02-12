@@ -9,6 +9,7 @@ namespace ExamGeneratorModel.ViewModel
 {
     public class ExamCoreStudentGroupViewModel
     {
+        public int Id { get; set; }
         public ExamCore ExamCore { get; set; }
         public bool IsGenerated { get; set; }
         public bool IsValidated { get; set; }

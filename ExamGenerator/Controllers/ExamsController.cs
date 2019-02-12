@@ -111,9 +111,8 @@ namespace ExamGenerator.Controllers
             if (examIDs.Count > 0)
             {
                 _resultService.SetIsValidatetFlagByExamID(examIDs.FirstOrDefault());
-                var examCoreID = _resultService.GetExamCoreIDByExamID(examIDs.FirstOrDefault());
-                var studentGroupID = _resultService.GetStudentGroupIDByExamID(examIDs.FirstOrDefault());
-                return RedirectToAction("Index/", "Results", new { examCoreID = examCoreID.ToString(), studentGroupID = studentGroupID.ToString() });
+                var examCoreStudentGroupID = _generatedExamService.GetByID(examIDs.FirstOrDefault()).ExamCoreStudentGroupID;
+                return RedirectToAction("Index/", "Results", new { examCoreStudentGroupID = examCoreStudentGroupID.ToString()});
             }
             return View();
         }
@@ -255,6 +254,43 @@ namespace ExamGenerator.Controllers
             return RedirectToAction("Details", "StudentGroups", new { id = (int)studentGruopID });
         }
 
+        [HttpPost, ActionName("GenerateExam2")]
+        public ActionResult GenerateExamPost2(int? ExamCoreStudentGroupID, int? questionNumber)
+        {
+            if (ExamCoreStudentGroupID != null && questionNumber != null)
+            {
+                var examCoreStudentGroup = _examCoreStudentGroupService.GetByID((int)ExamCoreStudentGroupID);
+                var core = _examCoreService.Find(examCoreStudentGroup.ExamCoreID);
+                var studentsGroupsStudentsIDList = _studentGroupService.GetStudentsGroupStudentID(examCoreStudentGroup.StudentGroupID);
+                var random = new Random();
+                var path = Request.MapPath("~/GeneratedExams");
+
+                if (!Directory.Exists(Request.MapPath("~/GeneratedExams")))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                DocumentCreator creator = new DocumentCreator(path);
+                foreach (var studentGroupStudentID in studentsGroupsStudentsIDList)
+                {
+                    var generatedExamDTO = GenerateExamForStudent2(core, studentGroupStudentID, (int)questionNumber, (int)ExamCoreStudentGroupID);
+                    creator.AddExamToGenerate(generatedExamDTO);
+
+                }
+                creator.Generate();
+
+                ArchiveUnZiper.PackFileToArchive(path + "//" + PDFHelpers.GetMD5(creator.PDFDocuments.FirstOrDefault()?.Filename) + ".zip", creator.PDFDocuments.Select(x => x.Filepath + x.Filename).ToList());
+
+                foreach (var pdfDocument in creator.PDFDocuments)
+                {
+                    _answerPositionService.InsertRange(pdfDocument.ExamID, Mapper.Map<List<AnswerPosition>>(pdfDocument.ExamAnswerPositions));
+                }
+                _examCoreStudentGroupService.SetExamArchivePath2(examCoreStudentGroup.Id, PDFHelpers.GetMD5(creator.PDFDocuments.FirstOrDefault()?.Filename) + ".zip");
+                return RedirectToAction("Details", "StudentGroups", new { id = (int)examCoreStudentGroup.StudentGroupID });
+            }
+            return RedirectToAction("Index", "StudentGroups");
+
+        }
+
         private ExamDTO GenerateExamForStudent(ExamCore examCore, int studentGroupStudentID, int questionNumber)
         {
             var generatedExam = new GeneratedExam()
@@ -269,6 +305,22 @@ namespace ExamGenerator.Controllers
                 .ToList());
             return getExamDTO(generatedExam.Id);
         }
+        private ExamDTO GenerateExamForStudent2(ExamCore examCore, int studentGroupStudentID, int questionNumber, int examCoreStudentGroup)
+        {
+            var generatedExam = new GeneratedExam()
+            {
+                ExamCoreID = examCore.Id,
+                StudentGroupStudentID = studentGroupStudentID,
+                ExamCoreStudentGroupID= examCoreStudentGroup
+            };
+            _generatedExamService.Insert(generatedExam);
+            _generatedExamService
+                .AssociateQuestionsToGeneratedExam(generatedExam, examCore.Questions.OrderBy(a => Guid.NewGuid())
+                .Take(questionNumber)
+                .ToList());
+            return getExamDTO(generatedExam.Id);
+        }
+
         private ExamDTO getExamDTO(int generatedExamID)
         {
             var generatedExam = _generatedExamService.Find(generatedExamID);

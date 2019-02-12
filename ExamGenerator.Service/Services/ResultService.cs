@@ -36,6 +36,23 @@ namespace ExamGenerator.Service.Services
             return results;
         }
 
+        public List<Result> GetResultsByStudentGroupAndExam2(int? examCoreStudentGroupID)
+        {
+            var examCoreStudentGroup = _context.ExamCoreStudentGroups.FirstOrDefault(x => x.Id == examCoreStudentGroupID);
+
+            var generatedExams = _context.GeneratedExams.Where(x=>x.ExamCoreStudentGroupID== examCoreStudentGroupID).ToList();
+            List<Result> results = new List<Result>();
+
+            foreach (var generatedExam in generatedExams)
+            {
+                var result = _context.Results.Where(x => x.StudentID == generatedExam.StudentGroupStudent.Student.Id && x.GeneratedExamID == generatedExam.Id).FirstOrDefault();
+                if (result != null) results.Add(result);
+
+            }
+            return results;
+        }
+
+
         public int? GetStudentIDByExamID(int? examID)
         {
             if (examID != null)
@@ -63,7 +80,7 @@ namespace ExamGenerator.Service.Services
             var generatedExam = _context.GeneratedExams.Find(examID);
             var studentGroupStudent = _context.StudentGroupStudents.Find(generatedExam.StudentGroupStudentID);
             var examCoreStudentsgroup = _context.ExamCoreStudentGroups
-                .Where(x => x.ExamCoreID == generatedExam.ExamCoreID && x.StudentGroupID == studentGroupStudent.StudentGroupID)
+                .Where(x => x.Id == generatedExam.ExamCoreStudentGroupID)
                 .FirstOrDefault();
 
             examCoreStudentsgroup.IsValidated = true;
@@ -72,7 +89,7 @@ namespace ExamGenerator.Service.Services
 
         public int? GetExamCoreIDByExamID(int? examID)
         {
-         return _context.GeneratedExams.Find(examID)?.ExamCoreID;
+            return _context.GeneratedExams.Find(examID)?.ExamCoreID;
         }
 
         public int? GetStudentGroupIDByExamID(int? examID)

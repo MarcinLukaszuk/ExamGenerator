@@ -61,6 +61,28 @@ namespace ExamGenerator.Controllers
             {
                 return HttpNotFound();
             }
+
+
+            var associatedExams = _examCoreStudentGroupService.GetAll().Where(x => x.StudentGroupID == id).ToList();
+
+            List<ExamCoreStudentGroupViewModel> lista = new List<ExamCoreStudentGroupViewModel>();
+            foreach (var associate in associatedExams)
+            {
+                var tymczasowy = new ExamCoreStudentGroupViewModel();
+                tymczasowy.Id = associate.Id;
+                if (associate.IsGenerated != null)
+                    tymczasowy.IsGenerated = (bool)associate.IsGenerated;
+                if (associate.IsValidated != null)
+                    tymczasowy.IsValidated = (bool)associate.IsValidated;
+                tymczasowy.ZIPArchiveName = associate.ZIPArchiveName;
+                tymczasowy.ExamCore = _examCoreService.GetByID(associate.ExamCoreID);
+                lista.Add(tymczasowy);
+            }
+
+
+
+
+
             var examsCoreVM = _studentGroupService.GetExamsCoreByStudentGroup(studentGroup.Id).ToList().Select(x => new ExamCoreStudentGroupViewModel() { ExamCore = x }).ToList();
 
             foreach (var item in examsCoreVM)
@@ -74,7 +96,7 @@ namespace ExamGenerator.Controllers
             {
                 StudentGroup = studentGroup,
                 Students = _studentGroupService.GetStudentsByStudentGroup(studentGroup.Id).ToList(),
-                ExamsCore = examsCoreVM
+                ExamsCore = lista
             };
             return View(viewModel);
         }

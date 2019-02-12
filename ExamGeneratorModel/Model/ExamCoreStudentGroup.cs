@@ -20,6 +20,7 @@ namespace ExamGeneratorModel.Model
         public bool? IsGenerated { get; set; }
         public bool? IsValidated { get; set; }
         public string ZIPArchiveName { get; set; }
+        public int Version { get; set; }
 
         public virtual StudentGroup StudentGroup { get; set; }
         public virtual ExamCore ExamCore { get; set; }

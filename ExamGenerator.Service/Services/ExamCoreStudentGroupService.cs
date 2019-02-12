@@ -24,7 +24,7 @@ namespace ExamGenerator.Service.Services
                 var existingAssociate = _context.ExamCoreStudentGroups.Where(x => x.StudentGroupID == studentGroup.Id && x.ExamCoreID == examCore.Id).FirstOrDefault();
                 if (existingAssociate == null)
                 {
-                    ExamCoreStudentGroup sgs = new ExamCoreStudentGroup() { ExamCoreID = examCore.Id, StudentGroupID = studentGroup.Id };
+                    ExamCoreStudentGroup sgs = new ExamCoreStudentGroup() { ExamCoreID = examCore.Id, StudentGroupID = studentGroup.Id, Version = 1 };
                     Insert(sgs);
                     _context.SaveChanges();
                     return true;
@@ -83,5 +83,23 @@ namespace ExamGenerator.Service.Services
                 _context.SaveChanges();
             }
         }
+
+        public void SetExamArchivePath2(int examCoreStudentGroup, string path)
+        {
+            var existingAssociate = _context.ExamCoreStudentGroups.Where(x => x.Id == examCoreStudentGroup).FirstOrDefault();
+            if (existingAssociate != null)
+            {
+                existingAssociate.ZIPArchiveName = path;
+                existingAssociate.IsGenerated = true;
+                _context.SaveChanges();
+            }
+        }
+
+        public int GetVersionsOfGenerategExam(int examCoreID, int studentGroupID)
+        {
+            var associatedExamsCore = _context.ExamCoreStudentGroups.Where(x => x.StudentGroupID == studentGroupID && x.ExamCoreID == examCoreID).ToList();
+            return associatedExamsCore.Max(x => x.Version);
+        }
+
     }
 }

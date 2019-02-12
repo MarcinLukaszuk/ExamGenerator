@@ -14,7 +14,10 @@ namespace ExamGeneratorModel.Model
         public int Id { get; set; }       
         public int StudentGroupStudentID { get; set; }
         public int ExamCoreID { get; set; }
+        public int ExamCoreStudentGroupID { get; set; }
 
+        [ForeignKey("ExamCoreStudentGroupID")]
+        public virtual ExamCoreStudentGroup ExamCoreStudentGroup { get; set; }
         [ForeignKey("StudentGroupStudentID")]
         public virtual StudentGroupStudent StudentGroupStudent { get; set; }
         [ForeignKey("ExamCoreID")]

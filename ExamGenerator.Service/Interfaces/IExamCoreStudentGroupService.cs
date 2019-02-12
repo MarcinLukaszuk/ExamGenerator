@@ -15,5 +15,7 @@ namespace ExamGenerator.Service.Interfaces
         bool CheckIfExamCoreIsValidated(int examCoreID, int studentGroupID);
         string GetGenerategExamArchivePath(int examCoreID, int studentGroupID);
         void SetExamArchivePath(int examCoreID, int studentGroupID,string path);
+        int GetVersionsOfGenerategExam(int examCoreID, int studentGroupID);
+        void SetExamArchivePath2(int examCoreStudentGroup, string path);
     }
 }
