@@ -3,10 +3,17 @@
 @{
     ViewBag.Title = "Details";
 }
- 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    .fa {
+        margin-left: 8px;
+        margin-right: 2px;
+    }
+</style>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <div class="container">
     <h2>Students Group:  <b>@Html.DisplayFor(model => model.StudentGroup.Name)</b></h2>
-  
+
     <div class="panel-group" id="accordion">
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -41,13 +48,18 @@
                                     @Html.DisplayFor(modelItem => item.ExamCore.Name)
                                 </td>
                                 <td>
-                                    @using (Html.BeginForm("GenerateExam2", "ExamCores", new { ExamCoreStudentGroupID = item.Id}))
+                                    @using (Html.BeginForm("GenerateExam", "ExamCores", new { ExamCoreStudentGroupID = item.Id }))
                                     {
-                                        <input value="Generate"
-                                               class="btn btn-primary"
-                                               data-toggle="popover"
-                                               title="Question Number"
-                                               data-content='<input type="number" name= "questionNumber" class="form-control" min="1" max= "@item.ExamCore.Questions.Count" value="@item.ExamCore.Questions.Count"/>  <input value="Save" type="submit" class="btn btn-danger" />' />
+
+                                        <button id="itemId-@item.Id"
+                                                class="btn btn-primary"
+                                                data-toggle="popover"
+                                                title="Question Number"
+                                                type="button"
+                                                data-content='<input type="number" name= "questionNumber" class="form-control" min="1" max= "@item.ExamCore.Questions.Count" value="@item.ExamCore.Questions.Count"/>  <input value="Save" type="submit" onclick="generate(@item.Id,this)" class="btn btn-danger" />'>
+                                            Generate<i id="spinner-@item.Id" class="fa fa-spinner fa-spin" style="display: none;"></i>
+                                        </button>
+
                                     }
                                 </td>
                                 <td>
@@ -83,7 +95,7 @@
                                 <td>
                                     @if (item.IsValidated == true)
                                     {
-                                        @Html.ActionLink("Results", "Index", "Results", new { examCoreStudentGroupID = item.Id}, new { @class = "btn btn-success" })
+                                        @Html.ActionLink("Results", "Index", "Results", new { examCoreStudentGroupID = item.Id }, new { @class = "btn btn-success" })
                                     }
                                     else
                                     {
@@ -151,7 +163,7 @@
 </p>
 <script src="~/Scripts/jquery-3.3.1.js"></script>
 <script>
-
+    
     $(function () {
         $('[data-toggle="popover"]').popover({
             html: true,
@@ -163,9 +175,16 @@
             }
         })
     })
-    function zipDownload(url) {
 
+    function zipDownload(url) {
         window.location = url;
+    }
+
+    function generate(idExam, saveButton) {
+        $("#spinner-" + idExam).show();
+        var generateButton = $("#itemId-" + idExam).click();
+        generateButton.attr("disabled", "");
+        generateButton.attr("onclick", "");
     }
 
 </script>

@@ -13,14 +13,20 @@ namespace ExamGenerator.DocumentManager.PDFCreator
 {
     public class PDFDocument : IPDFDocument
     {
-        Document _document;
-        PdfWriter _writer;
-        string _filepath;
-        string _filename;
-        LinkedList<PdfPTable> tables;
-        LinkedList<QuestionDTO> questions;
-        List<AnswerPositionDTO> examAnswerPositions;
-        public int ExamID { get; set; }
+        private Document _document;
+        private PdfWriter _writer;
+        private string _filepath;
+        private string _filename;
+        private int _examID;
+        private LinkedList<QuestionDTO> _questions;
+        private List<AnswerPositionDTO> _examAnswerPositions;
+        public int ExamID
+        {
+            get
+            {
+                return _examID;
+            }
+        }
         public string Filename
         {
             get
@@ -39,47 +45,43 @@ namespace ExamGenerator.DocumentManager.PDFCreator
         {
             get
             {
-                return examAnswerPositions;
+                return _examAnswerPositions;
             }
         }
 
-        public PDFDocument(ExamDTO exam, string path)
+        public PDFDocument(ExamDTO examDTO, string path)
         {
-            ExamID = exam.Id;
-            _filename =exam.StudentFullName+ PDFHelpers.GetMD5(ExamID.ToString()) + ".pdf";
-            _filepath = path + "\\";
             _document = new Document(PageSize.A4, 36, 36, 36, 36);
+
+            _examID = examDTO.Id;
+            _filename = examDTO.StudentFullName + PDFHelpers.GetMD5(_examID.ToString()) + ".pdf";
+            _filepath = path + "\\";
+
             _writer = PdfWriter.GetInstance(_document, new FileStream(_filepath + _filename, FileMode.Create));
-            _writer.PageEvent = PDFHelpers.CreatePageEventHelper(exam);
+            _writer.PageEvent = PDFHelpers.CreatePageEventHelper(examDTO);
             _document.Open();
 
-            tables = new LinkedList<PdfPTable>();
-            questions = new LinkedList<QuestionDTO>();
-            examAnswerPositions = new List<AnswerPositionDTO>();
+            _questions = new LinkedList<QuestionDTO>(examDTO.QuestionsDTO);
+            _examAnswerPositions = new List<AnswerPositionDTO>();
         }
         public void AddExercise(QuestionDTO question)
         {
-            questions.AddLast(question);
+            _questions.AddLast(question);
         }
 
         public void SaveDocument()
         {
-            buildDocument();
-            _document.Close();
-        }
-
-        private void buildDocument()
-        {
-            int questionCounter = 1;
-            foreach (var question in questions)
+            int questionNumber = 1;
+            foreach (var question in _questions)
             {
                 var currentAnswerPositions = new LinkedList<AnswerPositionDTO>();
-                var table = PDFHelpers.PDFTableCreator(question, questionCounter++);
+                var table = PDFHelpers.PDFTableCreator(question, questionNumber++);
                 _document.Add(table);
-                currentAnswerPositions = PDFHelpers.getAbsolutePositionOfAnswers(ExamID,table, question, _document, _writer);
+                currentAnswerPositions = PDFHelpers.CreateAnswerPositionList(ExamID, table, question, _document, _writer);
 
-                examAnswerPositions.AddRange(currentAnswerPositions);
+                _examAnswerPositions.AddRange(currentAnswerPositions);
             }
+            _document.Close();
         }
     }
 }

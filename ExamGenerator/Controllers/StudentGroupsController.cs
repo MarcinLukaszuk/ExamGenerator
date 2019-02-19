@@ -472,7 +472,7 @@ namespace ExamGenerator.Controllers
 
         public FileResult GetExamsArchive(string filename)
         {
-            var path = HostingEnvironment.MapPath("~/GeneratedExams");
+            var path = Request.MapPath("~/GeneratedExams");
             return File(path + "//" + filename, "application/zip", filename);
         }
     }

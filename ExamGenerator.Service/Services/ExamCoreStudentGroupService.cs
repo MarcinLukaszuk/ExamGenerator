@@ -73,18 +73,7 @@ namespace ExamGenerator.Service.Services
             return string.Empty;
         }
 
-        public void SetExamArchivePath(int examCoreID, int studentGroupID, string path)
-        {
-            var existingAssociate = _context.ExamCoreStudentGroups.Where(x => x.StudentGroupID == studentGroupID && x.ExamCoreID == examCoreID).FirstOrDefault();
-            if (existingAssociate != null)
-            {
-                existingAssociate.ZIPArchiveName = path;
-                existingAssociate.IsGenerated = true;
-                _context.SaveChanges();
-            }
-        }
-
-        public void SetExamArchivePath2(int examCoreStudentGroup, string path)
+        public void SetExamArchivePath(int examCoreStudentGroup, string path)
         {
             var existingAssociate = _context.ExamCoreStudentGroups.Where(x => x.Id == examCoreStudentGroup).FirstOrDefault();
             if (existingAssociate != null)
@@ -100,6 +89,5 @@ namespace ExamGenerator.Service.Services
             var associatedExamsCore = _context.ExamCoreStudentGroups.Where(x => x.StudentGroupID == studentGroupID && x.ExamCoreID == examCoreID).ToList();
             return associatedExamsCore.Max(x => x.Version);
         }
-
     }
 }

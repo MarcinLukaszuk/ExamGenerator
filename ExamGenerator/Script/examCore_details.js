@@ -25,12 +25,13 @@
 
 
 function sendFileWithQuestions(examID) {
-    var fileInput = $("#fileInput");
+    var fileInput = $("#fileInput"); 
     var file = fileInput[0].files[0];
     var formData = new FormData();
     formData.append("FileUpload", file);
-    formData.append("examID", examID);
-
+    formData.append("examID", examID); 
+    $("#spinnerExam-" + examID).show();
+     
     jQuery.ajax({
         type: "POST",
         url: jquerryFileUploadHref,
@@ -40,12 +41,12 @@ function sendFileWithQuestions(examID) {
         data: formData,
         success: function (response) {
             alert(response.responseText);
+            location.reload();
         },
         failure: function (response) {
             alert(response.responseText);
         }
     });
-
 }
 
 function addNewAnswerToQuestion(QuestionID) {

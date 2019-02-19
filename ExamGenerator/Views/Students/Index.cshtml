@@ -5,7 +5,14 @@
 }
 
 <h2>Index</h2>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    .fa {
+        margin-left: 8px;
+        margin-right: 2px;
+    }
+</style>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
@@ -20,18 +27,18 @@
     <div class="collapse row" id="collapseFile">
         <div class="col-md-9"></div>
         <div class="col-md-3">
-            @using (Html.BeginForm("CreateStudentsFromFile", "Students", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-                <div class="input-group">
-                    <input type="text" class="form-control" readonly>
-                    <label class="input-group-btn">
-                        <span class="btn btn-primary">
-                            Browse&hellip; <input type="file" name="FileUpload" id="fileInput" style="display: none;" accept=".csv">
-                        </span>
-                    </label>
-                </div>
-                <input type="submit" class="btn btn-primary" name="Submit" id="Submit" value="Upload" />
-            }
+         
+            <div class="input-group">
+                <input type="text" class="form-control" readonly>
+                <label class="input-group-btn">
+                    <span class="btn btn-primary">
+                        Browse&hellip; <input type="file" name="FileUpload" id="fileInput" style="display: none;" accept=".csv">
+                    </span>
+                </label>
+            </div>
+            <button class="btn btn-primary" onclick="sendFileWithStudents()">
+                Upload<i id="spinner" class="fa fa-spinner fa-spin" style="display: none;"></i>
+            </button>
         </div>
     </div>
 
@@ -71,6 +78,8 @@
 </div>
 
 
-
+<script>
+     var jquerryFileUploadHref = "@Url.Action("CreateStudentsFromFile")"
+</script>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="~/Script/students-index.js"></script>

@@ -343,6 +343,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\script-bootstrap-select.js" />
+    <Content Include="Script\exam_validate.js" />
     <Content Include="Script\exam.js" />
     <Content Include="Script\examCore_details_removeQuestion.js" />
     <Content Include="Script\students-index.js" />

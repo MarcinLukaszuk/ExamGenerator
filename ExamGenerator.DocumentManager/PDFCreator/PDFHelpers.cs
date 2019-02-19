@@ -14,7 +14,7 @@ namespace ExamGenerator.DocumentManager.PDFCreator
     {
         static int _fontsize = 12;
         static Font _polishFont = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.CP1257, _fontsize, Font.NORMAL);
-        static Image image = null;
+        static Image checkbox = null;
         static int _border = Rectangle.NO_BORDER;
 
         public static PdfPTable PDFTableCreator(QuestionDTO question, int questionNumber)
@@ -32,7 +32,6 @@ namespace ExamGenerator.DocumentManager.PDFCreator
                 Border = _border,
                 Colspan = 2,
                 HorizontalAlignment = Element.ALIGN_LEFT
-
             });
 
             foreach (var answer in question.AnswersDTO)
@@ -57,7 +56,7 @@ namespace ExamGenerator.DocumentManager.PDFCreator
 
         public static Image GetEmptySquare()
         {
-            if (image == null)
+            if (checkbox == null)
             {
                 int size = 100;
                 int thickness = 10;
@@ -68,30 +67,29 @@ namespace ExamGenerator.DocumentManager.PDFCreator
                 flagGraphics.FillRectangle(System.Drawing.Brushes.Black, size - thickness, 0, thickness, size);
                 flagGraphics.FillRectangle(System.Drawing.Brushes.Black, 0, 0, size, thickness);
                 flagGraphics.FillRectangle(System.Drawing.Brushes.Black, 0, size - thickness, size, thickness);
-                image = Image.GetInstance(flag, System.Drawing.Imaging.ImageFormat.Jpeg);
-                image.ScaleAbsolute(_fontsize, _fontsize);
+                checkbox = Image.GetInstance(flag, System.Drawing.Imaging.ImageFormat.Jpeg);
+                checkbox.ScaleAbsolute(_fontsize, _fontsize);
             }
-            return image;
+            return checkbox;
         }
 
-        public static LinkedList<AnswerPositionDTO> getAbsolutePositionOfAnswers(int ExamID, PdfPTable table, QuestionDTO question, Document document, PdfWriter writer)
+        public static LinkedList<AnswerPositionDTO> CreateAnswerPositionList(int ExamID, PdfPTable table, QuestionDTO question, Document document, PdfWriter writer)
         {
-            var answerPositions = new LinkedList<AnswerPositionDTO>();
+            var answerPositionsList = new LinkedList<AnswerPositionDTO>();
             var answersDTO = question.AnswersDTO;
             answersDTO.Reverse();
-            var end = writer.GetVerticalPosition(false);
+            var cursorPosition = writer.GetVerticalPosition(false);
             var rows = table.Rows;
             rows.RemoveAt(0);
             rows.Reverse();
 
-            var lol = BaseColor.YELLOW;
             int i = 0;
             foreach (var row in rows)
             {
-                answerPositions.AddFirst(new AnswerPositionDTO()
+                answerPositionsList.AddFirst(new AnswerPositionDTO()
                 {
                     X = document.Left,
-                    Y = end + row.GetMaxRowHeightsWithoutCalculating(),
+                    Y = cursorPosition + row.GetMaxRowHeightsWithoutCalculating(),
                     Height = row.GetMaxRowHeightsWithoutCalculating(),
                     Width = row.GetCells().ElementAt(0).Width,
                     PageNumber = writer.CurrentPageNumber,
@@ -99,13 +97,12 @@ namespace ExamGenerator.DocumentManager.PDFCreator
                     GeneratedExamID = ExamID
                 });
 
-                lol = lol == BaseColor.YELLOW ? BaseColor.BLUE : BaseColor.YELLOW;
-
-                end = answerPositions.First().Y;
+                cursorPosition = answerPositionsList.First().Y;
                 ++i;
             }
-            return answerPositions;
+            return answerPositionsList;
         }
+
         public static string GetMD5(string input)
         {
             using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
@@ -128,13 +125,16 @@ namespace ExamGenerator.DocumentManager.PDFCreator
         int _testID;
         string _examName;
         string _fullStudentName;
-        static int _fontsize = 12;
-        static Font _polishFont = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.CP1257, _fontsize, Font.NORMAL);
+        static int _fontsize;
+        static Font _polishFont;
         public PDFHeader(ExamDTO examDTO)
         {
             _testID = examDTO.Id;
             _examName = examDTO.Name;
             _fullStudentName = examDTO.StudentFullName;
+
+            _fontsize = 12;
+            _polishFont = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.CP1257, _fontsize, Font.NORMAL);
         }
         public override void OnStartPage(PdfWriter writer, Document document)
         {
@@ -144,8 +144,7 @@ namespace ExamGenerator.DocumentManager.PDFCreator
                     writer.PageNumber.ToString()
                 });
 
-            QrCodeED qrcode = new QrCodeED();
-            System.Drawing.Bitmap btm = qrcode.Encode(qrcodeString);
+            System.Drawing.Bitmap btm = QrCodeEncoderDecoder.Encode(qrcodeString);
 
             Image pdfImage = Image.GetInstance(btm, System.Drawing.Imaging.ImageFormat.Jpeg);
             pdfImage.ScaleAbsolute(50f, 50f);
@@ -163,8 +162,7 @@ namespace ExamGenerator.DocumentManager.PDFCreator
                 Border = Rectangle.NO_BORDER
             };
 
-
-            PdfPCell centerCell = new PdfPCell(new Paragraph("Exam Name: " + _examName+"\nStudent Name: "+ _fullStudentName, _polishFont))
+            PdfPCell centerCell = new PdfPCell(new Paragraph("Exam Name: " + _examName + "\nStudent Name: " + _fullStudentName, _polishFont))
             {
                 Border = Rectangle.NO_BORDER
             };

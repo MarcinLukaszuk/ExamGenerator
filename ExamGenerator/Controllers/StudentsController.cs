@@ -75,12 +75,31 @@ namespace ExamGenerator.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateStudentsFromFile(HttpPostedFileBase FileUpload)
         {
-            using (StreamReader reader = new StreamReader(FileUpload.InputStream, Encoding.Default, true))
+            try
             {
-                var userID = User.Identity.GetUserId();
-                await addStudentsFromFile(reader, userID);
+                if (FileUpload != null)
+                {
+                    using (StreamReader reader = new StreamReader(FileUpload.InputStream, Encoding.Default, true))
+                    {
+                        var userID = User.Identity.GetUserId();
+                        await addStudentsFromFile(reader, userID);
+                        return Json(
+                        new
+                        {
+                            success = true,
+                            failure = false,
+                            responseText = "Students have been successfuly updated!"
+                        }, JsonRequestBehavior.AllowGet);
+                    }
+                }
             }
-            return RedirectToAction("Index");
+            catch (Exception ex)
+            {
+                return Json(new { success = false, failure = true, responseText = "Error during updating questions." }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { success = false, failure = true, responseText = "Error during updating questions." }, JsonRequestBehavior.AllowGet);
+
+
         }
 
         private async Task<int> addStudentsFromFile(StreamReader reader, string userID)

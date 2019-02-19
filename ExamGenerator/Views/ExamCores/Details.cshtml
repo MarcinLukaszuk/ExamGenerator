@@ -36,7 +36,9 @@
                     </span>
                 </label>
             </div>
-            <input type="button" class="btn btn-primary" onclick="sendFileWithQuestions(@Model.Id)" value="Upload">
+            <button class="btn btn-primary" onclick="sendFileWithQuestions(@Model.Id)">
+                Upload<i id="spinnerExam-@Model.Id" class="fa fa-spinner fa-spin" style="display: none;"></i>
+            </button>
         </div>
     </div>
 
@@ -52,7 +54,7 @@
                     <div class="btn-group col-md-2" role="group" aria-label="removeQuestion @i">
                         <input id="removeQuestionBtn-@i" type="button" tag="false" class="btn btn-default" onclick="setRemoveQuestionButtonValue(this)" value="Remove Question" style="display: none;" />
                     </div>
-                     
+
                     <div class="btn-group" role="group" aria-label="saveGroup @i">
                         <input id="editBtn-@i" type="button" class="btn btn-default" onclick="setEditable(@i)" value="Edit" />
                     </div>

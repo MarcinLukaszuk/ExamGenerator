@@ -110,6 +110,10 @@
     <Compile Include="Migrations\201902120925346_addGeneratedKey.Designer.cs">
       <DependentUpon>201902120925346_addGeneratedKey.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201902121303539_addGeneratedKey2.cs" />
+    <Compile Include="Migrations\201902121303539_addGeneratedKey2.Designer.cs">
+      <DependentUpon>201902121303539_addGeneratedKey2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Answer.cs" />
     <Compile Include="Model\AnswersPositions.cs" />
@@ -164,6 +168,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201902120925346_addGeneratedKey.resx">
       <DependentUpon>201902120925346_addGeneratedKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902121303539_addGeneratedKey2.resx">
+      <DependentUpon>201902121303539_addGeneratedKey2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

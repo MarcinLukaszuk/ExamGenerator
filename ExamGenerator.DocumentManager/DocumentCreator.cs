@@ -47,11 +47,7 @@ namespace ExamGenerator.DocumentManager
         }
         public DocumentCreator(ExamDTO exam, string path)
         {
-            doc = new PDFDocument(exam, path);
-            foreach (var item in exam.QuestionsDTO)
-            {
-                doc.AddExercise(item);
-            }
+            doc = new PDFDocument(exam, path);        
             doc.SaveDocument();
         }
         public DocumentCreator(string _pathToDirectory)
@@ -69,11 +65,7 @@ namespace ExamGenerator.DocumentManager
         {
             foreach (var examDTO in examsToGenerate)
             {
-                var pdfDocument = new PDFDocument(examDTO, pathToDirectory);
-                foreach (var item in examDTO.QuestionsDTO)
-                {
-                    pdfDocument.AddExercise(item);
-                }
+                var pdfDocument = new PDFDocument(examDTO, pathToDirectory);             
                 pdfDocuments.Add(pdfDocument);
                 pdfDocument.SaveDocument();
             }

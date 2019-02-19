@@ -26,7 +26,7 @@ namespace ExamGenerator.Service.Services
             foreach (var student in studentsID)
             {
                 var studentGroupStudentID = _context.StudentGroupStudents.Where(x => x.StudentID == student.Id && x.StudentGroupID == studentGroupID).FirstOrDefault();
-                var generatedExam = _context.GeneratedExams.Where(x => x.ExamCoreID == examCoreID && x.StudentGroupStudentID == studentGroupStudentID.Id).FirstOrDefault();
+                var generatedExam = _context.GeneratedExams.Where(x => x.ExamCoreStudentGroup.ExamCoreID == examCoreID && x.StudentGroupStudentID == studentGroupStudentID.Id).FirstOrDefault();
 
                 if (generatedExam == null) return results;
 
@@ -40,7 +40,7 @@ namespace ExamGenerator.Service.Services
         {
             var examCoreStudentGroup = _context.ExamCoreStudentGroups.FirstOrDefault(x => x.Id == examCoreStudentGroupID);
 
-            var generatedExams = _context.GeneratedExams.Where(x=>x.ExamCoreStudentGroupID== examCoreStudentGroupID).ToList();
+            var generatedExams = _context.GeneratedExams.Where(x => x.ExamCoreStudentGroupID == examCoreStudentGroupID).ToList();
             List<Result> results = new List<Result>();
 
             foreach (var generatedExam in generatedExams)
@@ -89,7 +89,7 @@ namespace ExamGenerator.Service.Services
 
         public int? GetExamCoreIDByExamID(int? examID)
         {
-            return _context.GeneratedExams.Find(examID)?.ExamCoreID;
+            return _context.GeneratedExams.Find(examID)?.ExamCoreStudentGroup.ExamCoreID;
         }
 
         public int? GetStudentGroupIDByExamID(int? examID)
