@@ -25,13 +25,24 @@ namespace ExamGenerator.DocumentManager
             _examIDs = new List<int>();
 
             foreach (var bitmap in _bitmapList)
-            {
-                var examID = BitmapAnalyser.GetExamID(bitmap);
+            { 
+                var bitmap2 = BitmapAnalyser.extractDocumentFromBitmap(bitmap);
+
+                bitmap2.Save("C:\\Users\\Marcin\\source\\repos\\trapez\\trapez\\bin\\Debug\\output\\bitmap2.jpg");
+
+                var bitmap3 = BitmapAnalyser.getBinarizedBitmap(bitmap2);
+                bitmap3.Save("C:\\Users\\Marcin\\source\\repos\\trapez\\trapez\\bin\\Debug\\output\\bitmap3.jpg");
+
+                var standarizedBitmap = BitmapAnalyser.ResizeToStandard(bitmap3);
+                standarizedBitmap.Save("C:\\Users\\Marcin\\source\\repos\\trapez\\trapez\\bin\\Debug\\output\\standarizedBitmap.jpg");
+
+                var examID = BitmapAnalyser.GetExamID(bitmap3);
+                  examID = BitmapAnalyser.GetExamID(bitmap);
 
                 if (!_examsDictionary.ContainsKey(examID))
-                    _examsDictionary.Add(examID, new List<Bitmap>() { bitmap });
+                    _examsDictionary.Add(examID, new List<Bitmap>() { bitmap3 });
                 else
-                    _examsDictionary[examID].Add(bitmap);
+                    _examsDictionary[examID].Add(bitmap3);
 
                 _examIDs.Add(examID);
             }
@@ -51,11 +62,16 @@ namespace ExamGenerator.DocumentManager
             {
                 var pageNumber = BitmapAnalyser.GetExamPage(bitmap);
                 var pageAnswers = answerPositionsDTO.Where(x => x.PageNumber == pageNumber).OrderBy(x => x.Y).ToList();
+               
+                var standarizedBitmap = BitmapAnalyser.ResizeToStandard(bitmap);
+                standarizedBitmap.Save("C:\\Users\\Marcin\\source\\repos\\trapez\\trapez\\bin\\Debug\\output\\standard.jpg");
 
-                foreach (var answer in pageAnswers)
+                foreach (var answer in pageAnswers.OrderBy(x => x.Y))
                 {
-                    var answerBitmap = BitmapAnalyser.GetAnswerBitmap(bitmap, answer);
+                    var answerBitmap = BitmapAnalyser.GetAnswerBitmap(standarizedBitmap, answer);
+                
                     var answerValue = BitmapAnalyser.CheckValue(answerBitmap);
+                  
                     if (bitmapsDictionary.ContainsKey(answer.AnswerDTO.QuestionID) == false)
                     {
                         questions++;

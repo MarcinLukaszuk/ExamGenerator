@@ -178,5 +178,51 @@ namespace ExamGenerator.DocumentManager.PDFCreator
             table.AddCell(rightCell);
             document.Add(table);
         }
+
+        public override void OnEndPage(PdfWriter writer, Document document)
+        {
+            string qrcodeString = string.Join("/",
+                new string[] {
+                    _testID.ToString(),
+                    writer.PageNumber.ToString()
+                });
+
+            System.Drawing.Bitmap btm = QrCodeEncoderDecoder.Encode(qrcodeString);
+            var pos = writer.GetVerticalPosition(false);
+
+
+            Image pdfImage = Image.GetInstance(btm, System.Drawing.Imaging.ImageFormat.Jpeg);
+            pdfImage.ScaleAbsolute(50f, 50f);
+            PdfPTable table = new PdfPTable(3)
+            {
+                HorizontalAlignment = (Element.ALIGN_CENTER),
+                WidthPercentage = 100
+            };
+            table.SetWidths(new float[] { 1f, 6f, 1f });
+
+            PdfPCell leftCell = new PdfPCell(pdfImage)
+            {
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                Border = Rectangle.NO_BORDER
+            };
+
+            PdfPCell centerCell = new PdfPCell()
+            {
+                Border = Rectangle.NO_BORDER
+            };
+
+            PdfPCell rightCell = new PdfPCell()
+            {
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                Border = Rectangle.NO_BORDER
+            };
+
+            table.AddCell(leftCell);
+            table.AddCell(centerCell);
+            table.AddCell(rightCell);
+            writer.DirectContent.MoveTo(document.Left, 136);
+            table.TotalWidth = 595 - (36 + 36);
+            table.WriteSelectedRows(0, -1, document.Left, 36 + table.TotalHeight, writer.DirectContent);
+        }
     }
 }

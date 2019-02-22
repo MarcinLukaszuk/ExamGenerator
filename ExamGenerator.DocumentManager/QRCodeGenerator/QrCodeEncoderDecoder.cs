@@ -46,5 +46,19 @@ namespace ExamGenerator.DocumentManager.QRCodeGenerator
                 }
             }.Decode(btm)?.ToString();
         }
+
+        public static Result[] DecodeMultiple(Bitmap btm)
+        {
+            return new BarcodeReader()
+            {
+                Options = new DecodingOptions()
+                {
+                    TryHarder = true,
+                    PossibleFormats = new List<BarcodeFormat> {
+                        format
+                    }
+                }
+            }.DecodeMultiple(btm);
+        }
     }
 }

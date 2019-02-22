@@ -17,8 +17,6 @@ namespace ExamGenerator.DocumentManager
         private List<PDFDocument> pdfDocuments; 
         private string pathToDirectory;
 
-        
-
         public List<PDFDocument> PDFDocuments
         {
             get { return pdfDocuments; }
