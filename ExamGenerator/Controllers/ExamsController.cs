@@ -219,28 +219,6 @@ namespace ExamGenerator.Controllers
             return RedirectToAction("Index");
         }
 
-
-        public FileResult GetPdfExam(int id)
-        {
-            ExamCore exam = _examCoreService.Find(id);
-            if (exam == null)
-            {
-                return null;
-            }
-            var path = Request.MapPath("~/GeneratedExams");
-
-
-            ExamDTO examDTO = Mapper.Map<ExamDTO>(exam);
-            DocumentCreator creator = new DocumentCreator(examDTO, path);
-            var answerPositions = creator.AnswerPositionDTO;
-            _answerPositionService.InsertRange(6, Mapper.Map<List<AnswerPosition>>(answerPositions));
-
-            string fullPath = Path.Combine(path, creator.Filename);
-            return File(fullPath, "application/pdf", creator.Filename);
-        }
-
-
-
         [HttpPost, ActionName("GenerateExam")]
         public ActionResult GenerateExamPost(int? ExamCoreStudentGroupID, int? questionNumber)
         {

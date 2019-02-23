@@ -194,6 +194,10 @@ namespace ExamGenerator.DocumentManager
 
         public static Bitmap extractDocumentFromBitmap(Bitmap bitmap)
         {
+            if (bitmap.Width>bitmap.Height)
+            {
+                bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
+            }
             var image = new Image<Bgr, byte>(bitmap);
             var imageGray = image.Convert<Gray, byte>();
             var filteredImage = new Image<Bgr, byte>(bitmap);
@@ -232,11 +236,10 @@ namespace ExamGenerator.DocumentManager
             }
             var posortowany = sortVector(sourcePointsVector);
             var zOffsetem = addOffsetToVector(sourcePointsVector, -5);
-
-
+            
             var wysokoscjakas = new int[] { getEuclideanDistance(zOffsetem[0], zOffsetem[1]), getEuclideanDistance(zOffsetem[2], zOffsetem[3]) }.Max();
             var szerokoscjakas = new int[] { getEuclideanDistance(zOffsetem[0], zOffsetem[2]), getEuclideanDistance(zOffsetem[1], zOffsetem[3]) }.Max();
-
+ 
             VectorOfPoint targetPoints2 = new VectorOfPoint(new Point[] {
                 new Point(0, 0),
                 new Point(0, szerokoscjakas),

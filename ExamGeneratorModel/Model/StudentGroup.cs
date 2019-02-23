@@ -13,7 +13,9 @@ namespace ExamGeneratorModel.Model
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Owner { get; set; }
+        [Required]
         public bool IsDeleted { get; set; }
+        [Required]
+        public string Owner { get; set; }
     }
 }

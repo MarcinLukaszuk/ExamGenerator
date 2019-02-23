@@ -10,7 +10,9 @@ namespace ExamGeneratorModel.Model
         [StringLength(200)]
         public string Name { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
-        public string Owner { get; set; }
+        [Required]
         public bool IsDeleted { get; set; }
+        [Required]
+        public string Owner { get; set; }
     }
 }

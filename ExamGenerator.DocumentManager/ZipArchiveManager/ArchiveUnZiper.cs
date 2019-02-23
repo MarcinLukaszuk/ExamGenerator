@@ -11,7 +11,6 @@ namespace ExamGenerator.DocumentManager.UnZipArchive
 {
     public static class ArchiveUnZiper
     {
-
         public static void PackFileToArchive(string archivePath, List<string> examsPaths)
         {
             if (File.Exists(archivePath)) File.Delete(archivePath);
@@ -29,8 +28,6 @@ namespace ExamGenerator.DocumentManager.UnZipArchive
                 File.Delete(file);
             }
         }
-
-
 
         public static List<Bitmap> GetBitmapsFromZipArchive(string zipArchivePath)
         {

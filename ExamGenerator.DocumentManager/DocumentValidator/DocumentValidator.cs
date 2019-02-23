@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.IO.Compression;
-using ExamGenerator.DocumentManager.ZIPValidator;
 using System.Drawing;
 using ExamGeneratorModel.Model;
 using ExamGeneratorModel.DTO;

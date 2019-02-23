@@ -15,7 +15,9 @@ namespace ExamGeneratorModel.Model
         [Display(Name = "Surname")]
         public string SurName { get; set; }
         public string Email { get; set; }
+        [Required]
         public bool IsDeleted { get; set; }
+        [Required]
         public string Owner { get; set; }
     }
 }

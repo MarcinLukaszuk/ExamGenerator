@@ -21,10 +21,6 @@ namespace ExamGenerator.UnitTests
              identifierExpression, params T[] entities);
     }
 
-
-
-
-
     public class ServiceTestsHelper
     {
 
@@ -86,7 +82,6 @@ namespace ExamGenerator.UnitTests
             ctx.Setup(c => c.Students).Returns(mockDbSetStudent.Object);
             ctx.Setup(c => c.StudentGroups).Returns(mockDbSetStudentGroup.Object);
             ctx.Setup(c => c.Results).Returns(mockDbSetResult.Object);
-
 
 
             answerService = new AnswerService(fakectx);

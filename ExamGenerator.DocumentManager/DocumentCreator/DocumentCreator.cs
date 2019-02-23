@@ -43,11 +43,7 @@ namespace ExamGenerator.DocumentManager
                 return doc.Filepath;
             }
         }
-        public DocumentCreator(ExamDTO exam, string path)
-        {
-            doc = new PDFDocument(exam, path);        
-            doc.SaveDocument();
-        }
+
         public DocumentCreator(string _pathToDirectory)
         {
             examsToGenerate = new List<ExamDTO>();
