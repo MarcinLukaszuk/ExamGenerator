@@ -24,26 +24,23 @@ namespace ExamGenerator.DocumentManager
             _examIDs = new List<int>();
 
             foreach (var bitmap in _bitmapList)
-            { 
-                var bitmap2 = BitmapAnalyser.extractDocumentFromBitmap(bitmap);
+            {
+                using (var excractedDocument = BitmapAnalyser.ExtractDocumentFromBitmap(bitmap))
+                {
+                    var binaryDocument = BitmapAnalyser.getBinarizedBitmap(excractedDocument);
+                    var examID = BitmapAnalyser.GetExamID(binaryDocument);
+                    if (examID == 0)
+                    {
+                        examID = BitmapAnalyser.GetExamID(BitmapAnalyser.ResizeToStandard(binaryDocument));
+                    }
 
-                bitmap2.Save("C:\\Users\\Marcin\\source\\repos\\trapez\\trapez\\bin\\Debug\\output\\bitmap2.jpg");
+                    if (!_examsDictionary.ContainsKey(examID))
+                        _examsDictionary.Add(examID, new List<Bitmap>() { binaryDocument });
+                    else
+                        _examsDictionary[examID].Add(binaryDocument);
 
-                var bitmap3 = BitmapAnalyser.getBinarizedBitmap(bitmap2);
-                bitmap3.Save("C:\\Users\\Marcin\\source\\repos\\trapez\\trapez\\bin\\Debug\\output\\bitmap3.jpg");
-
-                var standarizedBitmap = BitmapAnalyser.ResizeToStandard(bitmap3);
-                standarizedBitmap.Save("C:\\Users\\Marcin\\source\\repos\\trapez\\trapez\\bin\\Debug\\output\\standarizedBitmap.jpg");
-
-                var examID = BitmapAnalyser.GetExamID(bitmap3);
-                  examID = BitmapAnalyser.GetExamID(bitmap);
-
-                if (!_examsDictionary.ContainsKey(examID))
-                    _examsDictionary.Add(examID, new List<Bitmap>() { bitmap3 });
-                else
-                    _examsDictionary[examID].Add(bitmap3);
-
-                _examIDs.Add(examID);
+                    _examIDs.Add(examID);
+                }
             }
         }
 
@@ -61,16 +58,15 @@ namespace ExamGenerator.DocumentManager
             {
                 var pageNumber = BitmapAnalyser.GetExamPage(bitmap);
                 var pageAnswers = answerPositionsDTO.Where(x => x.PageNumber == pageNumber).OrderBy(x => x.Y).ToList();
-               
+
                 var standarizedBitmap = BitmapAnalyser.ResizeToStandard(bitmap);
-                standarizedBitmap.Save("C:\\Users\\Marcin\\source\\repos\\trapez\\trapez\\bin\\Debug\\output\\standard.jpg");
 
                 foreach (var answer in pageAnswers.OrderBy(x => x.Y))
                 {
                     var answerBitmap = BitmapAnalyser.GetAnswerBitmap(standarizedBitmap, answer);
-                
+
                     var answerValue = BitmapAnalyser.CheckValue(answerBitmap);
-                  
+
                     if (bitmapsDictionary.ContainsKey(answer.AnswerDTO.QuestionID) == false)
                     {
                         questions++;
@@ -84,5 +80,13 @@ namespace ExamGenerator.DocumentManager
 
             return new ResultDTO() { Points = bitmapsDictionary.Select(x => x.Value).Sum(), MaxPoints = questions, GeneratedExamID = examID };
         }
+
+        ~DocumentValidator()
+        {
+            _bitmapList.Clear();
+            _examsDictionary.Clear();
+            _examIDs.Clear();
+        }
+
     }
 }

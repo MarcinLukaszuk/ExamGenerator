@@ -104,12 +104,8 @@ namespace ExamGenerator.Controllers
 
         private async Task<int> addStudentsFromFile(StreamReader reader, string userID)
         {
-            var line = reader.ReadLine();
-            if (line != "Name;Surname;Email")
-            {
-                reader.Close();
-                return 0;
-            }
+            var line = string.Empty;
+            
             while ((line = reader.ReadLine()) != null)
             {
                 var array = line.Split(';');

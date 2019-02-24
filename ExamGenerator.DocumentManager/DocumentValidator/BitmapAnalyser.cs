@@ -34,8 +34,6 @@ namespace ExamGenerator.DocumentManager
                 using (var cannyEdges = getEdgesOfImage(image))
                 using (var contours = getContoursOfImage(cannyEdges))
                 {
-                    image.Save("C:\\Users\\Marcin\\source\\repos\\trapez\\trapez\\bin\\Debug\\output\\out.jpg");
-
                     for (int i = 0; i < contours.Size; i++)
                     {
                         using (var contour = contours[i])
@@ -56,8 +54,6 @@ namespace ExamGenerator.DocumentManager
                     {
                         using (var btm = getCheckboxFromBinarizedImage(image, boxList, bitmap.PixelFormat))
                         {
-                            btm.Save("C:\\Users\\Marcin\\source\\repos\\trapez\\trapez\\bin\\Debug\\output\\out2.jpg");
-
                             if (btm != null)
                             {
                                 var whitePixels = countBlackPixels(btm);
@@ -76,12 +72,10 @@ namespace ExamGenerator.DocumentManager
 
         public static Bitmap ResizeToStandard(Bitmap bitmap)
         {
-            var qrCodesPositions2 = QrCodeEncoderDecoder.DecodeMultiple(bitmap).ToList();
             if (bitmap.Width > bitmap.Height)
             {
                 bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
             }
-
             var qrCodesPositions = QrCodeEncoderDecoder.DecodeMultiple(bitmap).ToList().OrderBy(x => x.ResultPoints.FirstOrDefault().Y).Select(x => x.ResultPoints.FirstOrDefault()).ToList();
 
             if (qrCodesPositions.Count() == 3 && (qrCodesPositions[2].Y - (qrCodesPositions[1].Y + qrCodesPositions[0].Y)) < 0)
@@ -90,12 +84,10 @@ namespace ExamGenerator.DocumentManager
             }
 
             var qrCodesNewPositions = QrCodeEncoderDecoder.DecodeMultiple(bitmap).ToList().OrderBy(x => x.ResultPoints.FirstOrDefault().X).Select(x => x.ResultPoints).ToList();
-            // leftTopQRCode
             var leftTopQRCode = qrCodesNewPositions.Take(2).OrderBy(x => x.FirstOrDefault().Y).FirstOrDefault().OrderBy(x => x.X + x.Y).FirstOrDefault();
             var leftBottomQRCode = qrCodesNewPositions.Take(2).OrderByDescending(x => x.FirstOrDefault().Y).FirstOrDefault().OrderBy(x => x.X).FirstOrDefault();
             var rightTopQRCode = qrCodesNewPositions[2].OrderByDescending(x => x.X).FirstOrDefault();
 
-            //     var topQRCodeDistance= leftTopQRCode
 
             var source = new PointF[4];
 
@@ -116,15 +108,12 @@ namespace ExamGenerator.DocumentManager
             source[2] = addOffsideToPoint(source[2], offsideX, offsideBot, bitmap);
             source[3] = addOffsideToPoint(source[3], offsideX, -offsideTop, bitmap);
 
-
             var target = new PointF[] {
                 new PointF(0,0),
                 new PointF(0,standardDocumentHeight),
                 new PointF(standardDocumentWidth,standardDocumentHeight),
                 new PointF(standardDocumentWidth,0)
             };
-
-
 
             using (var image = new Image<Gray, byte>(bitmap))
             {
@@ -152,6 +141,7 @@ namespace ExamGenerator.DocumentManager
                 point.Y = 0;
             return point;
         }
+
         public static Bitmap GetAnswerBitmap(Bitmap bitmap, AnswerPositionDTO answerPosDTO)
         {
             Bitmap retval = null;
@@ -167,6 +157,7 @@ namespace ExamGenerator.DocumentManager
             }
             return retval;
         }
+
         public static int GetExamPage(Bitmap bitmap)
         {
             var results = QrCodeEncoderDecoder.DecodeMultiple(bitmap);
@@ -192,67 +183,69 @@ namespace ExamGenerator.DocumentManager
             return 0;
         }
 
-        public static Bitmap extractDocumentFromBitmap(Bitmap bitmap)
+        public static Bitmap ExtractDocumentFromBitmap(Bitmap bitmap)
         {
-            if (bitmap.Width>bitmap.Height)
+            if (bitmap.Width > bitmap.Height)
             {
                 bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
             }
-            var image = new Image<Bgr, byte>(bitmap);
-            var imageGray = image.Convert<Gray, byte>();
-            var filteredImage = new Image<Bgr, byte>(bitmap);
-
-            CvInvoke.BilateralFilter(imageGray, filteredImage, 9, 75, 75);
-            CvInvoke.AdaptiveThreshold(filteredImage, filteredImage, 255, AdaptiveThresholdType.GaussianC, ThresholdType.Binary, 115, 4);
-            CvInvoke.MedianBlur(filteredImage, filteredImage, 11);
-            CvInvoke.CopyMakeBorder(filteredImage, filteredImage, 5, 5, 5, 5, BorderType.Constant, new MCvScalar(0, 0, 0));
-
-            UMat cannyEdges = new UMat();
-            CvInvoke.Canny(filteredImage, cannyEdges, 200, 250);
-            VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
-            CvInvoke.FindContours(cannyEdges, contours, null, RetrType.List, ChainApproxMethod.ChainApproxSimple);
-
-            var cannyEdgesHeight = cannyEdges.Bitmap.Height;
-            var cannyEdgesWidth = cannyEdges.Bitmap.Width;
-            var areaContour = (cannyEdgesHeight - 10) * (cannyEdgesWidth - 10);
-            var areaCount = areaContour * 0.5;
-            double areaContour2;
-
-            VectorOfPoint sourcePointsVector = new VectorOfPoint();
-            for (int i = 0; i < contours.Size; i++)
+            using (var image = new Image<Bgr, byte>(bitmap))
+            using (var imageGray = image.Convert<Gray, byte>())
+            using (var filteredImage = new Image<Bgr, byte>(bitmap))
+            using (var cannyEdges = new UMat())
+            using (var contours = new VectorOfVectorOfPoint())
             {
-                var cont = contours[i];
+                CvInvoke.BilateralFilter(imageGray, filteredImage, 9, 75, 75);
+                CvInvoke.AdaptiveThreshold(filteredImage, filteredImage, 255, AdaptiveThresholdType.GaussianC, ThresholdType.Binary, 115, 4);
+                CvInvoke.MedianBlur(filteredImage, filteredImage, 11);
+                CvInvoke.CopyMakeBorder(filteredImage, filteredImage, 5, 5, 5, 5, BorderType.Constant, new MCvScalar(0, 0, 0));
+                CvInvoke.Canny(filteredImage, cannyEdges, 200, 250);
+                CvInvoke.FindContours(cannyEdges, contours, null, RetrType.List, ChainApproxMethod.ChainApproxSimple);
 
-                CvInvoke.ApproxPolyDP(cont, cont, CvInvoke.ArcLength(cont, true) * 0.05, true);
-                if (cont.Size == 4 && CvInvoke.IsContourConvex(cont)
-                    && areaCount < CvInvoke.ContourArea(cont)
-                    && CvInvoke.ContourArea(cont) < areaContour)
+                var cannyEdgesHeight = cannyEdges.Bitmap.Height;
+                var cannyEdgesWidth = cannyEdges.Bitmap.Width;
+                var areaContour = (cannyEdgesHeight - 10) * (cannyEdgesWidth - 10);
+                var areaCount = areaContour * 0.5;
+                double areaContour2;
+
+                var sourcePointsVector = new VectorOfPoint();
+                for (int i = 0; i < contours.Size; i++)
                 {
-                    sourcePointsVector = cont;
-                    areaContour2 = CvInvoke.ContourArea(cont);
-                    sortVector(sourcePointsVector);
-                    break;
+                    using (var cont = contours[i])
+                    {
+                        CvInvoke.ApproxPolyDP(cont, cont, CvInvoke.ArcLength(cont, true) * 0.05, true);
+                        if (cont.Size == 4 && CvInvoke.IsContourConvex(cont)
+                            && areaCount < CvInvoke.ContourArea(cont)
+                            && CvInvoke.ContourArea(cont) < areaContour)
+                        {
+                            sourcePointsVector = cont;
+                            areaContour2 = CvInvoke.ContourArea(cont);
+                            sortVector(sourcePointsVector);
+                            break;
+                        }
+                    }
                 }
+                var sortedVector = sortVector(sourcePointsVector);
+                var vectorWithOffset = addOffsetToVector(sourcePointsVector, -5);
+
+                var euclideanHeight = new int[] { getEuclideanDistance(vectorWithOffset[0], vectorWithOffset[1]), getEuclideanDistance(vectorWithOffset[2], vectorWithOffset[3]) }.Max();
+                var euclideanWidth = new int[] { getEuclideanDistance(vectorWithOffset[0], vectorWithOffset[2]), getEuclideanDistance(vectorWithOffset[1], vectorWithOffset[3]) }.Max();
+
+                VectorOfPoint targetPoints = new VectorOfPoint(new Point[]
+                {
+                    new Point(0, 0),
+                    new Point(0, euclideanWidth),
+                    new Point(euclideanHeight, euclideanWidth),
+                    new Point(euclideanHeight, 0)
+                }.ToArray());
+
+                var source = sortVector(vectorWithOffset).ToArray().Select(x => new PointF(x.X, x.Y)).ToArray();
+                var target = sortVector(targetPoints).ToArray().Select(x => new PointF(x.X, x.Y)).ToArray();
+                var tran = CvInvoke.GetPerspectiveTransform(source, target);
+                CvInvoke.WarpPerspective(image, image, tran, new Size(euclideanHeight, euclideanWidth));
+
+                return image.ToBitmap((int)standardDocumentWidth * 4, (int)standardDocumentHeight * 4);
             }
-            var posortowany = sortVector(sourcePointsVector);
-            var zOffsetem = addOffsetToVector(sourcePointsVector, -5);
-            
-            var wysokoscjakas = new int[] { getEuclideanDistance(zOffsetem[0], zOffsetem[1]), getEuclideanDistance(zOffsetem[2], zOffsetem[3]) }.Max();
-            var szerokoscjakas = new int[] { getEuclideanDistance(zOffsetem[0], zOffsetem[2]), getEuclideanDistance(zOffsetem[1], zOffsetem[3]) }.Max();
- 
-            VectorOfPoint targetPoints2 = new VectorOfPoint(new Point[] {
-                new Point(0, 0),
-                new Point(0, szerokoscjakas),
-                new Point(wysokoscjakas, szerokoscjakas),
-                new Point(wysokoscjakas, 0) }.ToArray());
-
-
-            var source = sortVector(zOffsetem).ToArray().Select(x => new PointF(x.X, x.Y)).ToArray();
-            var target = sortVector(targetPoints2).ToArray().Select(x => new PointF(x.X, x.Y)).ToArray();
-            var tran = CvInvoke.GetPerspectiveTransform(source, target);
-            CvInvoke.WarpPerspective(image, image, tran, new Size(wysokoscjakas, szerokoscjakas));
-
-            return image.ToBitmap((int)standardDocumentWidth * 4, (int)standardDocumentHeight * 4);
         }
 
         private static int getEuclideanDistance(Point p1, Point p2)
@@ -289,12 +282,13 @@ namespace ExamGenerator.DocumentManager
             var image = new Image<Bgr, byte>(bitmap);
             var uimage = new UMat();
             var pyrDown = new UMat();
+            var imageBynarize = image.Convert<Gray, Byte>();
             CvInvoke.CvtColor(image, uimage, ColorConversion.Bgr2Gray);
             CvInvoke.PyrDown(uimage, pyrDown);
             CvInvoke.PyrUp(pyrDown, uimage);
-            var imageBynarize = image.Convert<Gray, Byte>();
             CvInvoke.AdaptiveThreshold(imageBynarize, imageBynarize, 255, AdaptiveThresholdType.GaussianC, ThresholdType.Binary, 255, 32);
             return imageBynarize.ToBitmap(bitmap.Width, bitmap.Height);
+
         }
 
 

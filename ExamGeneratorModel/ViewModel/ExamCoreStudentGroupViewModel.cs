@@ -11,6 +11,7 @@ namespace ExamGeneratorModel.ViewModel
     {
         public int Id { get; set; }
         public ExamCore ExamCore { get; set; }
+        public int Version { get; set; }
         public bool IsGenerated { get; set; }
         public bool IsValidated { get; set; }
         public string ZIPArchiveName { get; set; }

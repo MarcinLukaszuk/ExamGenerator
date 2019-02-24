@@ -6,10 +6,12 @@
 
 <h2>Create</h2>
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
-    
+    @Html.AntiForgeryToken() 
+    @Html.Hidden("Owner", User.Identity.Name)
+    @Html.Hidden("IsDeleted", false)
+
     <div class="form-horizontal">
         <h4>StudentGroup</h4>
         <hr />

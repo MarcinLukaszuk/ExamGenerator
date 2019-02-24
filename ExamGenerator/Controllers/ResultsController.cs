@@ -130,8 +130,9 @@ namespace ExamGenerator.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Result result = _resultService.Find(id);
+            var examCoreStudentGroupID = result.GeneratedExam.ExamCoreStudentGroupID;
             _resultService.Delete(result);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index/", new { examCoreStudentGroupID = examCoreStudentGroupID });
         }
 
         protected override void Dispose(bool disposing)

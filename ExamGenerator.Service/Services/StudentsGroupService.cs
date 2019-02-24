@@ -49,7 +49,11 @@ namespace ExamGenerator.Service.Services
             List<ExamCore> examsCoreList = new List<ExamCore>();
             foreach (var examCoreAssociated in associatedExamsCore)
             {
-                examsCoreList.Add(_context.Exams.Find(examCoreAssociated.ExamCoreID));
+                var exam = _context.Exams.Find(examCoreAssociated.ExamCoreID);
+                if (exam.IsDeleted == false)
+                {
+                    examsCoreList.Add(exam);
+                }
             }
             return examsCoreList.OrderBy(x => x.Name).Distinct().ToList();
         }
@@ -57,10 +61,12 @@ namespace ExamGenerator.Service.Services
         public List<ExamCore> GetExamsCoreNotInStudentGroup(int studentGroupID)
         {
             var associatedExamsCore = _context.ExamCoreStudentGroups.Where(x => x.StudentGroupID == studentGroupID).ToList();
-            List<ExamCore> examsCoreList = _context.Exams.ToList();
+            List<ExamCore> examsCoreList = _context.Exams.Where(x=>x.IsDeleted==false).ToList();
             foreach (var examCoreAssociated in associatedExamsCore)
             {
-                examsCoreList.Remove(_context.Exams.Find(examCoreAssociated.ExamCoreID));
+                var exam = _context.Exams.Find(examCoreAssociated.ExamCoreID);             
+                    examsCoreList.Remove(_context.Exams.Find(examCoreAssociated.ExamCoreID));
+                
             }
             return examsCoreList.OrderBy(x => x.Name).ToList();
         }

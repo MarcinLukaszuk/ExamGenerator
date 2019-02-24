@@ -68,15 +68,15 @@ namespace ExamGenerator.Controllers
             List<ExamCoreStudentGroupViewModel> lista = new List<ExamCoreStudentGroupViewModel>();
             foreach (var associate in associatedExams)
             {
-                var tymczasowy = new ExamCoreStudentGroupViewModel();
-                tymczasowy.Id = associate.Id;
+                var tmp = new ExamCoreStudentGroupViewModel();
+                tmp.Id = associate.Id;
                 if (associate.IsGenerated != null)
-                    tymczasowy.IsGenerated = (bool)associate.IsGenerated;
+                    tmp.IsGenerated = (bool)associate.IsGenerated;
                 if (associate.IsValidated != null)
-                    tymczasowy.IsValidated = (bool)associate.IsValidated;
-                tymczasowy.ZIPArchiveName = associate.ZIPArchiveName;
-                tymczasowy.ExamCore = _examCoreService.GetByID(associate.ExamCoreID);
-                lista.Add(tymczasowy);
+                    tmp.IsValidated = (bool)associate.IsValidated;
+                tmp.ZIPArchiveName = associate.ZIPArchiveName;
+                tmp.ExamCore = _examCoreService.GetByID(associate.ExamCoreID);
+                lista.Add(tmp);
             }
 
 
@@ -112,11 +112,11 @@ namespace ExamGenerator.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name")] StudentGroup studentGroup)
+        public ActionResult Create([Bind(Include = "Id,Name,Owner,IsDeleted")] StudentGroup studentGroup)
         {
             if (ModelState.IsValid)
             {
-                studentGroup.Owner = User.Identity.GetUserId();
+                studentGroup.Owner = User.Identity.GetUserId(); 
                 _studentGroupService.Insert(studentGroup);
 
                 return RedirectToAction("Details", new { id = studentGroup.Id });
