@@ -27,7 +27,10 @@ namespace ExamGenerator.DocumentManager
             {
                 using (var excractedDocument = BitmapAnalyser.ExtractDocumentFromBitmap(bitmap))
                 {
+                    excractedDocument.Save("C:\\Users\\Marcin\\Desktop\\egzaminyzrobic\\chuj.jpg");
                     var binaryDocument = BitmapAnalyser.getBinarizedBitmap(excractedDocument);
+
+                    binaryDocument.Save("C:\\Users\\Marcin\\Desktop\\egzaminyzrobic\\chuj2.jpg");
                     var examID = BitmapAnalyser.GetExamID(binaryDocument);
                     if (examID == 0)
                     {

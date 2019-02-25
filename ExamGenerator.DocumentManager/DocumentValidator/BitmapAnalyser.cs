@@ -286,7 +286,7 @@ namespace ExamGenerator.DocumentManager
             CvInvoke.CvtColor(image, uimage, ColorConversion.Bgr2Gray);
             CvInvoke.PyrDown(uimage, pyrDown);
             CvInvoke.PyrUp(pyrDown, uimage);
-            CvInvoke.AdaptiveThreshold(imageBynarize, imageBynarize, 255, AdaptiveThresholdType.GaussianC, ThresholdType.Binary, 255, 32);
+            CvInvoke.AdaptiveThreshold(imageBynarize, imageBynarize, 255, AdaptiveThresholdType.GaussianC, ThresholdType.Binary, 255, 16);
             return imageBynarize.ToBitmap(bitmap.Width, bitmap.Height);
 
         }
