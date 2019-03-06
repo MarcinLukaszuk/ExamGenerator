@@ -27,21 +27,12 @@ namespace ExamGenerator.DocumentManager
             {
                 using (var excractedDocument = BitmapAnalyser.ExtractDocumentFromBitmap(bitmap))
                 {
-                    excractedDocument.Save("C:\\Users\\Marcin\\Desktop\\egzaminyzrobic\\chuj.jpg");
                     var binaryDocument = BitmapAnalyser.getBinarizedBitmap(excractedDocument);
-
-                    binaryDocument.Save("C:\\Users\\Marcin\\Desktop\\egzaminyzrobic\\chuj2.jpg");
                     var examID = BitmapAnalyser.GetExamID(binaryDocument);
-                    if (examID == 0)
-                    {
-                        examID = BitmapAnalyser.GetExamID(BitmapAnalyser.ResizeToStandard(binaryDocument));
-                    }
-
                     if (!_examsDictionary.ContainsKey(examID))
                         _examsDictionary.Add(examID, new List<Bitmap>() { binaryDocument });
                     else
                         _examsDictionary[examID].Add(binaryDocument);
-
                     _examIDs.Add(examID);
                 }
             }
@@ -67,9 +58,7 @@ namespace ExamGenerator.DocumentManager
                 foreach (var answer in pageAnswers.OrderBy(x => x.Y))
                 {
                     var answerBitmap = BitmapAnalyser.GetAnswerBitmap(standarizedBitmap, answer);
-
                     var answerValue = BitmapAnalyser.CheckValue(answerBitmap);
-
                     if (bitmapsDictionary.ContainsKey(answer.AnswerDTO.QuestionID) == false)
                     {
                         questions++;
@@ -80,7 +69,6 @@ namespace ExamGenerator.DocumentManager
                         bitmapsDictionary[answer.AnswerDTO.QuestionID] = 0;
                 }
             }
-
             return new ResultDTO() { Points = bitmapsDictionary.Select(x => x.Value).Sum(), MaxPoints = questions, GeneratedExamID = examID };
         }
 

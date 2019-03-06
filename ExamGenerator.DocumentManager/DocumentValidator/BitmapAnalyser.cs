@@ -72,10 +72,6 @@ namespace ExamGenerator.DocumentManager
 
         public static Bitmap ResizeToStandard(Bitmap bitmap)
         {
-            if (bitmap.Width > bitmap.Height)
-            {
-                bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
-            }
             var qrCodesPositions = QrCodeEncoderDecoder.DecodeMultiple(bitmap).ToList().OrderBy(x => x.ResultPoints.FirstOrDefault().Y).Select(x => x.ResultPoints.FirstOrDefault()).ToList();
 
             if (qrCodesPositions.Count() == 3 && (qrCodesPositions[2].Y - (qrCodesPositions[1].Y + qrCodesPositions[0].Y)) < 0)
@@ -87,8 +83,7 @@ namespace ExamGenerator.DocumentManager
             var leftTopQRCode = qrCodesNewPositions.Take(2).OrderBy(x => x.FirstOrDefault().Y).FirstOrDefault().OrderBy(x => x.X + x.Y).FirstOrDefault();
             var leftBottomQRCode = qrCodesNewPositions.Take(2).OrderByDescending(x => x.FirstOrDefault().Y).FirstOrDefault().OrderBy(x => x.X).FirstOrDefault();
             var rightTopQRCode = qrCodesNewPositions[2].OrderByDescending(x => x.X).FirstOrDefault();
-
-
+            
             var source = new PointF[4];
 
             source[0] = new PointF(leftTopQRCode.X, leftTopQRCode.Y);
@@ -151,7 +146,7 @@ namespace ExamGenerator.DocumentManager
                 int absoluteX = (int)(answerPosDTO.X * standardMultiplicantValue);
                 int absoluteY = btm.Height - (int)(answerPosDTO.Y * standardMultiplicantValue);
                 int absoluteWidth = (int)(answerPosDTO.Width * standardMultiplicantValue);
-                int absoluteHeight = (int)(20 * standardMultiplicantValue);
+                int absoluteHeight = (int)(answerPosDTO.Height * standardMultiplicantValue);
                 Rectangle cloneRect = new Rectangle(absoluteX, absoluteY, absoluteWidth, absoluteHeight);
                 retval = btm.Clone(cloneRect, btm.PixelFormat);
             }
@@ -288,7 +283,6 @@ namespace ExamGenerator.DocumentManager
             CvInvoke.PyrUp(pyrDown, uimage);
             CvInvoke.AdaptiveThreshold(imageBynarize, imageBynarize, 255, AdaptiveThresholdType.GaussianC, ThresholdType.Binary, 255, 16);
             return imageBynarize.ToBitmap(bitmap.Width, bitmap.Height);
-
         }
 
 
